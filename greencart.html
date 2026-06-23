@@ -30,12 +30,12 @@
             </nav>
 
             <div class="header-right">
-    <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
-    <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
-        🛒 <span class="cart-badge" id="cart-count">0</span>
-    </a>
-    <a href="espace_agriculteur.html" class="producer-cta">Espace producteur</a>
-</div>
+                <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
+                <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+                    🛒 <span class="cart-badge" id="cart-count">0</span>
+                </a>
+                <a href="espace_agriculteur.html" class="producer-cta" id="producer-space-link">Espace producteur</a>
+            </div>
         </div>
     </header>
 
@@ -222,12 +222,11 @@
             </div>
 
             <div class="footer-links">
-  <strong>Informations</strong>
-  <a href="mentions-legales.html">Mentions légales</a>
-  <a href="cgu.html">CGU</a>
-  <a href="cgv.html">CGV</a>
-</div>
-
+                <strong>Informations</strong>
+                <a href="mentions-legales.html">Mentions légales</a>
+                <a href="cgu.html">CGU</a>
+                <a href="cgv.html">CGV</a>
+            </div>
 
             <div class="footer-contact">
                 <strong>Contact</strong>
@@ -251,34 +250,43 @@
         const cartCountEl = document.getElementById("cart-count");
         const cart = JSON.parse(localStorage.getItem("cart") || "[]");
         cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+
+        const producerSpaceLink = document.getElementById("producer-space-link");
+        const isLoggedIn = localStorage.getItem("greencartLoggedIn") === "true";
+        const role = localStorage.getItem("greencartRole");
+
+        if (producerSpaceLink && isLoggedIn && role === "producer") {
+            producerSpaceLink.href = "espace_producteur_dashboard.html";
+        }
     </script>
-<div id="cookie-banner" class="cookie-banner">
-    <p>Ce site utilise des cookies pour améliorer votre expérience. <a href="cgu.html#cookies">En savoir plus</a></p>
-    <div class="cookie-actions">
-        <button id="accept-cookies" class="btn btn-primary">Accepter</button>
-        <button id="reject-cookies" class="btn">Refuser</button>
+
+    <div id="cookie-banner" class="cookie-banner">
+        <p>Ce site utilise des cookies pour améliorer votre expérience. <a href="cgu.html#cookies">En savoir plus</a></p>
+        <div class="cookie-actions">
+            <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+            <button id="reject-cookies" class="btn">Refuser</button>
+        </div>
     </div>
-</div>
-<script>
-  const cookieBanner = document.getElementById('cookie-banner');
-  const acceptBtn = document.getElementById('accept-cookies');
-  const rejectBtn = document.getElementById('reject-cookies');
 
-  // Vérifie si l'utilisateur a déjà fait un choix
-  if (localStorage.getItem('cookiesAccepted') !== 'true' && localStorage.getItem('cookiesRejected') !== 'true') {
-    cookieBanner.style.display = 'flex';
-  }
+    <script>
+        const cookieBanner = document.getElementById('cookie-banner');
+        const acceptBtn = document.getElementById('accept-cookies');
+        const rejectBtn = document.getElementById('reject-cookies');
 
-  acceptBtn.addEventListener('click', () => {
-    localStorage.setItem('cookiesAccepted', 'true');
-    cookieBanner.style.display = 'none';
-  });
+        if (localStorage.getItem('cookiesAccepted') !== 'true' && localStorage.getItem('cookiesRejected') !== 'true') {
+            cookieBanner.style.display = 'flex';
+        }
 
-  rejectBtn.addEventListener('click', () => {
-    localStorage.setItem('cookiesRejected', 'true');
-    cookieBanner.style.display = 'none';
-  });
-</script>
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookiesAccepted', 'true');
+            cookieBanner.style.display = 'none';
+        });
+
+        rejectBtn.addEventListener('click', () => {
+            localStorage.setItem('cookiesRejected', 'true');
+            cookieBanner.style.display = 'none';
+        });
+    </script>
 
 </body>
 </html>
