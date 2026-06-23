@@ -16,24 +16,24 @@
 <header>
     <div class="container header-inner">
         <div class="header-left">
-            <a href="greencart.html">
+            <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
                 <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
             </a>
         </div>
 
-        <nav>
+        <nav aria-label="Navigation principale">
             <ul>
                 <li><a href="greencart.html">Accueil</a></li>
                 <li><a href="categorie.html">Produits</a></li>
                 <li><a href="producteurs.html">Producteurs</a></li>
-                <li><a href="#pourquoi">À propos</a></li>
+                <li><a href="greencart.html#pourquoi">À propos</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
 
         <div class="header-right">
-            <a href="profil.html" class="icon-circle">👤</a>
-            <a href="panier.html" class="icon-circle cart-icon">
+            <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
+            <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
                 🛒 <span class="cart-badge" id="cart-count">0</span>
             </a>
         </div>
@@ -45,7 +45,7 @@
     <section class="page-hero">
         <h1>Mon profil</h1>
         <p class="section-intro">
-            Connectez-vous pour accéder à votre espace personnel. Cette connexion est fictive dans le cadre du projet.
+            Connectez-vous pour accéder à votre espace personnel. Cette connexion reste fictive dans le cadre du projet.
         </p>
     </section>
 
@@ -56,7 +56,7 @@
 
             <div class="form-row">
                 <label for="email">Adresse e-mail</label>
-                <input type="email" id="email" placeholder="ex : robert@gmail.com" required>
+                <input type="email" id="email" placeholder="ex : demo@greencart.fr" required>
             </div>
 
             <div class="form-row">
@@ -64,12 +64,11 @@
                 <input type="password" id="password" placeholder="********" required>
             </div>
 
-            <div class="form-row" style="flex-direction:row;align-items:center;gap:.5rem;">
+            <div class="form-row remember-row">
                 <input type="checkbox" id="remember">
                 <label for="remember" style="font-weight:600;">Se souvenir de moi</label>
             </div>
 
-            <!-- Google reCAPTCHA -->
             <div class="g-recaptcha" data-sitekey="6LdFsuksAAAAABAspZ4nNm2v6iL9CZY8kjhvRMc7" style="margin-top:1rem;"></div>
 
             <button class="btn btn-primary" type="submit" style="width:100%;margin-top:1.2rem;">Se connecter</button>
@@ -84,15 +83,31 @@
         <div class="legal-box" style="padding:1.4rem;">
             <h2 style="margin-top:0;">Infos projet</h2>
             <p style="margin:0;color:var(--text-muted);line-height:1.7;">
-                Pour ce rendu, l’espace profil sert à illustrer un parcours utilisateur complet. 
-                Aucune donnée réelle n’est enregistrée.
+                Pour ce rendu, l’espace profil sert à illustrer un parcours utilisateur complet.
+                Aucune donnée réelle n’est enregistrée, et la connexion fonctionne en mode démonstration.
             </p>
 
-            <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:var(--border);">
-                <strong>Compte de démonstration</strong>
+            <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid rgba(15,23,42,0.08);">
+                <strong>Compte de démonstration client</strong>
                 <p style="margin:.4rem 0 0;color:var(--text-muted);">
                     Email : demo@greencart.fr<br>
                     Mot de passe : demo123
+                </p>
+            </div>
+
+            <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid rgba(15,23,42,0.08);">
+                <strong>Compte de démonstration producteur</strong>
+                <p style="margin:.4rem 0 0;color:var(--text-muted);">
+                    Email : producteur@greencart.fr<br>
+                    Mot de passe : demo123
+                </p>
+            </div>
+
+            <div style="margin-top:1rem;background:#fff;border-radius:14px;padding:1rem;border:1px solid rgba(15,23,42,0.08);">
+                <strong>Fonctionnement</strong>
+                <p style="margin:.4rem 0 0;color:var(--text-muted);line-height:1.7;">
+                    Le compte client garde un accès classique au site.
+                    Le compte producteur active un rôle <strong>producer</strong> dans le navigateur, afin de rediriger ensuite vers l’espace producteur dédié.
                 </p>
             </div>
         </div>
@@ -118,11 +133,11 @@
         <div class="footer-contact">
             <strong>Contact</strong>
             <div class="footer-contact-row">
-                <span>✉️</span>
+                <span class="footer-icon">✉️</span>
                 <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
             </div>
             <div class="footer-contact-row">
-                <span>📞</span>
+                <span class="footer-icon">📞</span>
                 <span>01 23 45 67 89</span>
             </div>
         </div>
@@ -133,93 +148,80 @@
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const cartCountEl = document.getElementById('cart-count');
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    const cartCountEl = document.getElementById("cart-count");
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
 
-  const form = document.getElementById('login-form');
-  const msg = document.getElementById('login-msg');
-  const logoutBtn = document.getElementById('logout-btn');
+    const form = document.getElementById("login-form");
+    const msg = document.getElementById("login-msg");
+    const logoutBtn = document.getElementById("logout-btn");
 
-  const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const captchaResponse = grecaptcha.getResponse();
 
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const recaptchaResponse = document.getElementById('g-recaptcha-response');
-      if (recaptchaResponse) {
-        recaptchaResponse.removeAttribute('required');
-        recaptchaResponse.removeAttribute('aria-required');
-      }
-    }, 1000);
-  });
+        if (!captchaResponse) {
+            msg.textContent = "Veuillez valider le captcha.";
+            return;
+        }
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const password = document.getElementById("password").value.trim();
 
-    const email = document.getElementById('email').value.trim().toLowerCase();
-    const password = document.getElementById('password').value.trim();
+        if (email === "demo@greencart.fr" && password === "demo123") {
+            localStorage.setItem("greencartLoggedIn", "true");
+            localStorage.setItem("greencartRole", "customer");
+            localStorage.setItem("greencartUserEmail", email);
+            localStorage.removeItem("greencartProducerId");
 
-    if (!email || !password) {
-      msg.textContent = 'Merci de renseigner votre e-mail et votre mot de passe.';
-      return;
+            const redirect = sessionStorage.getItem("redirectAfterLogin");
+
+            if (redirect === "panier") {
+                msg.textContent = "Connexion client réussie. Redirection vers le panier...";
+                sessionStorage.removeItem("redirectAfterLogin");
+
+                setTimeout(() => {
+                    window.location.href = "panier.html";
+                }, 1000);
+            } else {
+                msg.textContent = "Connexion client réussie.";
+            }
+
+        } else if (email === "producteur@greencart.fr" && password === "demo123") {
+            localStorage.setItem("greencartLoggedIn", "true");
+            localStorage.setItem("greencartRole", "producer");
+            localStorage.setItem("greencartUserEmail", email);
+            localStorage.setItem("greencartProducerId", "1");
+
+            msg.textContent = "Connexion producteur réussie.";
+
+        } else {
+            msg.textContent = "Identifiants incorrects.";
+        }
+
+        grecaptcha.reset();
+    });
+
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("greencartLoggedIn");
+        localStorage.removeItem("greencartRole");
+        localStorage.removeItem("greencartUserEmail");
+        localStorage.removeItem("greencartProducerId");
+        msg.textContent = "Vous êtes déconnecté.";
+    });
+
+    if (localStorage.getItem("greencartLoggedIn") === "true") {
+        const role = localStorage.getItem("greencartRole");
+        const email = localStorage.getItem("greencartUserEmail") || "";
+
+        if (role === "producer") {
+            msg.textContent = "Vous êtes déjà connecté comme producteur" + (email ? " : " + email : "") + ".";
+        } else {
+            msg.textContent = "Vous êtes déjà connecté" + (email ? " : " + email : "") + ".";
+        }
     }
-
-    try {
-      const { data, error } = await supabaseClient
-        .from('profiles')
-        .select('id, email, full_name, role')
-        .eq('email', email)
-        .eq('password', password)
-        .maybeSingle();
-
-    if (error) {
-  console.error('Supabase login error:', error);
-  msg.textContent = `Erreur connexion : ${error.message || 'inconnue'}`;
-  return;
-}
-
-      if (!data) {
-        msg.textContent = 'Identifiants incorrects.';
-        return;
-      }
-
-      localStorage.setItem('greencartLoggedIn', 'true');
-      localStorage.setItem('greencartUser', JSON.stringify(data));
-
-      const redirect = sessionStorage.getItem('redirectAfterLogin');
-
-      if (redirect === 'panier') {
-        msg.textContent = 'Connexion réussie. Redirection vers le panier...';
-        sessionStorage.removeItem('redirectAfterLogin');
-        setTimeout(() => {
-          window.location.href = 'panier.html';
-        }, 1000);
-      } else {
-        msg.textContent = `Connexion réussie. Bonjour ${data.full_name || data.email} !`;
-      }
-    } catch (error) {
-      console.error(error);
-      msg.textContent = 'Impossible de contacter la base de données.';
-    }
-  });
-
-  logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem('greencartLoggedIn');
-    localStorage.removeItem('greencartUser');
-    msg.textContent = 'Vous êtes déconnecté.';
-  });
-
-  if (localStorage.getItem('greencartLoggedIn') === 'true') {
-    const user = JSON.parse(localStorage.getItem('greencartUser') || 'null');
-    msg.textContent = user
-      ? `Vous êtes déjà connecté${user.full_name ? ' en tant que ' + user.full_name : ''}.`
-      : 'Vous êtes déjà connecté.';
-  }
 </script>
 
 </body>
