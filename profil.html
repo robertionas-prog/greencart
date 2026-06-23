@@ -177,11 +177,11 @@
         .eq('password', password)
         .maybeSingle();
 
-      if (error) {
-        console.error(error);
-        msg.textContent = 'Erreur lors de la connexion.';
-        return;
-      }
+    if (error) {
+  console.error('Supabase login error:', error);
+  msg.textContent = `Erreur connexion : ${error.message || 'inconnue'}`;
+  return;
+}
 
       if (!data) {
         msg.textContent = 'Identifiants incorrects.';
