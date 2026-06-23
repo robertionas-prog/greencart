@@ -133,58 +133,93 @@
     </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    const cartCountEl = document.getElementById("cart-count");
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+  const cartCountEl = document.getElementById('cart-count');
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
 
-    const form = document.getElementById("login-form");
-    const msg = document.getElementById("login-msg");
-    const logoutBtn = document.getElementById("logout-btn");
+  const form = document.getElementById('login-form');
+  const msg = document.getElementById('login-msg');
+  const logoutBtn = document.getElementById('logout-btn');
 
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
+  const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
+  const SUPABASE_KEY = 'TA_PUBLISHABLE_KEY_ICI';
 
-        const captchaResponse = grecaptcha.getResponse();
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        if (!captchaResponse) {
-            msg.textContent = "Veuillez valider le captcha.";
-            return;
-        }
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const recaptchaResponse = document.getElementById('g-recaptcha-response');
+      if (recaptchaResponse) {
+        recaptchaResponse.removeAttribute('required');
+        recaptchaResponse.removeAttribute('aria-required');
+      }
+    }, 1000);
+  });
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        if (email === "demo@greencart.fr" && password === "demo123") {
-            localStorage.setItem("greencartLoggedIn", "true");
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = document.getElementById('password').value.trim();
 
-            const redirect = sessionStorage.getItem("redirectAfterLogin");
-
-            if (redirect === "panier") {
-                msg.textContent = "Connexion réussie. Redirection vers le panier...";
-                sessionStorage.removeItem("redirectAfterLogin");
-
-                setTimeout(() => {
-                    window.location.href = "panier.html";
-                }, 1000);
-            } else {
-                msg.textContent = "Connexion fictive réussie.";
-            }
-        } else {
-            msg.textContent = "Identifiants incorrects.";
-        }
-
-        grecaptcha.reset();
-    });
-
-    logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("greencartLoggedIn");
-        msg.textContent = "Vous êtes déconnecté.";
-    });
-
-    if (localStorage.getItem("greencartLoggedIn") === "true") {
-        msg.textContent = "Vous êtes déjà connecté.";
+    if (!email || !password) {
+      msg.textContent = 'Merci de renseigner votre e-mail et votre mot de passe.';
+      return;
     }
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('profiles')
+        .select('id, email, full_name, role')
+        .eq('email', email)
+        .eq('password', password)
+        .maybeSingle();
+
+      if (error) {
+        console.error(error);
+        msg.textContent = 'Erreur lors de la connexion.';
+        return;
+      }
+
+      if (!data) {
+        msg.textContent = 'Identifiants incorrects.';
+        return;
+      }
+
+      localStorage.setItem('greencartLoggedIn', 'true');
+      localStorage.setItem('greencartUser', JSON.stringify(data));
+
+      const redirect = sessionStorage.getItem('redirectAfterLogin');
+
+      if (redirect === 'panier') {
+        msg.textContent = 'Connexion réussie. Redirection vers le panier...';
+        sessionStorage.removeItem('redirectAfterLogin');
+        setTimeout(() => {
+          window.location.href = 'panier.html';
+        }, 1000);
+      } else {
+        msg.textContent = `Connexion réussie. Bonjour ${data.full_name || data.email} !`;
+      }
+    } catch (error) {
+      console.error(error);
+      msg.textContent = 'Impossible de contacter la base de données.';
+    }
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('greencartLoggedIn');
+    localStorage.removeItem('greencartUser');
+    msg.textContent = 'Vous êtes déconnecté.';
+  });
+
+  if (localStorage.getItem('greencartLoggedIn') === 'true') {
+    const user = JSON.parse(localStorage.getItem('greencartUser') || 'null');
+    msg.textContent = user
+      ? `Vous êtes déjà connecté${user.full_name ? ' en tant que ' + user.full_name : ''}.`
+      : 'Vous êtes déjà connecté.';
+  }
 </script>
 
 </body>
