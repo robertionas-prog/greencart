@@ -21,9 +21,9 @@
             <nav aria-label="Navigation principale">
                 <ul>
                     <li><a href="greencart.html">Accueil</a></li>
-                    <li><a href="categorie.html">Produits</a></li>
+                    <li><a href="categorie.html" aria-current="page">Produits</a></li>
                     <li><a href="producteurs.html">Producteurs</a></li>
-                    <li><a href="greencart.html#pourquoi">À propos</a></li>
+                    <li><a href="#pourquoi">À propos</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
@@ -45,7 +45,7 @@
             </div>
 
             <aside class="product-summary">
-                <h1 id="product-name">Chargement...</h1>
+                <h1 id="product-name">Chargement…</h1>
                 <div class="unit-price" id="unit-price"></div>
 
                 <div class="qty-row">
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="total-price">
-                    Total : <span id="total-price"></span>
+                    Total : <span id="total-price">—</span>
                 </div>
 
                 <button class="btn btn-primary add-to-cart" id="add-to-cart-btn" type="button">
@@ -69,7 +69,7 @@
 
         <section class="product-description">
             <h2>Description</h2>
-            <p id="product-desc"></p>
+            <p id="product-desc">Chargement de la description…</p>
             <p id="product-storage"></p>
         </section>
 
@@ -78,13 +78,13 @@
             <div class="reviews">
                 <h2>Avis du commerçant</h2>
 
-                <div class="reviews-grid" id="product-reviews">
+                <div class="reviews-grid" id="reviews-grid">
                     <article class="review-card">
                         <div class="review-avatar" aria-hidden="true"></div>
                         <div>
                             <div class="review-name">GreenCart</div>
                             <div class="review-stars">★★★★☆</div>
-                            <p class="review-text">Chargement des avis...</p>
+                            <p class="review-text">Chargement des avis…</p>
                         </div>
                     </article>
                 </div>
@@ -95,7 +95,7 @@
 
                 <div class="reco-card">
                     <div class="reco-body">
-                        <div class="reco-name" id="reco-name"></div>
+                        <div class="reco-name" id="reco-name">Chargement…</div>
                         <div class="reco-old" id="reco-old"></div>
                         <div class="reco-new" id="reco-new"></div>
                         <img class="reco-img" id="reco-img" src="" alt="">
@@ -136,7 +136,7 @@
         </div>
 
         <div class="footer-bottom">
-            © 2026 GreenCart – Projet étudiant.
+            © 2025 GreenCart – Projet étudiant.
         </div>
     </footer>
 
@@ -146,40 +146,226 @@
         const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const nameEl = document.getElementById("product-name");
-        const unitEl = document.getElementById("unit-price");
-        const imgEl = document.getElementById("product-image");
-        const descEl = document.getElementById("product-desc");
-        const storageEl = document.getElementById("product-storage");
+        const cartCountEl = document.getElementById("cart-count");
+        const productImageEl = document.getElementById("product-image");
+        const productNameEl = document.getElementById("product-name");
+        const unitPriceEl = document.getElementById("unit-price");
+        const productDescEl = document.getElementById("product-desc");
+        const productStorageEl = document.getElementById("product-storage");
+        const totalPriceEl = document.getElementById("total-price");
         const qtyInput = document.getElementById("qty-input");
         const minusBtn = document.getElementById("minus-btn");
         const plusBtn = document.getElementById("plus-btn");
-        const totalPriceEl = document.getElementById("total-price");
         const addBtn = document.getElementById("add-to-cart-btn");
-        const cartCountEl = document.getElementById("cart-count");
-        const reviewsEl = document.getElementById("product-reviews");
+        const reviewsGrid = document.getElementById("reviews-grid");
+
+        const recoNameEl = document.getElementById("reco-name");
+        const recoOldEl = document.getElementById("reco-old");
+        const recoNewEl = document.getElementById("reco-new");
+        const recoImgEl = document.getElementById("reco-img");
+        const recoLinkEl = document.getElementById("reco-link");
+
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get("slug") || params.get("id");
 
         let currentProduct = null;
-        let currentSlug = null;
 
-        function formatPrice(n) {
-            return Number(n).toFixed(2).replace(".", ",") + "€";
+        function refreshBadge() {
+            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            cartCountEl.textContent = cart.reduce((sum, item) => sum + item.qty, 0);
         }
 
-        function formatUnitPrice(price, unit) {
-            return `${Number(price).toFixed(2).replace(".", ",")}€${unit ? " / " + unit : ""}`;
+        function getCart() {
+            return JSON.parse(localStorage.getItem("cart") || "[]");
+        }
+
+        function setCart(cart) {
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
+
+        function formatPrice(value, unit) {
+            const price = Number(value).toFixed(2).replace('.', ',');
+            return unit ? `${price}€ / ${unit}` : `${price}€`;
+        }
+
+        function formatTotal(value) {
+            return `${Number(value).toFixed(2).replace('.', ',')}€`;
         }
 
         function renderStars(rating) {
-            const safe = Math.max(0, Math.min(5, Number(rating) || 0));
-            return "★".repeat(safe) + "☆".repeat(5 - safe);
+            const safeRating = Math.max(0, Math.min(5, Math.round(Number(rating) || 0)));
+            return '★'.repeat(safeRating) + '☆'.repeat(5 - safeRating);
         }
 
         function updateTotal() {
-            if (!currentProduct) return;
-            const q = Math.max(1, parseInt(qtyInput.value || "1", 10));
-            qtyInput.value = q;
-            totalPriceEl.textContent = formatPrice(Number(currentProduct.price) * q);
+            if (!currentProduct) {
+                totalPriceEl.textContent = "—";
+                return;
+            }
+
+            const qty = Math.max(1, parseInt(qtyInput.value || "1", 10));
+            qtyInput.value = qty;
+            totalPriceEl.textContent = formatTotal(currentProduct.price * qty);
+        }
+
+        function renderNotFound() {
+            productNameEl.textContent = "Produit introuvable";
+            unitPriceEl.textContent = "";
+            productImageEl.src = "images/logo.png";
+            productImageEl.alt = "Produit introuvable";
+            productDescEl.textContent = "Le produit demandé n’existe pas, n’est plus actif, ou l’URL est incorrecte.";
+            productStorageEl.textContent = "Retournez à la page des produits pour continuer votre navigation.";
+            totalPriceEl.textContent = "—";
+
+            addBtn.disabled = true;
+            addBtn.style.opacity = "0.6";
+            addBtn.style.cursor = "not-allowed";
+
+            reviewsGrid.innerHTML = `
+                <article class="review-card">
+                    <div class="review-avatar" aria-hidden="true"></div>
+                    <div>
+                        <div class="review-name">GreenCart</div>
+                        <div class="review-stars">★★★★☆</div>
+                        <p class="review-text">Aucun avis disponible pour ce produit.</p>
+                    </div>
+                </article>
+            `;
+
+            recoNameEl.textContent = "Retour à la sélection";
+            recoOldEl.textContent = "";
+            recoNewEl.textContent = "";
+            recoImgEl.src = "images/logo.png";
+            recoImgEl.alt = "Retour aux produits";
+            recoLinkEl.href = "categorie.html";
+            recoLinkEl.textContent = "Voir les produits";
+
+            document.title = "Produit introuvable – GreenCart";
+        }
+
+        function renderProduct(product) {
+            currentProduct = product;
+
+            productNameEl.textContent = product.name || "";
+            unitPriceEl.textContent = formatPrice(product.price, product.unit);
+            productImageEl.src = product.image_url || "images/logo.png";
+            productImageEl.alt = product.name || "Produit GreenCart";
+            productDescEl.textContent = product.description || "Aucune description disponible pour ce produit.";
+            productStorageEl.textContent = product.storage_info || "";
+            document.title = `${product.name} – GreenCart`;
+
+            addBtn.disabled = false;
+            addBtn.style.opacity = "";
+            addBtn.style.cursor = "";
+
+            updateTotal();
+        }
+
+        function renderReviews(reviews) {
+            if (!reviews || reviews.length === 0) {
+                reviewsGrid.innerHTML = `
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">GreenCart</div>
+                            <div class="review-stars">★★★★☆</div>
+                            <p class="review-text">Les premiers avis clients arriveront bientôt pour ce produit.</p>
+                        </div>
+                    </article>
+                `;
+                return;
+            }
+
+            reviewsGrid.innerHTML = reviews.map(review => `
+                <article class="review-card">
+                    <div class="review-avatar" aria-hidden="true"></div>
+                    <div>
+                        <div class="review-name">${review.author_name || 'Utilisateur vérifié'}</div>
+                        <div class="review-stars">${renderStars(review.rating)}</div>
+                        <p class="review-text">${review.content || ''}</p>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderRecommendation(product) {
+            if (!product) {
+                recoNameEl.textContent = "Aucun autre produit disponible";
+                recoOldEl.textContent = "";
+                recoNewEl.textContent = "";
+                recoImgEl.src = "images/logo.png";
+                recoImgEl.alt = "Aucun autre produit disponible";
+                recoLinkEl.href = "categorie.html";
+                recoLinkEl.textContent = "Voir les produits";
+                return;
+            }
+
+            recoNameEl.textContent = product.name || "";
+            recoOldEl.textContent = formatTotal(Number(product.price) + 1);
+            recoNewEl.textContent = formatTotal(product.price);
+            recoImgEl.src = product.image_url || "images/logo.png";
+            recoImgEl.alt = product.name || "Produit recommandé";
+            recoLinkEl.href = `produit.html?slug=${encodeURIComponent(product.slug)}`;
+            recoLinkEl.textContent = "Voir le produit";
+        }
+
+        async function loadProductPage() {
+            refreshBadge();
+
+            if (!slug) {
+                renderNotFound();
+                return;
+            }
+
+            const { data: product, error: productError } = await supabaseClient
+                .from('products')
+                .select('*')
+                .eq('slug', slug)
+                .eq('is_active', true)
+                .maybeSingle();
+
+            if (productError) {
+                console.error('Erreur chargement produit :', productError);
+                renderNotFound();
+                return;
+            }
+
+            if (!product) {
+                renderNotFound();
+                return;
+            }
+
+            renderProduct(product);
+
+            const { data: reviews, error: reviewsError } = await supabaseClient
+                .from('reviews')
+                .select('*')
+                .eq('product_id', product.id)
+                .eq('is_approved', true)
+                .order('id', { ascending: false });
+
+            if (reviewsError) {
+                console.error('Erreur chargement avis produit :', reviewsError);
+                renderReviews([]);
+            } else {
+                renderReviews(reviews || []);
+            }
+
+            const { data: recommendedProducts, error: recommendedError } = await supabaseClient
+                .from('products')
+                .select('*')
+                .eq('is_active', true)
+                .eq('category', product.category)
+                .order('id', { ascending: true });
+
+            if (recommendedError) {
+                console.error('Erreur chargement recommandations :', recommendedError);
+                renderRecommendation(null);
+                return;
+            }
+
+            const recoList = (recommendedProducts || []).filter(item => item.slug !== product.slug);
+            renderRecommendation(recoList[0] || null);
         }
 
         minusBtn.addEventListener("click", () => {
@@ -194,35 +380,23 @@
 
         qtyInput.addEventListener("input", updateTotal);
 
-        function getCart() {
-            return JSON.parse(localStorage.getItem("cart") || "[]");
-        }
-
-        function setCart(cart) {
-            localStorage.setItem("cart", JSON.stringify(cart));
-        }
-
-        function refreshBadge() {
-            const cart = getCart();
-            cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
-        }
-
         addBtn.addEventListener("click", () => {
-            if (!currentProduct || !currentSlug) return;
+            if (!currentProduct) return;
 
             const cart = getCart();
             const qty = Math.max(1, parseInt(qtyInput.value || "1", 10));
-            const existing = cart.find(i => i.slug === currentSlug);
+
+            const existing = cart.find(item => item.id === currentProduct.slug);
 
             if (existing) {
                 existing.qty += qty;
             } else {
                 cart.push({
-                    slug: currentSlug,
+                    id: currentProduct.slug,
                     name: currentProduct.name,
                     price: Number(currentProduct.price),
-                    img: currentProduct.image_url,
-                    qty
+                    img: currentProduct.image_url || "",
+                    qty: qty
                 });
             }
 
@@ -230,125 +404,6 @@
             refreshBadge();
             alert("Produit ajouté au panier.");
         });
-
-        function renderReviews(reviews) {
-            if (!reviews || reviews.length === 0) {
-                reviewsEl.innerHTML = `
-                    <article class="review-card">
-                        <div class="review-avatar" aria-hidden="true"></div>
-                        <div>
-                            <div class="review-name">GreenCart</div>
-                            <div class="review-stars">★★★★☆</div>
-                            <p class="review-text">Aucun avis disponible pour le moment sur ce produit.</p>
-                        </div>
-                    </article>
-                `;
-                return;
-            }
-
-            reviewsEl.innerHTML = reviews.map(review => `
-                <article class="review-card">
-                    <div class="review-avatar" aria-hidden="true"></div>
-                    <div>
-                        <div class="review-name">${review.author_name}</div>
-                        <div class="review-stars">${renderStars(review.rating)}</div>
-                        <p class="review-text">${review.content}</p>
-                    </div>
-                </article>
-            `).join('');
-        }
-
-        async function loadRecommended(currentProductId) {
-            const { data: products, error } = await supabaseClient
-                .from('products')
-                .select('*')
-                .eq('is_active', true)
-                .neq('id', currentProductId)
-                .order('id', { ascending: true });
-
-            if (error || !products || products.length === 0) {
-                document.getElementById("reco-name").textContent = "Aucun produit recommandé";
-                document.getElementById("reco-old").textContent = "";
-                document.getElementById("reco-new").textContent = "";
-                document.getElementById("reco-img").style.display = "none";
-                document.getElementById("reco-link").style.display = "none";
-                return;
-            }
-
-            const reco = products[Math.floor(Math.random() * products.length)];
-
-            document.getElementById("reco-name").textContent = reco.name;
-            document.getElementById("reco-old").textContent = formatPrice(Number(reco.price) + 1);
-            document.getElementById("reco-new").textContent = formatPrice(reco.price);
-            document.getElementById("reco-img").src = reco.image_url || "";
-            document.getElementById("reco-img").alt = reco.name;
-            document.getElementById("reco-img").style.display = "block";
-            document.getElementById("reco-link").style.display = "inline-flex";
-            document.getElementById("reco-link").href = "produit.html?slug=" + encodeURIComponent(reco.slug);
-        }
-
-        async function loadProductPage() {
-            refreshBadge();
-
-            const params = new URLSearchParams(window.location.search);
-            const slug = params.get("slug");
-
-            if (!slug) {
-                nameEl.textContent = "Produit introuvable";
-                descEl.textContent = "Aucun slug produit n’a été transmis dans l’URL.";
-                unitEl.textContent = "";
-                storageEl.textContent = "";
-                addBtn.disabled = true;
-                return;
-            }
-
-            currentSlug = slug;
-
-            const { data: product, error: productError } = await supabaseClient
-                .from('products')
-                .select('*')
-                .eq('slug', slug)
-                .eq('is_active', true)
-                .single();
-
-            if (productError || !product) {
-                console.error("Erreur chargement produit :", productError);
-                nameEl.textContent = "Produit introuvable";
-                descEl.textContent = "Le produit demandé n’existe pas ou n’est plus disponible.";
-                unitEl.textContent = "";
-                storageEl.textContent = "";
-                addBtn.disabled = true;
-                return;
-            }
-
-            currentProduct = product;
-
-            nameEl.textContent = product.name;
-            unitEl.textContent = formatUnitPrice(product.price, product.unit);
-            imgEl.src = product.image_url || "";
-            imgEl.alt = product.name;
-            descEl.textContent = product.description || "";
-            storageEl.textContent = product.storage_info ? `Conservation : ${product.storage_info}` : "";
-            document.title = product.name + " – GreenCart";
-
-            updateTotal();
-
-            const { data: reviews, error: reviewsError } = await supabaseClient
-                .from('reviews')
-                .select('*')
-                .eq('is_approved', true)
-                .eq('product_id', product.id)
-                .order('id', { ascending: false });
-
-            if (reviewsError) {
-                console.error("Erreur chargement avis produit :", reviewsError);
-                renderReviews([]);
-            } else {
-                renderReviews(reviews);
-            }
-
-            loadRecommended(product.id);
-        }
 
         loadProductPage();
     </script>
