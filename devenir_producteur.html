@@ -202,37 +202,38 @@
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    let captchaToken = '';
     try {
       if (typeof grecaptcha !== 'undefined') {
-        try {
-          grecaptcha.getResponse();
-        } catch (err) {
-          console.warn('Captcha non disponible.', err);
-        }
+        captchaToken = grecaptcha.getResponse() || '';
       }
+    } catch (err) {
+      console.warn('Captcha non disponible, envoi sans captcha.', err);
+    }
 
-      const data = {
-        farm_name: document.getElementById('name').value.trim(),
-        company_name: document.getElementById('company').value.trim(),
-        siret: document.getElementById('siret').value.trim(),
-        address: document.getElementById('address').value.trim(),
-        city: document.getElementById('city').value.trim(),
-        postal_code: document.getElementById('postal-code').value.trim(),
-        activity: document.getElementById('activity').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        message: document.getElementById('message').value.trim()
-      };
+    const data = {
+      farm_name: document.getElementById('name').value.trim(),
+      company_name: document.getElementById('company').value.trim(),
+      siret: document.getElementById('siret').value.trim(),
+      address: document.getElementById('address').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      postal_code: document.getElementById('postal-code').value.trim(),
+      activity: document.getElementById('activity').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      message: document.getElementById('message').value.trim()
+    };
 
-      if (
-        !data.farm_name || !data.company_name || !data.siret || !data.address ||
-        !data.city || !data.postal_code || !data.activity || !data.email ||
-        !data.phone || !data.message
-      ) {
-        alert('Tous les champs sont requis.');
-        return;
-      }
+    if (
+      !data.farm_name || !data.company_name || !data.siret || !data.address ||
+      !data.city || !data.postal_code || !data.activity || !data.email ||
+      !data.phone || !data.message
+    ) {
+      alert('Tous les champs sont requis.');
+      return;
+    }
 
+    try {
       const { error } = await supabaseClient
         .from('producer_applications')
         .insert([data]);
