@@ -120,14 +120,68 @@
     </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const cartCountEl = document.getElementById('cart-count');
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
 
-  document.querySelector('.contact-form').addEventListener('submit', (e) => {
+  const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
+  const SUPABASE_KEY = 'TA_PUBLISHABLE_KEY_ICI';
+
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  document.querySelector('.contact-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    alert('Formulaire prêt. Connexion à la base en cours de mise en place.');
+
+    const form = e.target;
+
+    let captchaToken = '';
+    try {
+      if (typeof grecaptcha !== 'undefined') {
+        captchaToken = grecaptcha.getResponse() || '';
+      }
+    } catch (err) {
+      console.warn('Captcha non disponible, envoi sans captcha.', err);
+    }
+
+    const data = {
+      name: document.getElementById('name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      subject: document.getElementById('subject').value.trim(),
+      message: document.getElementById('message').value.trim()
+    };
+
+    if (!data.name || !data.email || !data.subject || !data.message) {
+      alert('Tous les champs sont requis.');
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('contacts')
+        .insert([data]);
+
+      if (error) {
+        console.error(error);
+        alert("Erreur lors de l'envoi du message.");
+        return;
+      }
+
+      alert('Message envoyé avec succès !');
+      form.reset();
+
+      try {
+        if (typeof grecaptcha !== 'undefined') {
+          grecaptcha.reset();
+        }
+      } catch (err) {
+        console.warn('Impossible de reset le captcha.', err);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Impossible de contacter la base de données.');
+    }
   });
 </script>
 
