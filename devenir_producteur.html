@@ -189,6 +189,18 @@
 
   </main>
 
+  <script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const recaptchaResponse = document.getElementById('g-recaptcha-response');
+      if (recaptchaResponse) {
+        recaptchaResponse.removeAttribute('required');
+        recaptchaResponse.removeAttribute('aria-required');
+      }
+    }, 1000);
+  });
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const form = document.getElementById('producerForm');
