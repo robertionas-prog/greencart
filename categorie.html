@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Nos produits – GreenCart</title>
-    <meta name="description" content="Découvrez les produits locaux GreenCart en circuit court : fruits, légumes, viandes, fromages et épicerie artisanale issus de producteurs partenaires.">
+    <meta name="description" content="Découvrez les produits locaux GreenCart en circuit court : fruits, légumes, viandes, crèmerie et épicerie artisanale issus de producteurs partenaires.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- Header -->
     <header>
         <div class="container header-inner">
             <div class="header-left">
@@ -21,8 +20,8 @@
 
             <nav aria-label="Navigation principale">
                 <ul>
-                    <li><a href="greencart.html" aria-current="page">Accueil</a></li>
-                    <li><a href="categorie.html">Produits</a></li>
+                    <li><a href="greencart.html">Accueil</a></li>
+                    <li><a href="categorie.html" aria-current="page">Produits</a></li>
                     <li><a href="producteurs.html">Producteurs</a></li>
                     <li><a href="#pourquoi">À propos</a></li>
                     <li><a href="contact.html">Contact</a></li>
@@ -40,7 +39,6 @@
 
     <main class="category-page container">
 
-        <!-- Intro -->
         <section class="category-hero">
             <h1>Nos produits locaux</h1>
             <p class="section-intro">
@@ -48,325 +46,243 @@
             </p>
         </section>
 
-        <!-- Filtres -->
-        <section class="category-filters" aria-label="Filtres de produits">
+        <section class="category-filters" aria-label="Filtres de produits" id="category-filters">
             <button class="filter-btn active" type="button" data-filter="all">Tous</button>
-            <button class="filter-btn" type="button" data-filter="fruits">Fruits &amp; légumes</button>
-            <button class="filter-btn" type="button" data-filter="viandes">Viandes</button>
-            <button class="filter-btn" type="button" data-filter="fromages">Fromages</button>
-            <button class="filter-btn" type="button" data-filter="epicerie">Épicerie artisanale</button>
+            <button class="filter-btn" type="button" data-filter="fruits-legumes">Fruits &amp; légumes</button>
+            <button class="filter-btn" type="button" data-filter="viandes-charcuterie">Viandes &amp; charcuterie</button>
+            <button class="filter-btn" type="button" data-filter="cremerie">Crèmerie</button>
+            <button class="filter-btn" type="button" data-filter="epicerie-boissons">Épicerie &amp; boissons</button>
         </section>
 
-        <!-- Produits -->
         <section class="products-list" aria-label="Liste de produits">
             <div class="products-list-grid" id="products-grid">
-
-                <!-- Fruits & légumes -->
-                <article class="product-tile" data-category="fruits">
-                    <a href="produit.html?id=tomates-grappe">
-                        <img src="images/tomates.jpg" alt="Tomates rondes en grappe">
-                        <div class="product-tile-body">
-                            <h2>Tomates Rondes en Grappe</h2>
-                            <p class="product-origin">Origine : Ferme des Horizons</p>
-                            <p class="product-price">3,49€ / Kg</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
+                <article class="product-tile">
+                    <div class="product-tile-body">
+                        <h2>Chargement…</h2>
+                        <p class="product-origin">Les produits arrivent.</p>
+                    </div>
                 </article>
-
-                <article class="product-tile" data-category="fruits">
-                    <a href="produit.html?id=pommes-de-terre">
-                        <img src="images/pommes-de-terre.jpg" alt="Pommes de terre locales en filet">
-                        <div class="product-tile-body">
-                            <h2>Pommes de terre (3 Kg)</h2>
-                            <p class="product-origin">Origine : Ferme des Horizons</p>
-                            <p class="product-price">6,98€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="fruits">
-                    <a href="produit.html?id=carottes">
-                        <img src="images/carottes.png" alt="Carottes nouvelles locales">
-                        <div class="product-tile-body">
-                            <h2>Carottes nouvelles (1 Kg)</h2>
-                            <p class="product-origin">Origine : Ferme des Horizons</p>
-                            <p class="product-price">2,90€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="fruits">
-                    <a href="produit.html?id=pommes-golden">
-                        <img src="images/pommes-golden.jpg" alt="Pommes Golden locales">
-                        <div class="product-tile-body">
-                            <h2>Pommes Golden (1 Kg)</h2>
-                            <p class="product-origin">Origine : Verger du Coin</p>
-                            <p class="product-price">3,20€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="fruits">
-                    <a href="produit.html?id=courgettes">
-                        <img src="images/fruits-legumes.jpg" alt="Courgettes de saison locales">
-                        <div class="product-tile-body">
-                            <h2>Courgettes de saison (1 Kg)</h2>
-                            <p class="product-origin">Origine : Ferme des Horizons</p>
-                            <p class="product-price">2,75€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Viandes -->
-                <article class="product-tile" data-category="viandes">
-                    <a href="produit.html?id=filet-poulet">
-                        <img src="images/filet-de-poulet-jaune.jpg" alt="Filet de poulet fermier local">
-                        <div class="product-tile-body">
-                            <h2>Filet de poulet fermier (500 g)</h2>
-                            <p class="product-origin">Origine : Élevage du Pré Vert</p>
-                            <p class="product-price">9,90€ / Kg</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="viandes">
-                    <a href="produit.html?id=steak-hache">
-                        <img src="images/steak-hache.webp" alt="Steaks hachés de bœuf local">
-                        <div class="product-tile-body">
-                            <h2>Steak haché (2 x 125 g)</h2>
-                            <p class="product-origin">Origine : Boucherie locale</p>
-                            <p class="product-price">4,80€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="viandes">
-                    <a href="produit.html?id=saucisses">
-                        <img src="images/saucisse.jpg" alt="Saucisses artisanales locales">
-                        <div class="product-tile-body">
-                            <h2>Saucisses artisanales (400 g)</h2>
-                            <p class="product-origin">Origine : Boucherie locale</p>
-                            <p class="product-price">5,50€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="viandes">
-                    <a href="produit.html?id=cotelettes-porc">
-                        <img src="images/cotelettes-de-porc.webp" alt="Côtelettes de porc plein air locales">
-                        <div class="product-tile-body">
-                            <h2>Côtelettes de porc (600 g)</h2>
-                            <p class="product-origin">Origine : Élevage du Pré Vert</p>
-                            <p class="product-price">7,90€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="viandes">
-                    <a href="produit.html?id=jambon-blanc">
-                        <img src="images/jambon-blanc.png" alt="Jambon blanc fermier local">
-                        <div class="product-tile-body">
-                            <h2>Jambon blanc fermier (4 tranches)</h2>
-                            <p class="product-origin">Origine : Boucherie locale</p>
-                            <p class="product-price">3,90€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Fromages & laitages -->
-                <article class="product-tile" data-category="fromages">
-                    <a href="produit.html?id=chevre-frais">
-                        <img src="images/fromage-chevre.jpg" alt="Fromage de chèvre frais">
-                        <div class="product-tile-body">
-                            <h2>Fromage de chèvre frais</h2>
-                            <p class="product-origin">Origine : Atelier des Saveurs</p>
-                            <p class="product-price">4,30€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="fromages">
-                    <a href="produit.html?id=tomme-vache">
-                        <img src="images/tomme-vache.jpg" alt="Tomme de vache affinée">
-                        <div class="product-tile-body">
-                            <h2>Tomme de vache affinée (200 g)</h2>
-                            <p class="product-origin">Origine : Atelier des Saveurs</p>
-                            <p class="product-price">5,90€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="fromages">
-                    <a href="produit.html?id=yaourt-nature">
-                        <img src="images/yaourt-nature-fermier.jpeg" alt="Yaourt nature fermier">
-                        <div class="product-tile-body">
-                            <h2>Yaourt nature fermier (4 x 125 g)</h2>
-                            <p class="product-origin">Origine : Atelier des Saveurs</p>
-                            <p class="product-price">3,40€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="fromages">
-                    <a href="produit.html?id=beurre-demi-sel">
-                        <img src="images/beurre-demi-sel.webp" alt="Beurre demi-sel artisanal">
-                        <div class="product-tile-body">
-                            <h2>Beurre demi-sel (250 g)</h2>
-                            <p class="product-origin">Origine : Atelier des Saveurs</p>
-                            <p class="product-price">3,10€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="fromages">
-                    <a href="produit.html?id=faisselle">
-                        <img src="images/faisselle-fermiere.jpg" alt="Faisselle fermière">
-                        <div class="product-tile-body">
-                            <h2>Faisselle fermière (500 g)</h2>
-                            <p class="product-origin">Origine : Atelier des Saveurs</p>
-                            <p class="product-price">2,95€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <!-- Épicerie artisanale -->
-                <article class="product-tile" data-category="epicerie">
-                    <a href="produit.html?id=miel">
-                        <img src="images/miel-artisanal.jpg" alt="Miel artisanal toutes fleurs">
-                        <div class="product-tile-body">
-                            <h2>Miel artisanal (250 g)</h2>
-                            <p class="product-origin">Origine : Atelier des Saveurs</p>
-                            <p class="product-price">7,50€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="epicerie">
-                    <a href="produit.html?id=confiture-fraise">
-                        <img src="images/confiture-fraise.webp" alt="Confiture fraise maison">
-                        <div class="product-tile-body">
-                            <h2>Confiture fraise maison (250 g)</h2>
-                            <p class="product-origin">Origine : Atelier des Saveurs</p>
-                            <p class="product-price">5,90€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="epicerie">
-                    <a href="produit.html?id=oeufs">
-                        <img src="images/oeufs-plein-air.jpg" alt="Œufs plein air locaux">
-                        <div class="product-tile-body">
-                            <h2>Œufs plein air (boîte de 6)</h2>
-                            <p class="product-origin">Origine : Ferme des Horizons</p>
-                            <p class="product-price">3,60€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="epicerie">
-                    <a href="produit.html?id=jus-pomme">
-                        <img src="images/jus-de-pomme.webp" alt="Jus de pomme local">
-                        <div class="product-tile-body">
-                            <h2>Jus de pomme local (1 L)</h2>
-                            <p class="product-origin">Origine : Verger du Coin</p>
-                            <p class="product-price">3,90€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article class="product-tile" data-category="epicerie">
-                    <a href="produit.html?id=farine-ble">
-                        <img src="images/farine-ble-bio.jpg" alt="Farine de blé bio locale">
-                        <div class="product-tile-body">
-                            <h2>Farine de blé bio (1 Kg)</h2>
-                            <p class="product-origin">Origine : Moulin local</p>
-                            <p class="product-price">2,40€</p>
-                            <span class="product-link">Voir le produit</span>
-                        </div>
-                    </a>
-                </article>
-
             </div>
         </section>
 
     </main>
 
-   <footer>
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <div class="footer-brand-title">GreenCart</div>
-        <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
-      </div>
+    <footer>
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <div class="footer-brand-title">GreenCart</div>
+                <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
+            </div>
 
-      <div class="footer-links">
-        <strong>Informations</strong>
-        <a href="mentions-legales.html">Mentions légales</a>
-        <a href="cgu.html">CGU</a>
-        <a href="cgv.html">CGV</a>
-      </div>
+            <div class="footer-links">
+                <strong>Informations</strong>
+                <a href="mentions-legales.html">Mentions légales</a>
+                <a href="cgu.html">CGU</a>
+                <a href="cgv.html">CGV</a>
+            </div>
 
-      <div class="footer-contact">
-        <strong>Contact</strong>
-        <div class="footer-contact-row">
-          <span class="footer-icon">✉️</span>
-          <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+            <div class="footer-contact">
+                <strong>Contact</strong>
+                <div class="footer-contact-row">
+                    <span class="footer-icon">✉️</span>
+                    <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+                </div>
+                <div class="footer-contact-row">
+                    <span class="footer-icon">📞</span>
+                    <span>01 23 45 67 89</span>
+                </div>
+            </div>
         </div>
-        <div class="footer-contact-row">
-          <span class="footer-icon">📞</span>
-          <span>01 23 45 67 89</span>
+
+        <div class="footer-bottom">
+            © 2025 GreenCart – Projet étudiant.
         </div>
-      </div>
-    </div>
+    </footer>
 
-    <div class="footer-bottom">
-      © 2025 GreenCart – Projet étudiant.
-    </div>
-  </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         const cartCountEl = document.getElementById("cart-count");
-        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
-
+        const productsGrid = document.getElementById("products-grid");
         const filterButtons = document.querySelectorAll(".filter-btn");
-        const productTiles = document.querySelectorAll(".product-tile");
+        const params = new URLSearchParams(window.location.search);
 
-        filterButtons.forEach(btn => {
-            btn.addEventListener("click", () => {
-                filterButtons.forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
+        let allProducts = [];
+        let allProducers = [];
+        let activeFilter = params.get("category") || "all";
 
-                const filter = btn.dataset.filter;
+        function refreshBadge() {
+            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            cartCountEl.textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+        }
 
-                productTiles.forEach(tile => {
-                    const cat = tile.dataset.category;
-                    if (filter === "all" || cat === filter) {
-                        tile.style.display = "";
-                    } else {
-                        tile.style.display = "none";
-                    }
-                });
+        function formatPrice(value, unit) {
+            const price = Number(value).toFixed(2).replace('.', ',');
+            return unit ? `${price}€ / ${unit}` : `${price}€`;
+        }
+
+        function normalizeUnit(unit) {
+            if (!unit) return "";
+            const map = {
+                kg: "Kg",
+                lot: "lot",
+                boite: "boîte",
+                bouteille: "bouteille",
+                pot: "pot",
+                piece: "pièce",
+                plaquette: "plaquette",
+                barquette: "barquette"
+            };
+            const key = String(unit).toLowerCase().trim();
+            return map[key] || unit;
+        }
+
+        function getDisplayFilter(product) {
+            const category = (product.category || "").toLowerCase();
+
+            if (category === "fruits" || category === "legumes") {
+                return "fruits-legumes";
+            }
+
+            if (category === "viandes" || category === "charcuterie") {
+                return "viandes-charcuterie";
+            }
+
+            if (category === "cremerie") {
+                return "cremerie";
+            }
+
+            if (category === "epicerie" || category === "boissons") {
+                return "epicerie-boissons";
+            }
+
+            return "all";
+        }
+
+        function getOriginLabel(product) {
+            const producer = allProducers.find(item => item.id === product.producer_id);
+            return producer ? producer.name : "Producteur local";
+        }
+
+        function renderProducts() {
+            const visibleProducts = activeFilter === "all"
+                ? allProducts
+                : allProducts.filter(product => getDisplayFilter(product) === activeFilter);
+
+            if (!visibleProducts.length) {
+                productsGrid.innerHTML = `
+                    <article class="product-tile">
+                        <div class="product-tile-body">
+                            <h2>Aucun produit trouvé</h2>
+                            <p class="product-origin">Aucun produit n’est disponible pour ce filtre pour le moment.</p>
+                        </div>
+                    </article>
+                `;
+                return;
+            }
+
+            productsGrid.innerHTML = visibleProducts.map(product => `
+                <article class="product-tile" data-category="${getDisplayFilter(product)}">
+                    <a href="produit.html?slug=${encodeURIComponent(product.slug)}">
+                        <img src="${product.image_url || 'images/logo.png'}" alt="${product.name}">
+                        <div class="product-tile-body">
+                            <h2>${product.name}</h2>
+                            <p class="product-origin">Origine : ${getOriginLabel(product)}</p>
+                            <p class="product-price">${formatPrice(product.price, normalizeUnit(product.unit))}</p>
+                            <span class="product-link">Voir le produit</span>
+                        </div>
+                    </a>
+                </article>
+            `).join('');
+        }
+
+        function updateActiveButton() {
+            filterButtons.forEach(button => {
+                button.classList.toggle("active", button.dataset.filter === activeFilter);
+            });
+        }
+
+        function setFilter(filter) {
+            activeFilter = filter;
+            updateActiveButton();
+            renderProducts();
+
+            const url = new URL(window.location.href);
+
+            if (filter === "all") {
+                url.searchParams.delete("category");
+            } else {
+                url.searchParams.set("category", filter);
+            }
+
+            window.history.replaceState({}, "", url);
+        }
+
+        filterButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                setFilter(button.dataset.filter);
             });
         });
+
+        async function loadCategoryPage() {
+            refreshBadge();
+
+            productsGrid.innerHTML = `
+                <article class="product-tile">
+                    <div class="product-tile-body">
+                        <h2>Chargement…</h2>
+                        <p class="product-origin">Les produits arrivent.</p>
+                    </div>
+                </article>
+            `;
+
+            const { data: products, error: productsError } = await supabaseClient
+                .from('products')
+                .select('*')
+                .eq('is_active', true)
+                .order('id', { ascending: true });
+
+            if (productsError) {
+                console.error('Erreur chargement produits :', productsError);
+                productsGrid.innerHTML = `
+                    <article class="product-tile">
+                        <div class="product-tile-body">
+                            <h2>Impossible de charger les produits</h2>
+                            <p class="product-origin">Merci de réessayer dans quelques instants.</p>
+                        </div>
+                    </article>
+                `;
+                return;
+            }
+
+            const { data: producers, error: producersError } = await supabaseClient
+                .from('producers')
+                .select('*')
+                .eq('is_active', true)
+                .order('id', { ascending: true });
+
+            if (producersError) {
+                console.error('Erreur chargement producteurs :', producersError);
+                allProducers = [];
+            } else {
+                allProducers = producers || [];
+            }
+
+            allProducts = products || [];
+
+            const allowedFilters = ["all", "fruits-legumes", "viandes-charcuterie", "cremerie", "epicerie-boissons"];
+            if (!allowedFilters.includes(activeFilter)) {
+                activeFilter = "all";
+            }
+
+            updateActiveButton();
+            renderProducts();
+        }
+
+        loadCategoryPage();
     </script>
 
 </body>
