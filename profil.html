@@ -160,13 +160,6 @@
     form.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        const captchaResponse = grecaptcha.getResponse();
-
-        if (!captchaResponse) {
-            msg.textContent = "Veuillez valider le captcha.";
-            return;
-        }
-
         const email = document.getElementById("email").value.trim().toLowerCase();
         const password = document.getElementById("password").value.trim();
 
@@ -201,7 +194,9 @@
             msg.textContent = "Identifiants incorrects.";
         }
 
-        grecaptcha.reset();
+        if (typeof grecaptcha !== "undefined") {
+            grecaptcha.reset();
+        }
     });
 
     logoutBtn.addEventListener("click", () => {
@@ -210,6 +205,10 @@
         localStorage.removeItem("greencartUserEmail");
         localStorage.removeItem("greencartProducerId");
         msg.textContent = "Vous êtes déconnecté.";
+
+        if (typeof grecaptcha !== "undefined") {
+            grecaptcha.reset();
+        }
     });
 
     if (localStorage.getItem("greencartLoggedIn") === "true") {
