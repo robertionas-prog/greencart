@@ -1,0 +1,513 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Espace producteur – GreenCart</title>
+    <meta name="description" content="Tableau de bord producteur GreenCart pour gérer ses produits, ses commandes et son activité.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .producer-dashboard {
+            padding: 3rem 0 4rem;
+        }
+
+
+        .dashboard-hero {
+            background: linear-gradient(135deg, #eef8f1, #f8fbf8);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            display: grid;
+            grid-template-columns: 1.4fr .9fr;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+
+        .dashboard-hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: .8rem;
+        }
+
+
+        .dashboard-hero p {
+            color: var(--text-muted);
+            max-width: 60ch;
+        }
+
+
+        .dashboard-badges {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+
+
+        .dashboard-badge {
+            background: #fff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 999px;
+            padding: .55rem .95rem;
+            font-size: .9rem;
+            font-weight: 600;
+        }
+
+
+        .dashboard-hero-card {
+            background: #111827;
+            color: #fff;
+            border-radius: 22px;
+            padding: 1.4rem;
+            box-shadow: var(--shadow-med);
+        }
+
+
+        .dashboard-hero-card p {
+            color: rgba(255,255,255,.8);
+            margin-top: .35rem;
+        }
+
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.6rem;
+        }
+
+
+        .dashboard-stat {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.3rem;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow: var(--shadow-soft);
+        }
+
+
+        .dashboard-stat span {
+            display: block;
+            color: var(--text-muted);
+            font-size: .92rem;
+            margin-bottom: .35rem;
+        }
+
+
+        .dashboard-stat strong {
+            font-size: 2rem;
+            color: #12212B;
+        }
+
+
+        .dashboard-panels {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 1.4rem;
+            margin-top: 1.8rem;
+        }
+
+
+        .dashboard-panel {
+            background: #fff;
+            border-radius: 22px;
+            padding: 1.4rem;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow: var(--shadow-soft);
+        }
+
+
+        .dashboard-panel h2 {
+            margin-bottom: 1rem;
+        }
+
+
+        .orders-list,
+        .actions-list {
+            display: grid;
+            gap: .9rem;
+        }
+
+
+        .order-row,
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.05rem;
+            border-radius: 16px;
+            background: var(--bg-soft);
+        }
+
+
+        .order-row small,
+        .action-row small {
+            display: block;
+            color: var(--text-muted);
+            margin-top: .2rem;
+        }
+
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            padding: .45rem .8rem;
+            font-size: .82rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+
+        .status-prep {
+            background: #fff4d6;
+            color: #8a6100;
+        }
+
+
+        .status-ready {
+            background: #e8f7ed;
+            color: #256944;
+        }
+
+
+        .status-new {
+            background: #e9f0ff;
+            color: #2855c5;
+        }
+
+
+        .catalog-list {
+            display: grid;
+            gap: .9rem;
+        }
+
+
+        .catalog-item {
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            gap: .9rem;
+            align-items: center;
+            padding: .9rem;
+            border-radius: 16px;
+            background: var(--bg-soft);
+        }
+
+
+        .catalog-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+
+        .catalog-item p {
+            color: var(--text-muted);
+            font-size: .92rem;
+        }
+
+
+        .price-tag {
+            font-weight: 800;
+            font-size: 1rem;
+            color: #12212B;
+        }
+
+
+        .dashboard-actions {
+            display: flex;
+            gap: .8rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+
+
+        .btn-secondary-soft {
+            background: #fff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            color: #12212B;
+        }
+
+
+        @media (max-width: 980px) {
+            .dashboard-hero,
+            .dashboard-panels {
+                grid-template-columns: 1fr;
+            }
+
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+
+        @media (max-width: 720px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .catalog-item {
+                grid-template-columns: 64px 1fr;
+            }
+
+
+            .price-tag {
+                grid-column: 2;
+            }
+
+
+            .order-row,
+            .action-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+
+            .dashboard-hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<header>
+    <div class="container header-inner">
+        <div class="header-left">
+            <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
+                <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
+            </a>
+        </div>
+
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="greencart.html">Accueil</a></li>
+                <li><a href="categorie.html">Produits</a></li>
+                <li><a href="producteurs.html">Producteurs</a></li>
+                <li><a href="greencart.html#pourquoi">À propos</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+
+        <div class="header-right">
+            <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
+            <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+                🛒 <span class="cart-badge" id="cart-count">0</span>
+            </a>
+            <a href="espace_producteur_dashboard.html" class="producer-cta">Dashboard</a>
+        </div>
+    </div>
+</header>
+
+
+<main class="producer-dashboard">
+    <div class="container">
+        <section class="dashboard-hero">
+            <div>
+                <h1>Bonjour producteur 👋</h1>
+                <p>
+                    Bienvenue dans votre espace GreenCart. Retrouvez ici un aperçu de vos commandes, de vos produits mis en ligne et des prochaines actions à suivre.
+                </p>
+
+
+                <div class="dashboard-badges">
+                    <div class="dashboard-badge">Compte : producteur</div>
+                    <div class="dashboard-badge">Statut : actif</div>
+                    <div class="dashboard-badge">Catalogue local</div>
+                </div>
+
+
+                <div class="dashboard-actions">
+                    <a href="devenir_producteur.html" class="btn btn-primary">Ajouter un produit</a>
+                    <a href="producteurs.html" class="btn btn-secondary-soft">Voir ma vitrine</a>
+                </div>
+            </div>
+
+
+            <div class="dashboard-hero-card">
+                <strong style="font-size:1.1rem;">Résumé du jour</strong>
+                <p>2 nouvelles commandes, 1 produit bientôt en rupture et 4 clients ont consulté votre fiche aujourd’hui.</p>
+            </div>
+        </section>
+
+
+        <section class="dashboard-grid">
+            <article class="dashboard-stat">
+                <span>Produits actifs</span>
+                <strong>12</strong>
+            </article>
+
+
+            <article class="dashboard-stat">
+                <span>Commandes en cours</span>
+                <strong>5</strong>
+            </article>
+
+
+            <article class="dashboard-stat">
+                <span>Vues cette semaine</span>
+                <strong>148</strong>
+            </article>
+        </section>
+
+
+        <section class="dashboard-panels">
+            <article class="dashboard-panel">
+                <h2>Commandes récentes</h2>
+
+
+                <div class="orders-list">
+                    <div class="order-row">
+                        <div>
+                            <strong>Commande #GC-2048</strong>
+                            <small>Panier légumes de saison · 2 articles</small>
+                        </div>
+                        <span class="status-pill status-new">Nouvelle</span>
+                    </div>
+
+
+                    <div class="order-row">
+                        <div>
+                            <strong>Commande #GC-2041</strong>
+                            <small>Tomates anciennes + fromage frais</small>
+                        </div>
+                        <span class="status-pill status-prep">Préparation</span>
+                    </div>
+
+
+                    <div class="order-row">
+                        <div>
+                            <strong>Commande #GC-2035</strong>
+                            <small>Oeufs fermiers · lot x2</small>
+                        </div>
+                        <span class="status-pill status-ready">Prête</span>
+                    </div>
+                </div>
+            </article>
+
+
+            <article class="dashboard-panel">
+                <h2>Actions rapides</h2>
+
+
+                <div class="actions-list">
+                    <div class="action-row">
+                        <div>
+                            <strong>Mettre à jour les stocks</strong>
+                            <small>Synchroniser vos quantités avant ce soir.</small>
+                        </div>
+                    </div>
+
+
+                    <div class="action-row">
+                        <div>
+                            <strong>Ajouter une photo produit</strong>
+                            <small>Les fiches avec image convertissent mieux.</small>
+                        </div>
+                    </div>
+
+
+                    <div class="action-row">
+                        <div>
+                            <strong>Répondre aux avis clients</strong>
+                            <small>3 avis attendent une réponse.</small>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+
+        <section class="dashboard-panel" style="margin-top:1.8rem;">
+            <h2>Catalogue mis en avant</h2>
+
+
+            <div class="catalog-list">
+                <div class="catalog-item">
+                    <img class="catalog-thumb" src="images/tomates-grappe.jpg" alt="Tomates grappe">
+                    <div>
+                        <strong>Tomates grappe</strong>
+                        <p>Produit visible · stock correct</p>
+                    </div>
+                    <div class="price-tag">3,90 €</div>
+                </div>
+
+
+                <div class="catalog-item">
+                    <img class="catalog-thumb" src="images/fraises.jpg" alt="Fraises locales">
+                    <div>
+                        <strong>Fraises locales</strong>
+                        <p>Produit populaire · forte demande</p>
+                    </div>
+                    <div class="price-tag">4,80 €</div>
+                </div>
+
+
+                <div class="catalog-item">
+                    <img class="catalog-thumb" src="images/fromage-frais.jpg" alt="Fromage frais">
+                    <div>
+                        <strong>Fromage frais</strong>
+                        <p>Stock faible · mise à jour conseillée</p>
+                    </div>
+                    <div class="price-tag">5,20 €</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+
+<footer>
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            <div class="footer-brand-title">GreenCart</div>
+            <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
+        </div>
+
+
+        <div class="footer-links">
+            <strong>Informations</strong>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="cgu.html">CGU</a>
+            <a href="cgv.html">CGV</a>
+        </div>
+
+
+        <div class="footer-contact">
+            <strong>Contact</strong>
+            <div class="footer-contact-row">
+                <span class="footer-icon">✉️</span>
+                <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+            </div>
+            <div class="footer-contact-row">
+                <span class="footer-icon">📞</span>
+                <span>01 23 45 67 89</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer-bottom">
+        © 2026 GreenCart – Projet étudiant.
+    </div>
+</footer>
+
+
+<script>
+    const cartCountEl = document.getElementById("cart-count");
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+</script>
+
+
+</body>
+</html>
