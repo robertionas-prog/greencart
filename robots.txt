@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://greencart-robert-ionas.neocities.org/sitemap.xml

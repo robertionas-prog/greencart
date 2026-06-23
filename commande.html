@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Finaliser ma commande – GreenCart</title>
+    <meta name="description" content="Finalisez votre commande GreenCart en renseignant vos coordonnées et votre adresse de livraison pour compléter le parcours d’achat fictif.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+
+<header>
+    <div class="container header-inner">
+        <div class="header-left">
+            <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
+                <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
+            </a>
+        </div>
+
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="greencart.html">Accueil</a></li>
+                <li><a href="categorie.html">Produits</a></li>
+                <li><a href="greencart.html#producteurs">Producteurs</a></li>
+                <li><a href="greencart.html#pourquoi">À propos</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+
+        <div class="header-right">
+            <div class="icon-circle" aria-label="Mon compte">👤</div>
+            <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+                🛒 <span class="cart-badge" id="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+
+<main class="container" style="padding: 2.2rem 0 2.8rem;">
+
+
+    <section class="page-hero">
+        <h1>Finaliser ma commande</h1>
+        <p class="section-intro">
+            Renseignez vos coordonnées et votre adresse pour compléter votre commande fictive.
+        </p>
+    </section>
+
+
+    <section style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:1.5rem; align-items:start; margin-top:1.6rem;">
+
+
+        <form id="checkout-form" class="legal-box" style="padding:1.5rem;" aria-label="Formulaire de commande">
+            <h2 style="margin-top:0;">Informations de livraison</h2>
+
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="form-row">
+                    <label for="first-name">Prénom</label>
+                    <input type="text" id="first-name" name="first-name" placeholder="Robert" required>
+                </div>
+
+
+                <div class="form-row">
+                    <label for="last-name">Nom</label>
+                    <input type="text" id="last-name" name="last-name" placeholder="Ionas" required>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <label for="email">Adresse e-mail</label>
+                <input type="email" id="email" name="email" placeholder="demo@greencart.fr" required>
+            </div>
+
+
+            <div class="form-row">
+                <label for="phone">Téléphone</label>
+                <input type="tel" id="phone" name="phone" placeholder="06 12 34 56 78" required>
+            </div>
+
+
+            <div class="form-row">
+                <label for="address">Adresse</label>
+                <input type="text" id="address" name="address" placeholder="12 rue des Marchés Locaux" required>
+            </div>
+
+
+            <div style="display:grid; grid-template-columns:0.7fr 1.3fr; gap:1rem;">
+                <div class="form-row">
+                    <label for="postal-code">Code postal</label>
+                    <input type="text" id="postal-code" name="postal-code" placeholder="75010" required>
+                </div>
+
+
+                <div class="form-row">
+                    <label for="city">Ville</label>
+                    <input type="text" id="city" name="city" placeholder="Paris" required>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <label for="delivery-note">Instructions de livraison</label>
+                <textarea id="delivery-note" name="delivery-note" rows="4" placeholder="Ex : Sonner au portail, 2e étage, laisser devant la porte..."></textarea>
+            </div>
+
+
+            <button class="btn btn-primary" type="submit" style="width:100%;">
+                Confirmer la commande
+            </button>
+
+
+            <p id="checkout-msg" style="margin:.9rem 0 0; color:var(--text-muted); font-size:.95rem;"></p>
+        </form>
+
+
+        <aside class="cart-summary" aria-label="Résumé de commande">
+            <h2>Résumé</h2>
+
+
+            <div class="summary-row">
+                <span>Articles</span>
+                <span id="summary-items-count">0</span>
+            </div>
+
+
+            <div class="summary-row">
+                <span>Sous-total</span>
+                <span id="summary-subtotal">0,00€</span>
+            </div>
+
+
+            <div class="summary-row">
+                <span>Livraison</span>
+                <span id="summary-shipping">2,90€</span>
+            </div>
+
+
+            <div class="summary-row total">
+                <span>Total</span>
+                <span id="summary-total">0,00€</span>
+            </div>
+
+
+            <p class="cart-note" style="margin-top:1rem;">
+                Commande fictive réalisée dans un cadre pédagogique. Aucune transaction réelle n’est effectuée.
+            </p>
+
+
+            <a href="panier.html" class="btn" style="width:100%; margin-top:1rem; text-align:center;">
+                Retour au panier
+            </a>
+        </aside>
+
+
+    </section>
+</main>
+
+<div id="order-success-modal" class="login-modal-overlay" style="display: none;">
+    <div class="login-modal" role="dialog" aria-modal="true" aria-labelledby="order-success-title">
+        <h2 id="order-success-title">Commande passée</h2>
+        <p id="order-success-text">
+            Vous allez recevoir un e-mail de confirmation à l’adresse renseignée.
+        </p>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <button type="button" class="btn btn-primary" id="close-order-success">
+                Retour à l’accueil
+            </button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            <div class="footer-brand-title">GreenCart</div>
+            <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
+        </div>
+
+
+        <div class="footer-links">
+            <strong>Informations</strong>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="cgu.html">CGU</a>
+            <a href="cgv.html">CGV</a>
+        </div>
+
+
+        <div class="footer-contact">
+            <strong>Contact</strong>
+            <div class="footer-contact-row">
+                <span class="footer-icon">✉️</span>
+                <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+            </div>
+            <div class="footer-contact-row">
+                <span class="footer-icon">📞</span>
+                <span>01 23 45 67 89</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer-bottom">
+        © 2026 GreenCart – Projet étudiant.
+    </div>
+</footer>
+
+
+<script>
+    const cartCountEl = document.getElementById("cart-count");
+    const itemsCountEl = document.getElementById("summary-items-count");
+    const subtotalEl = document.getElementById("summary-subtotal");
+    const shippingEl = document.getElementById("summary-shipping");
+    const totalEl = document.getElementById("summary-total");
+    const checkoutForm = document.getElementById("checkout-form");
+    const checkoutMsg = document.getElementById("checkout-msg");
+
+    const orderSuccessModal = document.getElementById("order-success-modal");
+    const orderSuccessText = document.getElementById("order-success-text");
+    const closeOrderSuccessBtn = document.getElementById("close-order-success");
+
+    const SHIPPING_COST = 2.90;
+
+    function formatPrice(n) {
+        return n.toFixed(2).replace(".", ",") + "€";
+    }
+
+    function getCart() {
+        return JSON.parse(localStorage.getItem("cart") || "[]");
+    }
+
+    function isUserLoggedIn() {
+        return localStorage.getItem("greencartLoggedIn") === "true";
+    }
+
+    function updateCartBadge(cart) {
+        const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+        cartCountEl.textContent = totalItems;
+    }
+
+    function openOrderSuccessModal(email) {
+        orderSuccessText.textContent = `Commande passée avec succès. Vous allez recevoir un e-mail de confirmation à l’adresse ${email}.`;
+        orderSuccessModal.style.display = "flex";
+    }
+
+    function closeOrderSuccessModal() {
+        orderSuccessModal.style.display = "none";
+        window.location.href = "greencart.html";
+    }
+
+    function renderSummary() {
+        const cart = getCart();
+
+        updateCartBadge(cart);
+
+        if (!isUserLoggedIn()) {
+            window.location.href = "profil.html";
+            return;
+        }
+
+        if (cart.length === 0) {
+            itemsCountEl.textContent = "0";
+            subtotalEl.textContent = formatPrice(0);
+            shippingEl.textContent = formatPrice(SHIPPING_COST);
+            totalEl.textContent = formatPrice(0);
+            checkoutMsg.textContent = "Votre panier est vide. Retournez au panier pour ajouter des produits.";
+            checkoutForm.querySelector('button[type="submit"]').disabled = true;
+            return;
+        }
+
+        const itemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
+        const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+        const total = subtotal + SHIPPING_COST;
+
+        itemsCountEl.textContent = itemsCount;
+        subtotalEl.textContent = formatPrice(subtotal);
+        shippingEl.textContent = formatPrice(SHIPPING_COST);
+        totalEl.textContent = formatPrice(total);
+    }
+
+    checkoutForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const orderData = {
+            firstName: document.getElementById("first-name").value.trim(),
+            lastName: document.getElementById("last-name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            address: document.getElementById("address").value.trim(),
+            postalCode: document.getElementById("postal-code").value.trim(),
+            city: document.getElementById("city").value.trim(),
+            deliveryNote: document.getElementById("delivery-note").value.trim()
+        };
+
+        localStorage.setItem("greencartLastOrder", JSON.stringify(orderData));
+        localStorage.removeItem("cart");
+        renderSummary();
+        openOrderSuccessModal(orderData.email);
+    });
+
+    closeOrderSuccessBtn.addEventListener("click", closeOrderSuccessModal);
+
+    orderSuccessModal.addEventListener("click", (e) => {
+        if (e.target === orderSuccessModal) {
+            closeOrderSuccessModal();
+        }
+    });
+
+    renderSummary();
+</script>
+
+</body>
+</html>

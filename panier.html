@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Panier – GreenCart</title>
+    <meta name="description" content="Consultez votre panier GreenCart et préparez votre commande de produits locaux en circuit court auprès de producteurs partenaires avec livraison simplifiée.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="container header-inner">
+        <div class="header-left">
+            <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
+                <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
+            </a>
+        </div>
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="greencart.html">Accueil</a></li>
+                <li><a href="categorie.html">Produits</a></li>
+                <li><a href="greencart.html#producteurs">Producteurs</a></li>
+                <li><a href="greencart.html#pourquoi">À propos</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-right">
+            <div class="icon-circle" aria-label="Mon compte">👤</div>
+            <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+                🛒 <span class="cart-badge" id="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="cart-page container">
+
+    <!-- Panier -->
+    <section class="cart-hero">
+        <h1>Mon panier</h1>
+        <p class="section-intro">
+            Vérifiez vos produits avant de passer commande.
+        </p>
+    </section>
+
+    <section class="cart-layout" aria-label="Contenu du panier">
+
+        <!-- Liste produits -->
+        <div class="cart-items" id="cart-items"></div>
+
+        <!-- Récap -->
+        <aside class="cart-summary" aria-label="Récapitulatif du panier">
+            <h2>Récapitulatif</h2>
+
+            <div class="summary-row">
+                <span>Sous-total</span>
+                <span id="subtotal">0,00€</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Livraison</span>
+                <span id="shipping">2,90€</span>
+            </div>
+
+            <div class="summary-row total">
+                <span>Total</span>
+                <span id="total">0,00€</span>
+            </div>
+
+            <button class="btn btn-primary cart-checkout" id="checkout-btn" type="button">
+                Valider la commande
+            </button>
+
+            <p class="cart-note">
+                Commande fictive réalisée dans un cadre pédagogique.
+            </p>
+        </aside>
+
+    </section>
+
+</main>
+
+<!-- Pop-up connexion obligatoire -->
+<div id="login-required-modal" class="login-modal-overlay" style="display: none;">
+    <div class="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
+        <h2 id="login-modal-title">Connexion requise</h2>
+        <p>
+            Vous devez vous connecter pour valider votre commande.
+        </p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+            <button type="button" class="btn" id="close-login-modal">Annuler</button>
+            <button type="button" class="btn btn-primary" id="go-to-login">Se connecter</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-title">GreenCart</div>
+        <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
+      </div>
+
+      <div class="footer-links">
+        <strong>Informations</strong>
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgu.html">CGU</a>
+        <a href="cgv.html">CGV</a>
+      </div>
+
+      <div class="footer-contact">
+        <strong>Contact</strong>
+        <div class="footer-contact-row">
+          <span class="footer-icon">✉️</span>
+          <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+        </div>
+        <div class="footer-contact-row">
+          <span class="footer-icon">📞</span>
+          <span>01 23 45 67 89</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 GreenCart – Projet étudiant.
+    </div>
+  </footer>
+
+<script>
+    const cartCountEl = document.getElementById("cart-count");
+    const cartItemsEl = document.getElementById("cart-items");
+    const subtotalEl = document.getElementById("subtotal");
+    const shippingEl = document.getElementById("shipping");
+    const totalEl = document.getElementById("total");
+    const checkoutBtn = document.getElementById("checkout-btn");
+
+    const loginRequiredModal = document.getElementById("login-required-modal");
+    const closeLoginModalBtn = document.getElementById("close-login-modal");
+    const goToLoginBtn = document.getElementById("go-to-login");
+
+    const SHIPPING_COST = 2.90;
+
+    function formatPrice(n){
+        return n.toFixed(2).replace(".", ",") + "€";
+    }
+
+    function getCart(){
+        return JSON.parse(localStorage.getItem("cart") || "[]");
+    }
+
+    function setCart(cart){
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function refreshBadge(cart){
+        const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+        cartCountEl.textContent = totalItems;
+    }
+
+    function isUserLoggedIn(){
+        return localStorage.getItem("greencartLoggedIn") === "true";
+    }
+
+    function openLoginModal(){
+        loginRequiredModal.style.display = "flex";
+    }
+
+    function closeLoginModal(){
+        loginRequiredModal.style.display = "none";
+    }
+
+    function renderCart(){
+        const cart = getCart();
+        refreshBadge(cart);
+
+        if(cart.length === 0){
+            cartItemsEl.innerHTML = `
+                <div class="cart-empty">
+                    <p>Votre panier est vide.</p>
+                    <a href="categorie.html" class="btn btn-primary">Voir les produits</a>
+                </div>
+            `;
+            subtotalEl.textContent = formatPrice(0);
+            shippingEl.textContent = formatPrice(SHIPPING_COST);
+            totalEl.textContent = formatPrice(0);
+            checkoutBtn.disabled = true;
+            return;
+        }
+
+        checkoutBtn.disabled = false;
+
+        cartItemsEl.innerHTML = cart.map((item, index) => `
+            <article class="cart-item" data-index="${index}">
+                <img class="cart-item-img" src="${item.img}" alt="${item.name}">
+                <div class="cart-item-info">
+                    <h2 class="cart-item-title">${item.name}</h2>
+                    <p class="cart-item-unit">${formatPrice(item.price)} / unité</p>
+
+                    <div class="cart-qty-control" role="group" aria-label="Quantité pour ${item.name}">
+                        <button class="cart-qty-btn minus" type="button" aria-label="Diminuer">–</button>
+                        <input class="cart-qty-input" type="number" min="1" value="${item.qty}">
+                        <button class="cart-qty-btn plus" type="button" aria-label="Augmenter">+</button>
+                    </div>
+                </div>
+
+                <div class="cart-item-right">
+                    <div class="cart-item-total">${formatPrice(item.price * item.qty)}</div>
+                    <button class="cart-remove" type="button" aria-label="Supprimer ${item.name}">Supprimer</button>
+                </div>
+            </article>
+        `).join("");
+
+        attachEvents();
+        updateTotals();
+    }
+
+    function attachEvents(){
+        const cart = getCart();
+
+        document.querySelectorAll(".cart-item").forEach(itemEl => {
+            const index = parseInt(itemEl.dataset.index, 10);
+            const minusBtn = itemEl.querySelector(".cart-qty-btn.minus");
+            const plusBtn = itemEl.querySelector(".cart-qty-btn.plus");
+            const qtyInput = itemEl.querySelector(".cart-qty-input");
+            const removeBtn = itemEl.querySelector(".cart-remove");
+
+            minusBtn.addEventListener("click", () => {
+                cart[index].qty = Math.max(1, cart[index].qty - 1);
+                setCart(cart);
+                renderCart();
+            });
+
+            plusBtn.addEventListener("click", () => {
+                cart[index].qty += 1;
+                setCart(cart);
+                renderCart();
+            });
+
+            qtyInput.addEventListener("input", () => {
+                const v = Math.max(1, parseInt(qtyInput.value || "1", 10));
+                cart[index].qty = v;
+                setCart(cart);
+                renderCart();
+            });
+
+            removeBtn.addEventListener("click", () => {
+                cart.splice(index, 1);
+                setCart(cart);
+                renderCart();
+            });
+        });
+    }
+
+    function updateTotals(){
+        const cart = getCart();
+        const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        const total = cart.length ? subtotal + SHIPPING_COST : 0;
+
+        subtotalEl.textContent = formatPrice(subtotal);
+        shippingEl.textContent = formatPrice(SHIPPING_COST);
+        totalEl.textContent = formatPrice(total);
+    }
+
+    checkoutBtn.addEventListener("click", () => {
+    const cart = getCart();
+
+    if(cart.length === 0){
+        return;
+    }
+
+    if(!isUserLoggedIn()){
+        openLoginModal();
+        return;
+    }
+
+    window.location.href = "commande.html";
+});
+
+    closeLoginModalBtn.addEventListener("click", closeLoginModal);
+
+    loginRequiredModal.addEventListener("click", (e) => {
+        if(e.target === loginRequiredModal){
+            closeLoginModal();
+        }
+    });
+
+    goToLoginBtn.addEventListener("click", () => {
+        sessionStorage.setItem("redirectAfterLogin", "panier");
+        window.location.href = "profil.html";
+    });
+
+    renderCart();
+</script>
+
+</body>
+</html>

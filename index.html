@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>GreenCart – Produits locaux en circuit court</title>
+    <meta name="description" content="GreenCart est une plateforme fictive de produits locaux en circuit court, reliant producteurs partenaires et consommateurs avec une livraison simple et responsable.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-inner">
+            <div class="header-left">
+                <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
+                    <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
+                </a>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <ul>
+                    <li><a href="greencart.html" aria-current="page">Accueil</a></li>
+                    <li><a href="categorie.html">Produits</a></li>
+                    <li><a href="producteurs.html">Producteurs</a></li>
+                    <li><a href="#pourquoi">À propos</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+    <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
+    <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+        🛒 <span class="cart-badge" id="cart-count">0</span>
+    </a>
+    <a href="espace_agriculteur.html" class="producer-cta">Espace producteur</a>
+</div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-bg">
+                <img src="images/hero.jpg" alt="Produits frais et locaux">
+            </div>
+            <div class="container hero-content">
+                <h1>Vos produits locaux, à portée de clic</h1>
+                <p>
+                    Une sélection de produits de saison, issus de producteurs partenaires, livrés simplement.
+                </p>
+                <a class="btn btn-primary" href="producteurs.html">
+                    Explorer les producteurs près de chez moi
+                </a>
+            </div>
+        </section>
+
+        <!-- Zone 3 Nos produits locaux -->
+        <section class="container section" id="produits">
+            <div class="section-head">
+                <h2>Nos produits locaux</h2>
+                <p class="section-intro">
+                    Retrouvez nos catégories principales et découvrez des produits frais, sélectionnés au fil des saisons.
+                </p>
+            </div>
+
+            <div class="cards-grid">
+                <article class="category-card">
+                    <a href="categorie.html">
+                        <img src="images/fruits-legumes.jpg" alt="Fruits et légumes">
+                        <div class="card-body">
+                            <h3>Fruits &amp; légumes</h3>
+                            <p>De saison, récoltés à maturité.</p>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="category-card">
+                    <a href="categorie.html">
+                        <img src="images/viande.webp" alt="Viandes locales">
+                        <div class="card-body">
+                            <h3>Viandes</h3>
+                            <p>Traçables et issues d’élevages responsables.</p>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="category-card">
+                    <a href="categorie.html">
+                        <img src="images/fromage-laitage.webp" alt="Fromages et laitages">
+                        <div class="card-body">
+                            <h3>Fromages &amp; laitages</h3>
+                            <p>Artisanaux, faits avec du lait local.</p>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="category-card">
+                    <a href="categorie.html">
+                        <img src="images/epicerie-artisanale.webp" alt="Épicerie artisanale">
+                        <div class="card-body">
+                            <h3>Épicerie artisanale</h3>
+                            <p>Recettes maison, simples et vraies.</p>
+                        </div>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Zone 4 Pourquoi GreenCart -->
+        <section class="container section why" id="pourquoi">
+            <div class="why-inner">
+                <h2>Pourquoi GreenCart</h2>
+                <p>
+                    GreenCart est une plateforme pensée pour faciliter l’accès à des produits locaux en circuit court.
+                    L’objectif est de valoriser le travail des producteurs, de proposer une alternative plus responsable
+                    et de garantir une meilleure qualité dans l’assiette. Cette section sert aussi de contenu éditorial
+                    important pour le référencement, avec un texte descriptif clair et riche en mots-clés liés aux produits locaux.
+                </p>
+            </div>
+        </section>
+
+        <!-- Zone 5 Producteurs -->
+        <section class="container section" id="producteurs">
+            <div class="section-head">
+                <h2>Producteurs près de chez vous</h2>
+                <p class="section-intro">
+                    On sélectionne des partenaires engagés pour garantir fraîcheur, traçabilité et savoir-faire.
+                </p>
+            </div>
+
+            <div class="cards-grid">
+                <article class="producer-card">
+                    <a href="producteurs.html#ferme-horizons">
+                        <img src="images/ferme-des-horizons.jpeg" alt="Ferme des Horizons">
+                        <div class="card-body">
+                            <h3>Ferme des Horizons</h3>
+                            <p>Maraîcher bio spécialisé dans les paniers de saison.</p>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="producer-card">
+                    <a href="producteurs.html#pre-vert">
+                        <img src="images/elevage-du-pre-vert.jpg" alt="Élevage du Pré Vert">
+                        <div class="card-body">
+                            <h3>Élevage du Pré Vert</h3>
+                            <p>Viande locale tracée et respectueuse du bien-être animal.</p>
+                        </div>
+                    </a>
+                </article>
+
+                <article class="producer-card">
+                    <a href="producteurs.html#atelier-saveurs">
+                        <img src="images/atelier-des-saveurs.jpg" alt="Atelier des Saveurs">
+                        <div class="card-body">
+                            <h3>Atelier des Saveurs</h3>
+                            <p>Transformations artisanales : miels, confitures, laitages.</p>
+                        </div>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Zone 6 Témoignages -->
+        <section class="container section" id="temoignages">
+            <div class="section-head">
+                <h2>Témoignages clients</h2>
+                <p class="section-intro">
+                    Quelques retours d’utilisateurs qui commandent déjà sur GreenCart.
+                </p>
+            </div>
+
+            <div class="reviews-grid">
+                <article class="review-card">
+                    <div class="review-avatar" aria-hidden="true"></div>
+                    <div>
+                        <div class="review-name">Utilisateur vérifié</div>
+                        <div class="review-stars" aria-label="Note : 5 sur 5">★★★★★</div>
+                        <p class="review-text">
+                            Produits super frais, livraison rapide, franchement top.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="review-card">
+                    <div class="review-avatar" aria-hidden="true"></div>
+                    <div>
+                        <div class="review-name">Utilisateur vérifié</div>
+                        <div class="review-stars" aria-label="Note : 4 sur 5">★★★★☆</div>
+                        <p class="review-text">
+                            Très bonne qualité, on sent la différence avec le magasin.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="review-card">
+                    <div class="review-avatar" aria-hidden="true"></div>
+                    <div>
+                        <div class="review-name">Utilisateur vérifié</div>
+                        <div class="review-stars" aria-label="Note : 5 sur 5">★★★★★</div>
+                        <p class="review-text">
+                            Simple à utiliser et les producteurs sont vraiment sérieux.
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-inner" id="contact-footer">
+            <div class="footer-brand">
+                <div class="footer-brand-title">GreenCart</div>
+                <p style="font-size:0.9rem;">
+                    Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.
+                </p>
+            </div>
+
+            <div class="footer-links">
+  <strong>Informations</strong>
+  <a href="mentions-legales.html">Mentions légales</a>
+  <a href="cgu.html">CGU</a>
+  <a href="cgv.html">CGV</a>
+</div>
+
+
+            <div class="footer-contact">
+                <strong>Contact</strong>
+                <div class="footer-contact-row">
+                    <span class="footer-icon">✉️</span>
+                    <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+                </div>
+                <div class="footer-contact-row">
+                    <span class="footer-icon">📞</span>
+                    <span>01 23 45 67 89</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 GreenCart – Projet étudiant.
+        </div>
+    </footer>
+
+    <script>
+        const cartCountEl = document.getElementById("cart-count");
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    </script>
+<div id="cookie-banner" class="cookie-banner">
+    <p>Ce site utilise des cookies pour améliorer votre expérience. <a href="cgu.html#cookies">En savoir plus</a></p>
+    <div class="cookie-actions">
+        <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+        <button id="reject-cookies" class="btn">Refuser</button>
+    </div>
+</div>
+<script>
+  const cookieBanner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const rejectBtn = document.getElementById('reject-cookies');
+
+  // Vérifie si l'utilisateur a déjà fait un choix
+  if (localStorage.getItem('cookiesAccepted') !== 'true' && localStorage.getItem('cookiesRejected') !== 'true') {
+    cookieBanner.style.display = 'flex';
+  }
+
+  acceptBtn.addEventListener('click', () => {
+    localStorage.setItem('cookiesAccepted', 'true');
+    cookieBanner.style.display = 'none';
+  });
+
+  rejectBtn.addEventListener('click', () => {
+    localStorage.setItem('cookiesRejected', 'true');
+    cookieBanner.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>

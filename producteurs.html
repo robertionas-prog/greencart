@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Producteurs – GreenCart</title>
+   <meta name="description" content="Découvrez les producteurs partenaires de GreenCart et leurs produits locaux issus d’un savoir-faire artisanal en circuit court, proches de chez vous.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-inner">
+            <div class="header-left">
+                <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
+                    <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
+                </a>
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <ul>
+                    <li><a href="greencart.html" aria-current="page">Accueil</a></li>
+                    <li><a href="categorie.html">Produits</a></li>
+                    <li><a href="producteurs.html">Producteurs</a></li>
+                    <li><a href="#pourquoi">À propos</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
+                <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+                    🛒 <span class="cart-badge" id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="producers-page container">
+
+        <!-- Intro -->
+        <section class="page-hero">
+            <h1>Nos producteurs partenaires</h1>
+            <p class="section-intro">
+                On travaille avec des producteurs locaux qui partagent la même vision : des produits frais, de saison
+                et un circuit court qui respecte le vrai goût et le travail derrière.
+            </p>
+        </section>
+
+        <!-- Producteur 1 -->
+        <section class="producer-block" id="ferme-horizons">
+
+            <div class="producer-top">
+                <img class="producer-img" src="images/ferme-des-horizons.jpeg" alt="Ferme des Horizons">
+                <div class="producer-info">
+                    <h2>Ferme des Horizons</h2>
+                    <p>
+                        Maraîcher bio spécialisé dans les paniers de saison. La ferme privilégie une production raisonnée,
+                        sans pesticides, avec une récolte au fil de la maturité pour garder un maximum de fraîcheur.
+                    </p>
+                </div>
+            </div>
+
+            <div class="producer-products">
+                <h3>Produits proposés</h3>
+                <div class="producer-products-grid">
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=tomates-grappe">
+                            <img src="images/tomates.jpg" alt="Tomates rondes en grappe">
+                            <div>
+                                <h4>Tomates Rondes en Grappe</h4>
+                                <p>3,49€ / Kg</p>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=pommes-de-terre">
+                            <img src="images/pommes-de-terre.jpg" alt="Pommes de terre locales">
+                            <div>
+                                <h4>Pommes de terre (3 Kg)</h4>
+                                <p>6,98€</p>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=carottes">
+                            <img src="images/carottes.png" alt="Carottes nouvelles locales">
+                            <div>
+                                <h4>Carottes nouvelles (1 Kg)</h4>
+                                <p>2,90€</p>
+                            </div>
+                        </a>
+                    </article>
+
+                </div>
+            </div>
+
+            <div class="producer-reviews">
+                <h3>Avis sur ce producteur</h3>
+                <div class="reviews-grid">
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★★</div>
+                            <p class="review-text">Les légumes sont vraiment frais et ça se sent au goût.</p>
+                        </div>
+                    </article>
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★☆</div>
+                            <p class="review-text">Bonne qualité, surtout les produits de saison.</p>
+                        </div>
+                    </article>
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★★</div>
+                            <p class="review-text">On sent que c’est du local, rien à voir avec la grande surface.</p>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Producteur 2 -->
+        <section class="producer-block" id="pre-vert">
+
+            <div class="producer-top">
+                <img class="producer-img" src="images/elevage-du-pre-vert.jpg" alt="Élevage du Pré Vert">
+                <div class="producer-info">
+                    <h2>Élevage du Pré Vert</h2>
+                    <p>
+                        Éleveurs engagés pour une viande locale, tracée et respectueuse du bien-être animal.
+                        Les bêtes sont élevées en plein air et nourries sans OGM, avec une priorité sur la qualité.
+                    </p>
+                </div>
+            </div>
+
+            <div class="producer-products">
+                <h3>Produits proposés</h3>
+                <div class="producer-products-grid">
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=filet-poulet">
+                            <img src="images/filet-de-poulet-jaune.jpg" alt="Filet de poulet fermier">
+                            <div>
+                                <h4>Filet de poulet fermier</h4>
+                                <p>9,90€ / Kg</p>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=cotelettes-porc">
+                            <img src="images/cotelettes-de-porc.webp" alt="Côtelettes de porc">
+                            <div>
+                                <h4>Côtelettes de porc</h4>
+                                <p>7,90€</p>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=saucisses">
+                            <img src="images/saucisse.jpg" alt="Saucisses artisanales">
+                            <div>
+                                <h4>Saucisses artisanales</h4>
+                                <p>5,50€</p>
+                            </div>
+                        </a>
+                    </article>
+
+                </div>
+            </div>
+
+            <div class="producer-reviews">
+                <h3>Avis sur ce producteur</h3>
+                <div class="reviews-grid">
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★★</div>
+                            <p class="review-text">Viande tendre, goût top, on voit que c’est bien élevé.</p>
+                        </div>
+                    </article>
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★☆</div>
+                            <p class="review-text">Très bonne qualité, livraison nickel.</p>
+                        </div>
+                    </article>
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★★</div>
+                            <p class="review-text">On sent le travail artisanal derrière, super.</p>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Producteur 3 -->
+        <section class="producer-block" id="atelier-saveurs">
+
+            <div class="producer-top">
+                <img class="producer-img" src="images/atelier-des-saveveurs.jpg" alt="Atelier des Saveurs"
+                     onerror="this.onerror=null;this.src='images/atelier-des-saveurs.jpg';">
+                <div class="producer-info">
+                    <h2>Atelier des Saveurs</h2>
+                    <p>
+                        Artisans qui transforment des produits bruts en recettes maison : fromages, yaourts,
+                        miels et confitures. Leur force c’est le savoir-faire, sans surplus industriel.
+                    </p>
+                </div>
+            </div>
+
+            <div class="producer-products">
+                <h3>Produits proposés</h3>
+                <div class="producer-products-grid">
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=chevre-frais">
+                            <img src="images/fromage-chevre.jpg" alt="Fromage de chèvre frais">
+                            <div>
+                                <h4>Fromage de chèvre frais</h4>
+                                <p>4,30€</p>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=tomme-vache">
+                            <img src="images/tomme-vache.jpg" alt="Tomme de vache affinée">
+                            <div>
+                                <h4>Tomme de vache affinée</h4>
+                                <p>5,90€</p>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="mini-product">
+                        <a href="produit.html?id=miel">
+                            <img src="images/miel-artisanal.jpg" alt="Miel artisanal toutes fleurs">
+                            <div>
+                                <h4>Miel artisanal</h4>
+                                <p>7,50€</p>
+                            </div>
+                        </a>
+                    </article>
+
+                </div>
+            </div>
+
+            <div class="producer-reviews">
+                <h3>Avis sur ce producteur</h3>
+                <div class="reviews-grid">
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★★</div>
+                            <p class="review-text">Fromages excellents, on sent le côté artisanal.</p>
+                        </div>
+                    </article>
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★☆</div>
+                            <p class="review-text">Le miel est super bon, pas trop sucré.</p>
+                        </div>
+                    </article>
+
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-stars">★★★★★</div>
+                            <p class="review-text">Produit maison, simple et efficace.</p>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-title">GreenCart</div>
+        <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
+      </div>
+
+      <div class="footer-links">
+        <strong>Informations</strong>
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgu.html">CGU</a>
+        <a href="cgv.html">CGV</a>
+      </div>
+
+      <div class="footer-contact">
+        <strong>Contact</strong>
+        <div class="footer-contact-row">
+          <span class="footer-icon">✉️</span>
+          <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+        </div>
+        <div class="footer-contact-row">
+          <span class="footer-icon">📞</span>
+          <span>01 23 45 67 89</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2025 GreenCart – Projet étudiant.
+    </div>
+  </footer>
+
+    <script>
+        const cartCountEl = document.getElementById("cart-count");
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    </script>
+
+</body>
+</html>
