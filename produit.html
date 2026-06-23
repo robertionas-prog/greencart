@@ -10,7 +10,6 @@
 
 <body>
 
-    <!-- Header -->
     <header>
         <div class="container header-inner">
             <div class="header-left">
@@ -21,10 +20,10 @@
 
             <nav aria-label="Navigation principale">
                 <ul>
-                    <li><a href="greencart.html" aria-current="page">Accueil</a></li>
+                    <li><a href="greencart.html">Accueil</a></li>
                     <li><a href="categorie.html">Produits</a></li>
                     <li><a href="producteurs.html">Producteurs</a></li>
-                    <li><a href="#pourquoi">À propos</a></li>
+                    <li><a href="greencart.html#pourquoi">À propos</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
@@ -40,14 +39,13 @@
 
     <main class="product-page container">
 
-        <!-- Image + résumé -->
         <section class="product-top">
             <div class="product-gallery">
                 <img id="product-image" class="product-main-img" src="" alt="">
             </div>
 
             <aside class="product-summary">
-                <h1 id="product-name"></h1>
+                <h1 id="product-name">Chargement...</h1>
                 <div class="unit-price" id="unit-price"></div>
 
                 <div class="qty-row">
@@ -69,53 +67,24 @@
             </aside>
         </section>
 
-        <!-- Description -->
         <section class="product-description">
             <h2>Description</h2>
             <p id="product-desc"></p>
             <p id="product-storage"></p>
         </section>
 
-        <!-- Avis + recommandé -->
         <section class="product-bottom">
 
             <div class="reviews">
                 <h2>Avis du commerçant</h2>
 
-                <div class="reviews-grid">
+                <div class="reviews-grid" id="product-reviews">
                     <article class="review-card">
                         <div class="review-avatar" aria-hidden="true"></div>
                         <div>
-                            <div class="review-name">Utilisateur vérifié</div>
-                            <div class="review-stars">★★★★★</div>
-                            <p class="review-text">Produit frais et conforme, très bonne qualité.</p>
-                        </div>
-                    </article>
-
-                    <article class="review-card">
-                        <div class="review-avatar" aria-hidden="true"></div>
-                        <div>
-                            <div class="review-name">Utilisateur vérifié</div>
+                            <div class="review-name">GreenCart</div>
                             <div class="review-stars">★★★★☆</div>
-                            <p class="review-text">Goût au rendez-vous, livraison rapide.</p>
-                        </div>
-                    </article>
-
-                    <article class="review-card">
-                        <div class="review-avatar" aria-hidden="true"></div>
-                        <div>
-                            <div class="review-name">Utilisateur vérifié</div>
-                            <div class="review-stars">★★★★★</div>
-                            <p class="review-text">On sent que c’est du local, je recommande.</p>
-                        </div>
-                    </article>
-
-                    <article class="review-card">
-                        <div class="review-avatar" aria-hidden="true"></div>
-                        <div>
-                            <div class="review-name">Utilisateur vérifié</div>
-                            <div class="review-stars">★★★★☆</div>
-                            <p class="review-text">Bonne experience, produits de saison.</p>
+                            <p class="review-text">Chargement des avis...</p>
                         </div>
                     </article>
                 </div>
@@ -140,238 +109,77 @@
     </main>
 
     <footer>
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <div class="footer-brand-title">GreenCart</div>
-        <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
-      </div>
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <div class="footer-brand-title">GreenCart</div>
+                <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
+            </div>
 
-      <div class="footer-links">
-        <strong>Informations</strong>
-        <a href="mentions-legales.html">Mentions légales</a>
-        <a href="cgu.html">CGU</a>
-        <a href="cgv.html">CGV</a>
-      </div>
+            <div class="footer-links">
+                <strong>Informations</strong>
+                <a href="mentions-legales.html">Mentions légales</a>
+                <a href="cgu.html">CGU</a>
+                <a href="cgv.html">CGV</a>
+            </div>
 
-      <div class="footer-contact">
-        <strong>Contact</strong>
-        <div class="footer-contact-row">
-          <span class="footer-icon">✉️</span>
-          <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+            <div class="footer-contact">
+                <strong>Contact</strong>
+                <div class="footer-contact-row">
+                    <span class="footer-icon">✉️</span>
+                    <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+                </div>
+                <div class="footer-contact-row">
+                    <span class="footer-icon">📞</span>
+                    <span>01 23 45 67 89</span>
+                </div>
+            </div>
         </div>
-        <div class="footer-contact-row">
-          <span class="footer-icon">📞</span>
-          <span>01 23 45 67 89</span>
+
+        <div class="footer-bottom">
+            © 2026 GreenCart – Projet étudiant.
         </div>
-      </div>
-    </div>
+    </footer>
 
-    <div class="footer-bottom">
-      © 2025 GreenCart – Projet étudiant.
-    </div>
-  </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const PRODUCTS = {
-            "tomates-grappe": {
-                name: "Tomates Rondes en Grappe",
-                price: 3.49,
-                unit: "€ / Kg",
-                img: "images/tomates.jpg",
-                desc: "Tomates récoltées à maturité, texture ferme et goût légèrement sucré. Idéales en salade ou en sauce maison.",
-                storage: "Conservation : à température ambiante, à l’abri de la lumière."
-            },
-            "pommes-de-terre": {
-                name: "Pommes de terre (3 Kg)",
-                price: 6.98,
-                unit: "€ le filet",
-                img: "images/pommes-de-terre.jpg",
-                desc: "Pommes de terre locales, parfaites en purée, au four ou en gratin. Variété polyvalente.",
-                storage: "Conservation : endroit frais, sec et sombre."
-            },
-            "carottes": {
-                name: "Carottes nouvelles (1 Kg)",
-                price: 2.90,
-                unit: "€ / Kg",
-                img: "images/carottes.png",
-                desc: "Carottes croquantes et sucrées, issues de culture locale. Très bonnes crues ou cuites.",
-                storage: "Conservation : bac à légumes du frigo."
-            },
-            "pommes-golden": {
-                name: "Pommes Golden (1 Kg)",
-                price: 3.20,
-                unit: "€ / Kg",
-                img: "images/pommes-golden.jpg",
-                desc: "Pommes locales, sucrées et juteuses. À manger nature ou en compote.",
-                storage: "Conservation : endroit frais."
-            },
-            "courgettes": {
-                name: "Courgettes de saison (1 Kg)",
-                price: 2.75,
-                unit: "€ / Kg",
-                img: "images/fruits-legumes.jpg",
-                desc: "Courgettes de saison, tendres et légères. Parfaites en poêlée ou en gratin.",
-                storage: "Conservation : frigo, 4 à 5 jours."
-            },
-
-            "filet-poulet": {
-                name: "Filet de poulet fermier (500 g)",
-                price: 9.90,
-                unit: "€ / Kg",
-                img: "images/filet-de-poulet-jaune.jpg",
-                desc: "Filet de poulet local, chair tendre, élevage fermier.",
-                storage: "Conservation : frigo, à consommer sous 48h."
-            },
-            "steak-hache": {
-                name: "Steak haché (2 x 125 g)",
-                price: 4.80,
-                unit: "€ le lot",
-                img: "images/steak-hache.webp",
-                desc: "Steaks hachés de bœuf local, pratiques et savoureux.",
-                storage: "Conservation : frigo, à consommer rapidement."
-            },
-            "saucisses": {
-                name: "Saucisses artisanales (400 g)",
-                price: 5.50,
-                unit: "€ le lot",
-                img: "images/saucisse.jpg",
-                desc: "Saucisses maison, recette artisanale, parfaites au barbecue.",
-                storage: "Conservation : frigo."
-            },
-            "cotelettes-porc": {
-                name: "Côtelettes de porc (600 g)",
-                price: 7.90,
-                unit: "€ le lot",
-                img: "images/cotelettes-de-porc.webp",
-                desc: "Côtelettes locales, élevage plein air.",
-                storage: "Conservation : frigo, 2 jours max."
-            },
-            "jambon-blanc": {
-                name: "Jambon blanc fermier (4 tranches)",
-                price: 3.90,
-                unit: "€ le pack",
-                img: "images/jambon-blanc.png",
-                desc: "Jambon blanc fermier, sans additifs inutiles.",
-                storage: "Conservation : frigo."
-            },
-
-            "chevre-frais": {
-                name: "Fromage de chèvre frais",
-                price: 4.30,
-                unit: "€ / pièce",
-                img: "images/fromage-chevre.jpg",
-                desc: "Chèvre frais local, texture douce et goût léger.",
-                storage: "Conservation : frigo."
-            },
-            "tomme-vache": {
-                name: "Tomme de vache affinée (200 g)",
-                price: 5.90,
-                unit: "€ / pièce",
-                img: "images/tomme-vache.jpg",
-                desc: "Tomme affinée, goût fruité et légèrement noisette.",
-                storage: "Conservation : frigo."
-            },
-            "yaourt-nature": {
-                name: "Yaourt nature fermier (4 x 125 g)",
-                price: 3.40,
-                unit: "€ le lot",
-                img: "images/yaourt-nature-fermier.jpeg",
-                desc: "Yaourts fermiers nature, sans sucre ajouté.",
-                storage: "Conservation : frigo."
-            },
-            "beurre-demi-sel": {
-                name: "Beurre demi-sel (250 g)",
-                price: 3.10,
-                unit: "€ / pièce",
-                img: "images/beurre-demi-sel.webp",
-                desc: "Beurre artisanal demi-sel, idéal en cuisine.",
-                storage: "Conservation : frigo."
-            },
-            "faisselle": {
-                name: "Faisselle fermière (500 g)",
-                price: 2.95,
-                unit: "€ / pot",
-                img: "images/faisselle-fermiere.jpg",
-                desc: "Faisselle crémeuse, issue de lait local.",
-                storage: "Conservation : frigo."
-            },
-
-            "miel": {
-                name: "Miel artisanal (250 g)",
-                price: 7.50,
-                unit: "€ / pot",
-                img: "images/miel-artisanal.jpg",
-                desc: "Miel local toutes fleurs, récolte artisanale.",
-                storage: "Conservation : à température ambiante."
-            },
-            "confiture-fraise": {
-                name: "Confiture fraise maison (250 g)",
-                price: 5.90,
-                unit: "€ / pot",
-                img: "images/confiture-fraise.webp",
-                desc: "Confiture artisanale, fraises locales.",
-                storage: "Conservation : endroit frais, puis frigo après ouverture."
-            },
-            "oeufs": {
-                name: "Œufs plein air (boîte de 6)",
-                price: 3.60,
-                unit: "€ la boîte",
-                img: "images/oeufs-plein-air.jpg",
-                desc: "Œufs locaux plein air, calibre moyen.",
-                storage: "Conservation : frigo."
-            },
-            "jus-pomme": {
-                name: "Jus de pomme local (1 L)",
-                price: 3.90,
-                unit: "€ la bouteille",
-                img: "images/jus-de-pomme.webp",
-                desc: "Jus de pomme pressé localement, sans sucre ajouté.",
-                storage: "Conservation : frigo après ouverture."
-            },
-            "farine-ble": {
-                name: "Farine de blé bio (1 Kg)",
-                price: 2.40,
-                unit: "€ le sachet",
-                img: "images/farine-ble-bio.jpg",
-                desc: "Farine bio locale, idéale pour pains et pâtisseries.",
-                storage: "Conservation : endroit sec."
-            }
-        };
-
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get("id") || "tomates-grappe";
-        const product = PRODUCTS[id] || PRODUCTS["tomates-grappe"];
+        const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
+        const SUPABASE_KEY = 'TA_PUBLISHABLE_KEY_ICI';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const nameEl = document.getElementById("product-name");
         const unitEl = document.getElementById("unit-price");
         const imgEl = document.getElementById("product-image");
         const descEl = document.getElementById("product-desc");
         const storageEl = document.getElementById("product-storage");
-
-        nameEl.textContent = product.name;
-        unitEl.textContent = product.price.toFixed(2).replace(".", ",") + product.unit;
-        imgEl.src = product.img;
-        imgEl.alt = product.name;
-        descEl.textContent = product.desc;
-        storageEl.textContent = product.storage;
-
-        document.title = product.name + " – GreenCart";
-
         const qtyInput = document.getElementById("qty-input");
         const minusBtn = document.getElementById("minus-btn");
         const plusBtn = document.getElementById("plus-btn");
         const totalPriceEl = document.getElementById("total-price");
         const addBtn = document.getElementById("add-to-cart-btn");
         const cartCountEl = document.getElementById("cart-count");
+        const reviewsEl = document.getElementById("product-reviews");
 
-        function formatPrice(n){
-            return n.toFixed(2).replace(".", ",") + "€";
+        let currentProduct = null;
+        let currentSlug = null;
+
+        function formatPrice(n) {
+            return Number(n).toFixed(2).replace(".", ",") + "€";
         }
 
-        function updateTotal(){
+        function formatUnitPrice(price, unit) {
+            return `${Number(price).toFixed(2).replace(".", ",")}€${unit ? " / " + unit : ""}`;
+        }
+
+        function renderStars(rating) {
+            const safe = Math.max(0, Math.min(5, Number(rating) || 0));
+            return "★".repeat(safe) + "☆".repeat(5 - safe);
+        }
+
+        function updateTotal() {
+            if (!currentProduct) return;
             const q = Math.max(1, parseInt(qtyInput.value || "1", 10));
             qtyInput.value = q;
-            totalPriceEl.textContent = formatPrice(product.price * q);
+            totalPriceEl.textContent = formatPrice(Number(currentProduct.price) * q);
         }
 
         minusBtn.addEventListener("click", () => {
@@ -386,28 +194,36 @@
 
         qtyInput.addEventListener("input", updateTotal);
 
-        function getCart(){
+        function getCart() {
             return JSON.parse(localStorage.getItem("cart") || "[]");
         }
 
-        function setCart(cart){
+        function setCart(cart) {
             localStorage.setItem("cart", JSON.stringify(cart));
         }
 
-        function refreshBadge(){
+        function refreshBadge() {
             const cart = getCart();
             cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
         }
 
         addBtn.addEventListener("click", () => {
+            if (!currentProduct || !currentSlug) return;
+
             const cart = getCart();
             const qty = Math.max(1, parseInt(qtyInput.value || "1", 10));
-            const existing = cart.find(i => i.id === id);
+            const existing = cart.find(i => i.slug === currentSlug);
 
-            if(existing){
+            if (existing) {
                 existing.qty += qty;
             } else {
-                cart.push({ id, name: product.name, price: product.price, img: product.img, qty });
+                cart.push({
+                    slug: currentSlug,
+                    name: currentProduct.name,
+                    price: Number(currentProduct.price),
+                    img: currentProduct.image_url,
+                    qty
+                });
             }
 
             setCart(cart);
@@ -415,19 +231,126 @@
             alert("Produit ajouté au panier.");
         });
 
-        refreshBadge();
-        updateTotal();
+        function renderReviews(reviews) {
+            if (!reviews || reviews.length === 0) {
+                reviewsEl.innerHTML = `
+                    <article class="review-card">
+                        <div class="review-avatar" aria-hidden="true"></div>
+                        <div>
+                            <div class="review-name">GreenCart</div>
+                            <div class="review-stars">★★★★☆</div>
+                            <p class="review-text">Aucun avis disponible pour le moment sur ce produit.</p>
+                        </div>
+                    </article>
+                `;
+                return;
+            }
 
-        const recoIds = Object.keys(PRODUCTS).filter(pid => pid !== id);
-        const recoId = recoIds[Math.floor(Math.random() * recoIds.length)];
-        const reco = PRODUCTS[recoId];
+            reviewsEl.innerHTML = reviews.map(review => `
+                <article class="review-card">
+                    <div class="review-avatar" aria-hidden="true"></div>
+                    <div>
+                        <div class="review-name">${review.author_name}</div>
+                        <div class="review-stars">${renderStars(review.rating)}</div>
+                        <p class="review-text">${review.content}</p>
+                    </div>
+                </article>
+            `).join('');
+        }
 
-        document.getElementById("reco-name").textContent = reco.name;
-        document.getElementById("reco-old").textContent = formatPrice(reco.price + 1.00);
-        document.getElementById("reco-new").textContent = formatPrice(reco.price);
-        document.getElementById("reco-img").src = reco.img;
-        document.getElementById("reco-img").alt = reco.name;
-        document.getElementById("reco-link").href = "produit.html?id=" + recoId;
+        async function loadRecommended(currentProductId) {
+            const { data: products, error } = await supabaseClient
+                .from('products')
+                .select('*')
+                .eq('is_active', true)
+                .neq('id', currentProductId)
+                .order('id', { ascending: true });
+
+            if (error || !products || products.length === 0) {
+                document.getElementById("reco-name").textContent = "Aucun produit recommandé";
+                document.getElementById("reco-old").textContent = "";
+                document.getElementById("reco-new").textContent = "";
+                document.getElementById("reco-img").style.display = "none";
+                document.getElementById("reco-link").style.display = "none";
+                return;
+            }
+
+            const reco = products[Math.floor(Math.random() * products.length)];
+
+            document.getElementById("reco-name").textContent = reco.name;
+            document.getElementById("reco-old").textContent = formatPrice(Number(reco.price) + 1);
+            document.getElementById("reco-new").textContent = formatPrice(reco.price);
+            document.getElementById("reco-img").src = reco.image_url || "";
+            document.getElementById("reco-img").alt = reco.name;
+            document.getElementById("reco-img").style.display = "block";
+            document.getElementById("reco-link").style.display = "inline-flex";
+            document.getElementById("reco-link").href = "produit.html?slug=" + encodeURIComponent(reco.slug);
+        }
+
+        async function loadProductPage() {
+            refreshBadge();
+
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get("slug");
+
+            if (!slug) {
+                nameEl.textContent = "Produit introuvable";
+                descEl.textContent = "Aucun slug produit n’a été transmis dans l’URL.";
+                unitEl.textContent = "";
+                storageEl.textContent = "";
+                addBtn.disabled = true;
+                return;
+            }
+
+            currentSlug = slug;
+
+            const { data: product, error: productError } = await supabaseClient
+                .from('products')
+                .select('*')
+                .eq('slug', slug)
+                .eq('is_active', true)
+                .single();
+
+            if (productError || !product) {
+                console.error("Erreur chargement produit :", productError);
+                nameEl.textContent = "Produit introuvable";
+                descEl.textContent = "Le produit demandé n’existe pas ou n’est plus disponible.";
+                unitEl.textContent = "";
+                storageEl.textContent = "";
+                addBtn.disabled = true;
+                return;
+            }
+
+            currentProduct = product;
+
+            nameEl.textContent = product.name;
+            unitEl.textContent = formatUnitPrice(product.price, product.unit);
+            imgEl.src = product.image_url || "";
+            imgEl.alt = product.name;
+            descEl.textContent = product.description || "";
+            storageEl.textContent = product.storage_info ? `Conservation : ${product.storage_info}` : "";
+            document.title = product.name + " – GreenCart";
+
+            updateTotal();
+
+            const { data: reviews, error: reviewsError } = await supabaseClient
+                .from('reviews')
+                .select('*')
+                .eq('is_approved', true)
+                .eq('product_id', product.id)
+                .order('id', { ascending: false });
+
+            if (reviewsError) {
+                console.error("Erreur chargement avis produit :", reviewsError);
+                renderReviews([]);
+            } else {
+                renderReviews(reviews);
+            }
+
+            loadRecommended(product.id);
+        }
+
+        loadProductPage();
     </script>
 
 </body>
