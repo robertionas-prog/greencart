@@ -189,7 +189,7 @@
 
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const form = document.getElementById('producerForm');
   const confirmation = document.getElementById('confirmationMessage');
@@ -201,15 +201,6 @@
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
-
-    let captchaToken = '';
-    try {
-      if (typeof grecaptcha !== 'undefined') {
-        captchaToken = grecaptcha.getResponse() || '';
-      }
-    } catch (err) {
-      console.warn('Captcha non disponible, envoi sans captcha.', err);
-    }
 
     const data = {
       farm_name: document.getElementById('name').value.trim(),
@@ -247,18 +238,9 @@
       form.reset();
       confirmation.classList.add('visible');
 
-      try {
-        if (typeof grecaptcha !== 'undefined') {
-          grecaptcha.reset();
-        }
-      } catch (err) {
-        console.warn('Impossible de reset le captcha.', err);
-      }
-
       setTimeout(() => {
         confirmation.classList.remove('visible');
       }, 4000);
-
     } catch (error) {
       console.error(error);
       alert('Impossible de contacter la base de données.');
