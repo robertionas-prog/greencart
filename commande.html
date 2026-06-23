@@ -213,107 +213,147 @@
 </footer>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    const cartCountEl = document.getElementById("cart-count");
-    const itemsCountEl = document.getElementById("summary-items-count");
-    const subtotalEl = document.getElementById("summary-subtotal");
-    const shippingEl = document.getElementById("summary-shipping");
-    const totalEl = document.getElementById("summary-total");
-    const checkoutForm = document.getElementById("checkout-form");
-    const checkoutMsg = document.getElementById("checkout-msg");
+  const cartCountEl = document.getElementById('cart-count');
+  const itemsCountEl = document.getElementById('summary-items-count');
+  const subtotalEl = document.getElementById('summary-subtotal');
+  const shippingEl = document.getElementById('summary-shipping');
+  const totalEl = document.getElementById('summary-total');
+  const checkoutForm = document.getElementById('checkout-form');
+  const checkoutMsg = document.getElementById('checkout-msg');
+  const orderSuccessModal = document.getElementById('order-success-modal');
+  const orderSuccessText = document.getElementById('order-success-text');
+  const closeOrderSuccessBtn = document.getElementById('close-order-success');
+  const SHIPPING_COST = 2.90;
 
-    const orderSuccessModal = document.getElementById("order-success-modal");
-    const orderSuccessText = document.getElementById("order-success-text");
-    const closeOrderSuccessBtn = document.getElementById("close-order-success");
+  const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
+  const SUPABASE_KEY = 'TA_PUBLISHABLE_KEY_ICI';
 
-    const SHIPPING_COST = 2.90;
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function formatPrice(n) {
-        return n.toFixed(2).replace(".", ",") + "€";
+  function formatPrice(n) {
+    return n.toFixed(2).replace('.', ',');
+  }
+
+  function getCart() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+  }
+
+  function isUserLoggedIn() {
+    return localStorage.getItem('greencartLoggedIn') === 'true';
+  }
+
+  function updateCartBadge(cart) {
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    cartCountEl.textContent = totalItems;
+  }
+
+  function openOrderSuccessModal(email) {
+    orderSuccessText.textContent = `Commande passée avec succès. Vous allez recevoir un e-mail de confirmation à l’adresse ${email}.`;
+    orderSuccessModal.style.display = 'flex';
+  }
+
+  function closeOrderSuccessModal() {
+    orderSuccessModal.style.display = 'none';
+    window.location.href = 'greencart.html';
+  }
+
+  function renderSummary() {
+    const cart = getCart();
+    updateCartBadge(cart);
+
+    if (!isUserLoggedIn()) {
+      window.location.href = 'profil.html';
+      return;
     }
 
-    function getCart() {
-        return JSON.parse(localStorage.getItem("cart") || "[]");
+    if (cart.length === 0) {
+      itemsCountEl.textContent = '0';
+      subtotalEl.textContent = formatPrice(0);
+      shippingEl.textContent = formatPrice(SHIPPING_COST);
+      totalEl.textContent = formatPrice(0);
+      checkoutMsg.textContent = 'Votre panier est vide. Retournez au panier pour ajouter des produits.';
+      checkoutForm.querySelector('button[type="submit"]').disabled = true;
+      return;
     }
 
-    function isUserLoggedIn() {
-        return localStorage.getItem("greencartLoggedIn") === "true";
+    const itemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const total = subtotal + SHIPPING_COST;
+
+    itemsCountEl.textContent = itemsCount;
+    subtotalEl.textContent = formatPrice(subtotal);
+    shippingEl.textContent = formatPrice(SHIPPING_COST);
+    totalEl.textContent = formatPrice(total);
+  }
+
+  checkoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const cart = getCart();
+
+    if (!cart.length) {
+      checkoutMsg.textContent = 'Votre panier est vide.';
+      return;
     }
 
-    function updateCartBadge(cart) {
-        const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-        cartCountEl.textContent = totalItems;
+    const itemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const total = subtotal + SHIPPING_COST;
+
+    const orderData = {
+      first_name: document.getElementById('first-name').value.trim(),
+      last_name: document.getElementById('last-name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      address: document.getElementById('address').value.trim(),
+      postal_code: document.getElementById('postal-code').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      delivery_note: document.getElementById('delivery-note').value.trim(),
+      items: cart,
+      items_count: itemsCount,
+      subtotal: Number(subtotal.toFixed(2)),
+      shipping: Number(SHIPPING_COST.toFixed(2)),
+      total: Number(total.toFixed(2))
+    };
+
+    if (
+      !orderData.first_name || !orderData.last_name || !orderData.email ||
+      !orderData.phone || !orderData.address || !orderData.postal_code ||
+      !orderData.city
+    ) {
+      checkoutMsg.textContent = 'Merci de remplir tous les champs obligatoires.';
+      return;
     }
 
-    function openOrderSuccessModal(email) {
-        orderSuccessText.textContent = `Commande passée avec succès. Vous allez recevoir un e-mail de confirmation à l’adresse ${email}.`;
-        orderSuccessModal.style.display = "flex";
+    try {
+      const { error } = await supabaseClient
+        .from('orders')
+        .insert([orderData]);
+
+      if (error) {
+        console.error(error);
+        checkoutMsg.textContent = "Erreur lors de l'enregistrement de la commande.";
+        return;
+      }
+
+      localStorage.setItem('greencartLastOrder', JSON.stringify(orderData));
+      localStorage.removeItem('cart');
+      renderSummary();
+      openOrderSuccessModal(orderData.email);
+    } catch (error) {
+      console.error(error);
+      checkoutMsg.textContent = 'Impossible de contacter la base de données.';
     }
+  });
 
-    function closeOrderSuccessModal() {
-        orderSuccessModal.style.display = "none";
-        window.location.href = "greencart.html";
-    }
+  closeOrderSuccessBtn.addEventListener('click', closeOrderSuccessModal);
+  orderSuccessModal.addEventListener('click', (e) => {
+    if (e.target === orderSuccessModal) closeOrderSuccessModal();
+  });
 
-    function renderSummary() {
-        const cart = getCart();
-
-        updateCartBadge(cart);
-
-        if (!isUserLoggedIn()) {
-            window.location.href = "profil.html";
-            return;
-        }
-
-        if (cart.length === 0) {
-            itemsCountEl.textContent = "0";
-            subtotalEl.textContent = formatPrice(0);
-            shippingEl.textContent = formatPrice(SHIPPING_COST);
-            totalEl.textContent = formatPrice(0);
-            checkoutMsg.textContent = "Votre panier est vide. Retournez au panier pour ajouter des produits.";
-            checkoutForm.querySelector('button[type="submit"]').disabled = true;
-            return;
-        }
-
-        const itemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
-        const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-        const total = subtotal + SHIPPING_COST;
-
-        itemsCountEl.textContent = itemsCount;
-        subtotalEl.textContent = formatPrice(subtotal);
-        shippingEl.textContent = formatPrice(SHIPPING_COST);
-        totalEl.textContent = formatPrice(total);
-    }
-
-    checkoutForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const orderData = {
-            firstName: document.getElementById("first-name").value.trim(),
-            lastName: document.getElementById("last-name").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            phone: document.getElementById("phone").value.trim(),
-            address: document.getElementById("address").value.trim(),
-            postalCode: document.getElementById("postal-code").value.trim(),
-            city: document.getElementById("city").value.trim(),
-            deliveryNote: document.getElementById("delivery-note").value.trim()
-        };
-
-        localStorage.setItem("greencartLastOrder", JSON.stringify(orderData));
-        localStorage.removeItem("cart");
-        renderSummary();
-        openOrderSuccessModal(orderData.email);
-    });
-
-    closeOrderSuccessBtn.addEventListener("click", closeOrderSuccessModal);
-
-    orderSuccessModal.addEventListener("click", (e) => {
-        if (e.target === orderSuccessModal) {
-            closeOrderSuccessModal();
-        }
-    });
-
-    renderSummary();
+  renderSummary();
 </script>
 
 </body>
