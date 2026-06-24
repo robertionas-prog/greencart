@@ -7,10 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
 </head>
-
 <body>
 
 <header>
@@ -23,11 +21,11 @@
 
         <nav aria-label="Navigation principale">
             <ul>
-                <li><a href="greencart.html" aria-current="page">Accueil</a></li>
+                <li><a href="greencart.html">Accueil</a></li>
                 <li><a href="categorie.html">Produits</a></li>
                 <li><a href="producteurs.html">Producteurs</a></li>
-                <li><a href="#pourquoi">À propos</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="pourquoi.html">À propos</a></li>
+                <li><a href="contact.html" aria-current="page">Contact</a></li>
             </ul>
         </nav>
 
@@ -41,7 +39,6 @@
 </header>
 
 <main class="contact-page container">
-
     <section class="contact-hero">
         <h1>Contact</h1>
         <p class="section-intro">
@@ -71,12 +68,15 @@
                 <textarea id="message" name="message" rows="6" required placeholder="Votre message..."></textarea>
             </div>
 
-            <!-- Google reCAPTCHA -->
             <div class="g-recaptcha"
-     data-sitekey="6Le6DTAtAAAAAJs5yjy4zuWAnU8HwAfOVfEqx7F2"
-     data-action="LOGIN"
-     style="margin-top:1rem;"></div>
-            <button class="btn btn-primary" type="submit" style="margin-top:1.2rem;">Envoyer</button>
+                 data-sitekey="6Le6DTAtAAAAAJs5yjy4zuWAnU8HwAfOVfEqx7F2"
+                 style="margin-top:1rem;"></div>
+
+            <p id="contact-msg" style="margin-top:0.9rem;color:var(--text-muted);font-size:0.95rem;"></p>
+
+            <button class="btn btn-primary" type="submit" style="margin-top:1.2rem;">
+                Envoyer
+            </button>
         </form>
 
         <aside class="contact-info" aria-label="Informations de contact">
@@ -87,7 +87,6 @@
             <p><strong>Horaires :</strong> du lundi au samedi, 9h–19h</p>
         </aside>
     </section>
-
 </main>
 
 <footer>
@@ -118,79 +117,80 @@
     </div>
 
     <div class="footer-bottom">
-        © 2025 GreenCart – Projet étudiant.
+        © 2026 GreenCart – Projet étudiant.
     </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const cartCountEl = document.getElementById('cart-count');
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
-
-  const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
-
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  const form = document.getElementById('contact-form');
-const contactMsg = document.getElementById('contact-msg');
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  contactMsg.style.color = 'var(--text-muted)';
-  contactMsg.textContent = 'Envoi en cours...';
-
-  const data = {
-    name: document.getElementById('name').value.trim(),
-    email: document.getElementById('email').value.trim(),
-    subject: document.getElementById('subject').value.trim(),
-    message: document.getElementById('message').value.trim()
-  };
-
-  if (!data.name || !data.email || !data.subject || !data.message) {
-    contactMsg.style.color = '#b91c1c';
-    contactMsg.textContent = 'Tous les champs sont requis.';
-    return;
-  }
-
-  if (typeof grecaptcha === 'undefined') {
-    contactMsg.style.color = '#b91c1c';
-    contactMsg.textContent = 'Captcha indisponible. Rechargez la page.';
-    return;
-  }
-
-  const captchaToken = grecaptcha.getResponse();
-
-  if (!captchaToken) {
-    contactMsg.style.color = '#b91c1c';
-    contactMsg.textContent = 'Veuillez valider le captcha.';
-    return;
-  }
-
-  try {
-    const { error } = await supabaseClient
-      .from('contacts')
-      .insert([data]);
-
-    if (error) {
-      console.error(error);
-      contactMsg.style.color = '#b91c1c';
-      contactMsg.textContent = "Erreur lors de l'envoi du message.";
-      return;
+    const cartCountEl = document.getElementById("cart-count");
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (cartCountEl) {
+        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
     }
 
-    contactMsg.style.color = '#166534';
-    contactMsg.textContent = 'Message envoyé avec succès !';
-    form.reset();
-    grecaptcha.reset();
-  } catch (error) {
-    console.error(error);
-    contactMsg.style.color = '#b91c1c';
-    contactMsg.textContent = 'Impossible de contacter la base de données.';
-  }
-});
+    const SUPABASE_URL = "https://yzlcfuxeljeidtjdcmbd.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const form = document.getElementById("contact-form");
+    const contactMsg = document.getElementById("contact-msg");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        contactMsg.style.color = "var(--text-muted)";
+        contactMsg.textContent = "Envoi en cours...";
+
+        const data = {
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            subject: document.getElementById("subject").value.trim(),
+            message: document.getElementById("message").value.trim()
+        };
+
+        if (!data.name || !data.email || !data.subject || !data.message) {
+            contactMsg.style.color = "#b91c1c";
+            contactMsg.textContent = "Tous les champs sont requis.";
+            return;
+        }
+
+        if (typeof grecaptcha === "undefined" || !grecaptcha.enterprise) {
+            contactMsg.style.color = "#b91c1c";
+            contactMsg.textContent = "Captcha indisponible. Rechargez la page.";
+            return;
+        }
+
+        const captchaToken = grecaptcha.enterprise.getResponse();
+
+        if (!captchaToken) {
+            contactMsg.style.color = "#b91c1c";
+            contactMsg.textContent = "Veuillez valider le captcha.";
+            return;
+        }
+
+        try {
+            const { error } = await supabaseClient
+                .from("contacts")
+                .insert([data]);
+
+            if (error) {
+                console.error("CONTACT INSERT ERROR:", error);
+                contactMsg.style.color = "#b91c1c";
+                contactMsg.textContent = "Erreur lors de l'envoi du message.";
+                return;
+            }
+
+            contactMsg.style.color = "#166534";
+            contactMsg.textContent = "Message envoyé avec succès.";
+            form.reset();
+            grecaptcha.enterprise.reset();
+        } catch (error) {
+            console.error("CONTACT ERROR:", error);
+            contactMsg.style.color = "#b91c1c";
+            contactMsg.textContent = "Impossible de contacter la base de données.";
+        }
+    });
 </script>
 
 </body>
