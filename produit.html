@@ -136,7 +136,7 @@
         </div>
 
         <div class="footer-bottom">
-            © 2025 GreenCart – Projet étudiant.
+            © 2026 GreenCart – Projet étudiant.
         </div>
     </footer>
 
@@ -190,6 +190,15 @@
 
         function formatTotal(value) {
             return `${Number(value).toFixed(2).replace('.', ',')}€`;
+        }
+
+        function escapeHtml(text) {
+            return String(text || "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
         }
 
         function renderStars(rating) {
@@ -267,9 +276,8 @@
                     <article class="review-card">
                         <div class="review-avatar" aria-hidden="true"></div>
                         <div>
-                            <div class="review-name">GreenCart</div>
-                            <div class="review-stars">★★★★☆</div>
-                            <p class="review-text">Les premiers avis clients arriveront bientôt pour ce produit.</p>
+                            <div class="review-name">Aucun avis pour le moment</div>
+                            <p class="review-text">Les premiers avis clients arriveront bientôt pour ce commerçant.</p>
                         </div>
                     </article>
                 `;
@@ -280,9 +288,9 @@
                 <article class="review-card">
                     <div class="review-avatar" aria-hidden="true"></div>
                     <div>
-                        <div class="review-name">${review.author_name || 'Utilisateur vérifié'}</div>
-                        <div class="review-stars">${renderStars(review.rating)}</div>
-                        <p class="review-text">${review.content || ''}</p>
+                        <div class="review-name">${escapeHtml(review.author_name || 'Utilisateur vérifié')}</div>
+                        <div class="review-stars" aria-label="Note ${review.rating} sur 5">${renderStars(review.rating)}</div>
+                        <p class="review-text">${escapeHtml(review.content || '')}</p>
                     </div>
                 </article>
             `).join('');
@@ -340,12 +348,13 @@
             const { data: reviews, error: reviewsError } = await supabaseClient
                 .from('reviews')
                 .select('*')
-                .eq('product_id', product.id)
+                .eq('producer_id', product.producer_id)
+                .is('product_id', null)
                 .eq('is_approved', true)
-                .order('id', { ascending: false });
+                .order('created_at', { ascending: false });
 
             if (reviewsError) {
-                console.error('Erreur chargement avis produit :', reviewsError);
+                console.error('Erreur chargement avis commerçant :', reviewsError);
                 renderReviews([]);
             } else {
                 renderReviews(reviews || []);
@@ -385,7 +394,6 @@
 
             const cart = getCart();
             const qty = Math.max(1, parseInt(qtyInput.value || "1", 10));
-
             const existing = cart.find(item => item.id === currentProduct.slug);
 
             if (existing) {
