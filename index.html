@@ -376,7 +376,7 @@
                 return;
             }
 
-            list.innerHTML = data.map(review => `
+            list.innerHTML = data.slice(0, 3).map(review => `
                 <article class="review-card">
                     <div class="review-avatar" aria-hidden="true"></div>
                     <div>
