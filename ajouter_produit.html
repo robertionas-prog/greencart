@@ -207,15 +207,14 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const BUCKET_NAME = "product-images";
 
-
 const cartCountEl = document.getElementById("cart-count");
 const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
-
+if (cartCountEl) {
+    cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+}
 
 const form = document.getElementById("product-form");
 const msg = document.getElementById("product-msg");
-
 
 function slugify(text) {
     return text
@@ -226,90 +225,96 @@ function slugify(text) {
         .replace(/^-+|-+$/g, "");
 }
 
+if (form) {
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    msg.style.color = "var(--text-muted)";
-    msg.textContent = "Enregistrement du produit...";
+        msg.style.color = "var(--text-muted)";
+        msg.textContent = "Enregistrement du produit...";
 
+        try {
+            const name = document.getElementById("product-name").value.trim();
+            const category = document.getElementById("product-category").value.trim();
+            const price = parseFloat(document.getElementById("product-price").value);
+            const unit = document.getElementById("product-unit").value.trim();
+            const stock = parseInt(document.getElementById("product-stock").value, 10);
+            const description = document.getElementById("product-desc").value.trim();
+            const storageInfo = document.getElementById("product-storage-info").value.trim();
+            const imageFile = document.getElementById("product-image").files[0];
 
-    const name = document.getElementById("product-name").value.trim();
-    const category = document.getElementById("product-category").value.trim();
-    const price = parseFloat(document.getElementById("product-price").value);
-    const unit = document.getElementById("product-unit").value.trim();
-    const stock = parseInt(document.getElementById("product-stock").value, 10);
-    const description = document.getElementById("product-desc").value.trim();
-    const storageInfo = document.getElementById("product-storage-info").value.trim();
-    const imageFile = document.getElementById("product-image").files[0];
+            const producerId = Number(localStorage.getItem("greencartProducerId")) || 1;
 
+            if (!imageFile) {
+                msg.style.color = "#b91c1c";
+                msg.textContent = "Veuillez sélectionner une image.";
+                return;
+            }
 
-    const producerId = Number(localStorage.getItem("greencartProducerId")) || 1;
+            const baseSlug = slugify(name);
+            const uniqueStamp = Date.now();
+            const finalSlug = `${baseSlug}-${uniqueStamp}`;
+            const fileExt = imageFile.name.split(".").pop()?.toLowerCase() || "jpg";
+            const filePath = `${finalSlug}.${fileExt}`;
 
+            const { error: uploadError } = await supabase.storage
+                .from(BUCKET_NAME)
+                .upload(filePath, imageFile, {
+                    cacheControl: "3600",
+                    upsert: false
+                });
 
-    if (!imageFile) {
-        msg.style.color = "#b91c1c";
-        msg.textContent = "Veuillez sélectionner une image.";
-        return;
-    }
+            if (uploadError) {
+                console.error("UPLOAD ERROR:", uploadError);
+                msg.style.color = "#b91c1c";
+                msg.textContent = "Erreur upload : " + (uploadError.message || "inconnue");
+                return;
+            }
 
+            const { data: publicUrlData } = supabase.storage
+                .from(BUCKET_NAME)
+                .getPublicUrl(filePath);
 
-    const baseSlug = slugify(name);
-    const uniqueStamp = Date.now();
-    const finalSlug = `${baseSlug}-${uniqueStamp}`;
-    const fileExt = imageFile.name.split(".").pop()?.toLowerCase() || "jpg";
-    const filePath = `${finalSlug}.${fileExt}`;
+            const imageUrl = publicUrlData.publicUrl;
 
+            const { error: insertError } = await supabase
+                .from("products")
+                .insert([
+                    {
+                        producer_id: producerId,
+                        name: name,
+                        category: category,
+                        price: price,
+                        unit: unit,
+                        stock: stock,
+                        description: description,
+                        storage_info: storageInfo,
+                        image_url: imageUrl,
+                        slug: finalSlug
+                    }
+                ]);
 
-    const { error: uploadError } = await supabase.storage
-        .from(BUCKET_NAME)
-        .upload(filePath, imageFile, {
-            cacheControl: "3600",
-            upsert: false
-        });
+            if (insertError) {
+                console.error("INSERT ERROR:", insertError);
+                msg.style.color = "#b91c1c";
+                msg.textContent = "Erreur base de données : " + (insertError.message || "inconnue");
+                return;
+            }
 
+            msg.style.color = "#166534";
+            msg.textContent = "Produit ajouté avec succès. Redirection vers votre vitrine...";
+            form.reset();
 
-    if (uploadError) {
-        console.error(uploadError);
-        msg.style.color = "#b91c1c";
-        msg.textContent = "Erreur lors de l'envoi de l'image dans le storage.";
-        return;
-    }
-
-
-    const { data: publicUrlData } = supabase.storage
-        .from(BUCKET_NAME)
-        .getPublicUrl(filePath);
-
-
-    const imageUrl = publicUrlData.publicUrl;
-
-
-  const { error: uploadError } = await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(filePath, imageFile, {
-        cacheControl: "3600",
-        upsert: false
+            setTimeout(() => {
+                window.location.href = "ma_vitrine_producteur.html";
+            }, 1000);
+        } catch (err) {
+            console.error("UNEXPECTED ERROR:", err);
+            msg.style.color = "#b91c1c";
+            msg.textContent = "Erreur inattendue : " + (err.message || err);
+        }
     });
-
-if (uploadError) {
-    console.error("UPLOAD ERROR:", uploadError);
-    msg.style.color = "#b91c1c";
-    msg.textContent = "Erreur upload : " + (uploadError.message || "inconnue");
-    return;
 }
-
-
-    msg.style.color = "#166534";
-    msg.textContent = "Produit ajouté avec succès. Redirection vers votre vitrine...";
-    form.reset();
-
-
-    setTimeout(() => {
-        window.location.href = "ma_vitrine_producteur.html";
-    }, 1000);
-});
 </script>
-
 
 </body>
 </html>
