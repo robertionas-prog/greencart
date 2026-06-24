@@ -149,7 +149,12 @@
             color: #8a6100;
         }
 
-        .status-ready {
+        .status-shipped {
+            background: #e8f0ff;
+            color: #2451b2;
+        }
+
+        .status-delivered {
             background: #e8f7ed;
             color: #256944;
         }
@@ -157,6 +162,24 @@
         .status-new {
             background: #e9f0ff;
             color: #2855c5;
+        }
+
+        .order-status-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: .45rem;
+            align-items: flex-end;
+            min-width: 180px;
+        }
+
+        .order-status-select {
+            min-width: 170px;
+            border-radius: 10px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            padding: 0.45rem 0.7rem;
+            background: #fff;
+            font: inherit;
+            color: #12212B;
         }
 
         .catalog-item {
@@ -235,6 +258,16 @@
             .action-row {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .order-status-wrap {
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .order-status-select {
+                width: 100%;
+                min-width: 0;
             }
 
             .dashboard-hero h1 {
@@ -447,10 +480,17 @@
         return 1;
     }
 
-    function getOrderStatusLabel(order, index) {
-        if (index === 0) return { label: "Nouvelle", className: "status-new" };
-        if (index === 1) return { label: "Préparation", className: "status-prep" };
-        return { label: "Prête", className: "status-ready" };
+    function getStatusMeta(status) {
+        switch (status) {
+            case "en préparation":
+                return { label: "En préparation", className: "status-prep" };
+            case "expédiée":
+                return { label: "Expédiée", className: "status-shipped" };
+            case "livrée":
+                return { label: "Livrée", className: "status-delivered" };
+            default:
+                return { label: "Nouvelle", className: "status-new" };
+        }
     }
 
     function getOrderItemsText(items) {
@@ -464,14 +504,65 @@
             .join(' + ');
     }
 
+    async function updateOrderStatus(orderId, newStatus) {
+        const { error } = await supabaseClient
+            .from('orders')
+            .update({ status: newStatus })
+            .eq('id', orderId);
+
+        if (error) {
+            console.error('Erreur mise à jour statut :', error);
+            alert("Impossible de mettre à jour le statut de la commande.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function attachStatusEvents() {
+        const selects = document.querySelectorAll('.order-status-select');
+
+        selects.forEach(select => {
+            select.addEventListener('change', async () => {
+                const orderId = Number(select.dataset.orderId);
+                const newStatus = select.value;
+                const previousStatus = select.dataset.currentStatus || 'nouvelle';
+
+                select.disabled = true;
+
+                const success = await updateOrderStatus(orderId, newStatus);
+
+                if (!success) {
+                    select.value = previousStatus;
+                    select.disabled = false;
+                    return;
+                }
+
+                select.dataset.currentStatus = newStatus;
+
+                const badge = document.getElementById(`status-badge-${orderId}`);
+                const meta = getStatusMeta(newStatus);
+
+                if (badge) {
+                    badge.className = `status-pill ${meta.className}`;
+                    badge.textContent = meta.label;
+                }
+
+                select.disabled = false;
+            });
+        });
+    }
+
     function renderOrders(orders) {
         if (!orders || orders.length === 0) {
             ordersListEl.innerHTML = `<div class="empty-state">Aucune commande enregistrée pour le moment.</div>`;
             return;
         }
 
-        ordersListEl.innerHTML = orders.map((order, index) => {
-            const status = getOrderStatusLabel(order, index);
+        ordersListEl.innerHTML = orders.map((order) => {
+            const normalizedStatus = order.status || 'nouvelle';
+            const status = getStatusMeta(normalizedStatus);
+
             return `
                 <div class="order-row">
                     <div>
@@ -479,10 +570,24 @@
                         <small>${escapeHtml(getOrderItemsText(order.items))}</small>
                         <small>${escapeHtml(order.first_name || '')} ${escapeHtml(order.last_name || '')} · ${formatPrice(order.total)}</small>
                     </div>
-                    <span class="status-pill ${status.className}">${status.label}</span>
+
+                    <div class="order-status-wrap">
+                        <span class="status-pill ${status.className}" id="status-badge-${order.id}">
+                            ${status.label}
+                        </span>
+
+                        <select class="order-status-select" data-order-id="${order.id}" data-current-status="${escapeHtml(normalizedStatus)}">
+                            <option value="nouvelle" ${normalizedStatus === "nouvelle" ? "selected" : ""}>Nouvelle</option>
+                            <option value="en préparation" ${normalizedStatus === "en préparation" ? "selected" : ""}>En préparation</option>
+                            <option value="expédiée" ${normalizedStatus === "expédiée" ? "selected" : ""}>Expédiée</option>
+                            <option value="livrée" ${normalizedStatus === "livrée" ? "selected" : ""}>Livrée</option>
+                        </select>
+                    </div>
                 </div>
             `;
         }).join('');
+
+        attachStatusEvents();
     }
 
     function renderCatalog(products) {
