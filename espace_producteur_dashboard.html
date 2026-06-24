@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,6 @@
         .producer-dashboard {
             padding: 3rem 0 4rem;
         }
-
 
         .dashboard-hero {
             background: linear-gradient(135deg, #eef8f1, #f8fbf8);
@@ -24,18 +23,15 @@
             align-items: center;
         }
 
-
         .dashboard-hero h1 {
             font-size: 2.2rem;
             margin-bottom: .8rem;
         }
 
-
         .dashboard-hero p {
             color: var(--text-muted);
             max-width: 60ch;
         }
-
 
         .dashboard-badges {
             display: flex;
@@ -43,7 +39,6 @@
             flex-wrap: wrap;
             margin-top: 1.2rem;
         }
-
 
         .dashboard-badge {
             background: #fff;
@@ -54,7 +49,6 @@
             font-weight: 600;
         }
 
-
         .dashboard-hero-card {
             background: #111827;
             color: #fff;
@@ -63,12 +57,10 @@
             box-shadow: var(--shadow-med);
         }
 
-
         .dashboard-hero-card p {
             color: rgba(255,255,255,.8);
             margin-top: .35rem;
         }
-
 
         .dashboard-grid {
             display: grid;
@@ -76,7 +68,6 @@
             gap: 1.2rem;
             margin-top: 1.6rem;
         }
-
 
         .dashboard-stat {
             background: #fff;
@@ -86,7 +77,6 @@
             box-shadow: var(--shadow-soft);
         }
 
-
         .dashboard-stat span {
             display: block;
             color: var(--text-muted);
@@ -94,12 +84,10 @@
             margin-bottom: .35rem;
         }
 
-
         .dashboard-stat strong {
             font-size: 2rem;
             color: #12212B;
         }
-
 
         .dashboard-panels {
             display: grid;
@@ -107,7 +95,6 @@
             gap: 1.4rem;
             margin-top: 1.8rem;
         }
-
 
         .dashboard-panel {
             background: #fff;
@@ -117,18 +104,16 @@
             box-shadow: var(--shadow-soft);
         }
 
-
         .dashboard-panel h2 {
             margin-bottom: 1rem;
         }
 
-
         .orders-list,
-        .actions-list {
+        .actions-list,
+        .catalog-list {
             display: grid;
             gap: .9rem;
         }
-
 
         .order-row,
         .action-row {
@@ -141,14 +126,12 @@
             background: var(--bg-soft);
         }
 
-
         .order-row small,
         .action-row small {
             display: block;
             color: var(--text-muted);
             margin-top: .2rem;
         }
-
 
         .status-pill {
             display: inline-flex;
@@ -161,30 +144,20 @@
             white-space: nowrap;
         }
 
-
         .status-prep {
             background: #fff4d6;
             color: #8a6100;
         }
-
 
         .status-ready {
             background: #e8f7ed;
             color: #256944;
         }
 
-
         .status-new {
             background: #e9f0ff;
             color: #2855c5;
         }
-
-
-        .catalog-list {
-            display: grid;
-            gap: .9rem;
-        }
-
 
         .catalog-item {
             display: grid;
@@ -196,7 +169,6 @@
             background: var(--bg-soft);
         }
 
-
         .catalog-thumb {
             width: 72px;
             height: 72px;
@@ -204,19 +176,16 @@
             object-fit: cover;
         }
 
-
         .catalog-item p {
             color: var(--text-muted);
             font-size: .92rem;
         }
-
 
         .price-tag {
             font-weight: 800;
             font-size: 1rem;
             color: #12212B;
         }
-
 
         .dashboard-actions {
             display: flex;
@@ -225,13 +194,18 @@
             margin-top: 1.2rem;
         }
 
-
         .btn-secondary-soft {
             background: #fff;
             border: 1px solid rgba(15, 23, 42, 0.08);
             color: #12212B;
         }
 
+        .empty-state {
+            padding: 1rem;
+            border-radius: 16px;
+            background: var(--bg-soft);
+            color: var(--text-muted);
+        }
 
         @media (max-width: 980px) {
             .dashboard-hero,
@@ -239,35 +213,29 @@
                 grid-template-columns: 1fr;
             }
 
-
             .dashboard-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
-
 
         @media (max-width: 720px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
 
-
             .catalog-item {
                 grid-template-columns: 64px 1fr;
             }
 
-
             .price-tag {
                 grid-column: 2;
             }
-
 
             .order-row,
             .action-row {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
 
             .dashboard-hero h1 {
                 font-size: 1.8rem;
@@ -277,7 +245,6 @@
 </head>
 <body>
 
-
 <header>
     <div class="container header-inner">
         <div class="header-left">
@@ -285,7 +252,6 @@
                 <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
             </a>
         </div>
-
 
         <nav aria-label="Navigation principale">
             <ul>
@@ -297,7 +263,6 @@
             </ul>
         </nav>
 
-
         <div class="header-right">
             <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
             <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
@@ -308,97 +273,60 @@
     </div>
 </header>
 
-
 <main class="producer-dashboard">
     <div class="container">
         <section class="dashboard-hero">
             <div>
-                <h1>Bonjour producteur 👋</h1>
+                <h1 id="dashboard-title">Bonjour producteur 👋</h1>
                 <p>
                     Bienvenue dans votre espace GreenCart. Retrouvez ici un aperçu de vos commandes, de vos produits mis en ligne et des prochaines actions à suivre.
                 </p>
 
-
                 <div class="dashboard-badges">
                     <div class="dashboard-badge">Compte : producteur</div>
                     <div class="dashboard-badge">Statut : actif</div>
-                    <div class="dashboard-badge">Catalogue local</div>
+                    <div class="dashboard-badge" id="producer-badge-name">Catalogue local</div>
                 </div>
-
 
                 <div class="dashboard-actions">
-                   <a href="ajouter_produit.html" class="btn btn-primary">Ajouter un produit</a>
-                   <a href="ma_vitrine_producteur.html" class="btn btn-secondary-soft">Voir ma vitrine</a>
+                    <a href="ajouter_produit.html" class="btn btn-primary">Ajouter un produit</a>
+                    <a href="ma_vitrine_producteur.html" class="btn btn-secondary-soft">Voir ma vitrine</a>
                 </div>
             </div>
-
 
             <div class="dashboard-hero-card">
                 <strong style="font-size:1.1rem;">Résumé du jour</strong>
-                <p>2 nouvelles commandes, 1 produit bientôt en rupture et 4 clients ont consulté votre fiche aujourd’hui.</p>
+                <p id="hero-summary-text">Chargement de votre activité...</p>
             </div>
         </section>
-
 
         <section class="dashboard-grid">
             <article class="dashboard-stat">
                 <span>Produits actifs</span>
-                <strong>12</strong>
+                <strong id="stat-products">0</strong>
             </article>
 
-
             <article class="dashboard-stat">
-                <span>Commandes en cours</span>
-                <strong>5</strong>
+                <span>Commandes reçues</span>
+                <strong id="stat-orders">0</strong>
             </article>
 
-
             <article class="dashboard-stat">
-                <span>Vues cette semaine</span>
-                <strong>148</strong>
+                <span>Chiffre commandes</span>
+                <strong id="stat-revenue">0,00 €</strong>
             </article>
         </section>
-
 
         <section class="dashboard-panels">
             <article class="dashboard-panel">
                 <h2>Commandes récentes</h2>
-
-
-                <div class="orders-list">
-                    <div class="order-row">
-                        <div>
-                            <strong>Commande #GC-2048</strong>
-                            <small>Panier légumes de saison · 2 articles</small>
-                        </div>
-                        <span class="status-pill status-new">Nouvelle</span>
-                    </div>
-
-
-                    <div class="order-row">
-                        <div>
-                            <strong>Commande #GC-2041</strong>
-                            <small>Tomates anciennes + fromage frais</small>
-                        </div>
-                        <span class="status-pill status-prep">Préparation</span>
-                    </div>
-
-
-                    <div class="order-row">
-                        <div>
-                            <strong>Commande #GC-2035</strong>
-                            <small>Oeufs fermiers · lot x2</small>
-                        </div>
-                        <span class="status-pill status-ready">Prête</span>
-                    </div>
+                <div class="orders-list" id="orders-list">
+                    <div class="empty-state">Chargement des commandes...</div>
                 </div>
             </article>
 
-
             <article class="dashboard-panel">
                 <h2>Actions rapides</h2>
-
-
                 <div class="actions-list">
                     <div class="action-row">
                         <div>
@@ -407,7 +335,6 @@
                         </div>
                     </div>
 
-
                     <div class="action-row">
                         <div>
                             <strong>Ajouter une photo produit</strong>
@@ -415,53 +342,24 @@
                         </div>
                     </div>
 
-
                     <div class="action-row">
                         <div>
                             <strong>Répondre aux avis clients</strong>
-                            <small>3 avis attendent une réponse.</small>
+                            <small>Pensez à consulter les derniers avis visibles sur votre fiche producteur.</small>
                         </div>
                     </div>
                 </div>
             </article>
         </section>
 
-
-      <section class="dashboard-panel" style="margin-top:1.8rem;">
-    <h2>Catalogue mis en avant</h2>
-
-    <div class="catalog-list">
-        <div class="catalog-item">
-            <img class="catalog-thumb" src="images/tomates.jpg" alt="Tomates grappe">
-            <div>
-                <strong>Tomates grappe</strong>
-                <p>Produit visible · stock correct</p>
+        <section class="dashboard-panel" style="margin-top:1.8rem;">
+            <h2>Catalogue mis en avant</h2>
+            <div class="catalog-list" id="catalog-list">
+                <div class="empty-state">Chargement du catalogue...</div>
             </div>
-            <div class="price-tag">3,90 €</div>
-        </div>
-
-        <div class="catalog-item">
-            <img class="catalog-thumb" src="images/fruits-legumes.jpg" alt="Fraises locales">
-            <div>
-                <strong>Fraises locales</strong>
-                <p>Produit populaire · forte demande</p>
-            </div>
-            <div class="price-tag">4,80 €</div>
-        </div>
-
-        <div class="catalog-item">
-            <img class="catalog-thumb" src="images/fromage-chevre.jpg" alt="Fromage frais">
-            <div>
-                <strong>Fromage frais</strong>
-                <p>Stock faible · mise à jour conseillée</p>
-            </div>
-            <div class="price-tag">5,20 €</div>
-        </div>
-    </div>
-</section>
+        </section>
     </div>
 </main>
-
 
 <footer>
     <div class="container footer-inner">
@@ -470,14 +368,12 @@
             <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
         </div>
 
-
         <div class="footer-links">
             <strong>Informations</strong>
             <a href="mentions-legales.html">Mentions légales</a>
             <a href="cgu.html">CGU</a>
             <a href="cgv.html">CGV</a>
         </div>
-
 
         <div class="footer-contact">
             <strong>Contact</strong>
@@ -492,19 +388,195 @@
         </div>
     </div>
 
-
     <div class="footer-bottom">
         © 2026 GreenCart – Projet étudiant.
     </div>
 </footer>
 
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    const cartCountEl = document.getElementById("cart-count");
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
-</script>
+    const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    const cartCountEl = document.getElementById("cart-count");
+    const dashboardTitleEl = document.getElementById("dashboard-title");
+    const producerBadgeNameEl = document.getElementById("producer-badge-name");
+    const heroSummaryTextEl = document.getElementById("hero-summary-text");
+    const statProductsEl = document.getElementById("stat-products");
+    const statOrdersEl = document.getElementById("stat-orders");
+    const statRevenueEl = document.getElementById("stat-revenue");
+    const ordersListEl = document.getElementById("orders-list");
+    const catalogListEl = document.getElementById("catalog-list");
+
+    function formatPrice(value) {
+        return `${Number(value || 0).toFixed(2).replace('.', ',')} €`;
+    }
+
+    function escapeHtml(text) {
+        return String(text || '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function getCart() {
+        return JSON.parse(localStorage.getItem("cart") || "[]");
+    }
+
+    function refreshBadge() {
+        const cart = getCart();
+        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    }
+
+    function getProducerIdForDashboard() {
+        const role = localStorage.getItem("greencartRole");
+        const isLoggedIn = localStorage.getItem("greencartLoggedIn") === "true";
+        const producerId = Number(localStorage.getItem("greencartProducerId"));
+
+        if (!isLoggedIn || role !== "producer") {
+            return null;
+        }
+
+        if (!Number.isNaN(producerId) && producerId > 0) {
+            return producerId;
+        }
+
+        return 1;
+    }
+
+    function getOrderStatusLabel(order, index) {
+        if (index === 0) return { label: "Nouvelle", className: "status-new" };
+        if (index === 1) return { label: "Préparation", className: "status-prep" };
+        return { label: "Prête", className: "status-ready" };
+    }
+
+    function getOrderItemsText(items) {
+        if (!Array.isArray(items) || items.length === 0) {
+            return "Commande enregistrée";
+        }
+
+        return items
+            .slice(0, 2)
+            .map(item => `${item.name || 'Produit'}${item.qty ? ` · x${item.qty}` : ''}`)
+            .join(' + ');
+    }
+
+    function renderOrders(orders) {
+        if (!orders || orders.length === 0) {
+            ordersListEl.innerHTML = `<div class="empty-state">Aucune commande enregistrée pour le moment.</div>`;
+            return;
+        }
+
+        ordersListEl.innerHTML = orders.map((order, index) => {
+            const status = getOrderStatusLabel(order, index);
+            return `
+                <div class="order-row">
+                    <div>
+                        <strong>Commande #GC-${order.id}</strong>
+                        <small>${escapeHtml(getOrderItemsText(order.items))}</small>
+                        <small>${escapeHtml(order.first_name || '')} ${escapeHtml(order.last_name || '')} · ${formatPrice(order.total)}</small>
+                    </div>
+                    <span class="status-pill ${status.className}">${status.label}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderCatalog(products) {
+        if (!products || products.length === 0) {
+            catalogListEl.innerHTML = `<div class="empty-state">Aucun produit actif dans votre catalogue.</div>`;
+            return;
+        }
+
+        catalogListEl.innerHTML = products.slice(0, 6).map(product => `
+            <div class="catalog-item">
+                <img class="catalog-thumb" src="${escapeHtml(product.image_url || 'images/logo.png')}" alt="${escapeHtml(product.name || 'Produit')}">
+                <div>
+                    <strong>${escapeHtml(product.name || 'Produit')}</strong>
+                    <p>${product.is_active ? 'Produit visible' : 'Produit inactif'} · ${escapeHtml(product.unit || 'à l’unité')}</p>
+                </div>
+                <div class="price-tag">${formatPrice(product.price)}</div>
+            </div>
+        `).join('');
+    }
+
+    async function loadDashboard() {
+        refreshBadge();
+
+        const producerId = getProducerIdForDashboard();
+
+        if (!producerId) {
+            dashboardTitleEl.textContent = "Accès réservé au producteur";
+            producerBadgeNameEl.textContent = "Connexion requise";
+            heroSummaryTextEl.textContent = "Connectez-vous avec un compte producteur pour accéder au tableau de bord.";
+            ordersListEl.innerHTML = `<div class="empty-state">Connexion producteur requise.</div>`;
+            catalogListEl.innerHTML = `<div class="empty-state">Connexion producteur requise.</div>`;
+            return;
+        }
+
+        const { data: producer, error: producerError } = await supabaseClient
+            .from('producers')
+            .select('id, name')
+            .eq('id', producerId)
+            .maybeSingle();
+
+        if (producerError) {
+            console.error('Erreur chargement producteur :', producerError);
+        }
+
+        if (producer?.name) {
+            dashboardTitleEl.textContent = `Bonjour ${producer.name} 👋`;
+            producerBadgeNameEl.textContent = producer.name;
+        }
+
+        const { data: products, error: productsError, count: productsCount } = await supabaseClient
+            .from('products')
+            .select('*', { count: 'exact' })
+            .eq('producer_id', producerId)
+            .eq('is_active', true)
+            .order('id', { ascending: false });
+
+        if (productsError) {
+            console.error('Erreur chargement produits dashboard :', productsError);
+            renderCatalog([]);
+        } else {
+            renderCatalog(products || []);
+            statProductsEl.textContent = String(productsCount || (products || []).length || 0);
+        }
+
+        const { data: orders, error: ordersError, count: ordersCount } = await supabaseClient
+            .from('orders')
+            .select('*', { count: 'exact' })
+            .eq('producer_id', producerId)
+            .order('created_at', { ascending: false });
+
+        if (ordersError) {
+            console.error('Erreur chargement commandes dashboard :', ordersError);
+            renderOrders([]);
+            statOrdersEl.textContent = '0';
+            statRevenueEl.textContent = formatPrice(0);
+            heroSummaryTextEl.textContent = "Impossible de charger l’activité du jour.";
+            return;
+        }
+
+        renderOrders((orders || []).slice(0, 5));
+
+        const totalRevenue = (orders || []).reduce((sum, order) => sum + Number(order.total || 0), 0);
+        const latestOrdersCount = (orders || []).length;
+        const latestProductsCount = productsCount || (products || []).length || 0;
+
+        statOrdersEl.textContent = String(ordersCount || latestOrdersCount || 0);
+        statRevenueEl.textContent = formatPrice(totalRevenue);
+
+        heroSummaryTextEl.textContent =
+            `${latestOrdersCount} commande(s) visible(s), ${latestProductsCount} produit(s) actif(s) et ${formatPrice(totalRevenue)} de total cumulé sur vos commandes.`;
+    }
+
+    loadDashboard();
+</script>
 
 </body>
 </html>
