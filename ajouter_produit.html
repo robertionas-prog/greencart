@@ -284,29 +284,19 @@ form.addEventListener("submit", async (e) => {
     const imageUrl = publicUrlData.publicUrl;
 
 
-    const { error: insertError } = await supabase
-        .from("products")
-        .insert([{
-            producer_id: producerId,
-            slug: finalSlug,
-            name,
-            description,
-            price,
-            unit,
-            category,
-            image_url: imageUrl,
-            stock,
-            storage_info: storageInfo,
-            is_active: true
-        }]);
+  const { error: uploadError } = await supabase.storage
+    .from(BUCKET_NAME)
+    .upload(filePath, imageFile, {
+        cacheControl: "3600",
+        upsert: false
+    });
 
-
-    if (insertError) {
-        console.error(insertError);
-        msg.style.color = "#b91c1c";
-        msg.textContent = "Erreur lors de l'enregistrement du produit en base.";
-        return;
-    }
+if (uploadError) {
+    console.error("UPLOAD ERROR:", uploadError);
+    msg.style.color = "#b91c1c";
+    msg.textContent = "Erreur upload : " + (uploadError.message || "inconnue");
+    return;
+}
 
 
     msg.style.color = "#166534";
