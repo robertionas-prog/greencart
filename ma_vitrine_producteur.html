@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ma vitrine producteur</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .producer-page {
+      padding: 2rem 0 3rem;
+    }
+
+
+    .producer-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+
+    .producer-topbar h1 {
+      margin: 0;
+    }
+
+
+    .producer-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+
+    .producer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
+
+
+    .producer-product-card {
+      background: var(--white, #fff);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(15,23,42,0.06);
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    .producer-product-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #f3f4f6;
+    }
+
+
+    .producer-product-body {
+      padding: 1rem;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+
+    .producer-product-body h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+
+    .producer-meta {
+      color: var(--text-muted, #6b7280);
+      font-size: 0.92rem;
+    }
+
+
+    .producer-price {
+      font-weight: 800;
+      color: #111827;
+      font-size: 1.05rem;
+    }
+
+
+    .producer-desc {
+      color: var(--text-muted, #6b7280);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+
+    .producer-card-actions {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      margin-top: 0.4rem;
+    }
+
+
+    .status-box {
+      margin: 1rem 0 1.4rem;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid rgba(0,0,0,0.06);
+      color: #475569;
+    }
+
+
+    .empty-box {
+      background: #fff;
+      border: 1px dashed rgba(0,0,0,0.14);
+      border-radius: 18px;
+      padding: 2rem;
+      text-align: center;
+      color: #6b7280;
+    }
+
+
+    @media (max-width: 980px) {
+      .producer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+
+    @media (max-width: 640px) {
+      .producer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="header-left">
+        <a href="greencart.html">
+          <img src="images/logo.png" alt="Logo GreenCart" class="logo-img" />
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="greencart.html">Accueil</a></li>
+          <li><a href="categorie.html">Produits</a></li>
+          <li><a href="producteurs.html">Producteurs</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <a href="profil.html" class="icon-circle">👤</a>
+        <a href="panier.html" class="icon-circle cart-icon">
+          🛒
+          <span class="cart-badge" id="cart-count">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+
+  <main class="container producer-page">
+    <div class="producer-topbar">
+      <div>
+        <h1>Ma vitrine producteur</h1>
+        <p class="section-intro">Retrouvez ici tous les produits enregistrés sur votre espace.</p>
+      </div>
+
+
+      <div class="producer-actions">
+        <a href="ajouter_produit.html" class="btn btn-primary">Ajouter un produit</a>
+      </div>
+    </div>
+
+
+    <div id="status-msg" class="status-box">Chargement des produits...</div>
+    <div id="products-wrapper" class="producer-grid"></div>
+  </main>
+
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-title">GreenCart</div>
+        <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court.</p>
+      </div>
+      <div class="footer-links">
+        <strong>Informations</strong>
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgu.html">CGU</a>
+        <a href="cgv.html">CGV</a>
+      </div>
+      <div class="footer-contact">
+        <strong>Contact</strong>
+        <div class="footer-contact-row"><span>contact@greencart.fr</span></div>
+      </div>
+    </div>
+    <div class="container footer-bottom">© 2026 GreenCart - Projet étudiant.</div>
+  </footer>
+
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js";
+
+
+    const supabaseUrl = "https://yzlcfuxeljeidtjdcmbd.supabase.co";
+    const supabaseKey = "sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+
+    const cartCountEl = document.getElementById("cart-count");
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (cartCountEl) {
+      cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    }
+
+
+    const statusMsg = document.getElementById("status-msg");
+    const productsWrapper = document.getElementById("products-wrapper");
+
+
+    const producerId = Number(localStorage.getItem("greencartProducerId")) || 1;
+
+
+    function formatPrice(value) {
+      return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR"
+      }).format(value);
+    }
+
+
+    function escapeHtml(text) {
+      return String(text || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    async function loadProducts() {
+      statusMsg.style.color = "#475569";
+      statusMsg.textContent = "Chargement des produits...";
+
+
+      const { data, error } = await supabase
+        .from("products")
+        .select("id, producer_id, name, category, price, unit, stock, description, storage_info, image_url, slug")
+        .eq("producer_id", producerId)
+        .order("id", { ascending: false });
+
+
+      if (error) {
+        console.error("LOAD PRODUCTS ERROR:", error);
+        statusMsg.style.color = "#b91c1c";
+        statusMsg.textContent = "Erreur lors du chargement : " + (error.message || "inconnue");
+        return;
+      }
+
+
+      if (!data || data.length === 0) {
+        statusMsg.style.display = "none";
+        productsWrapper.innerHTML = `
+          <div class="empty-box">
+            <p>Vous n'avez encore ajouté aucun produit à votre vitrine.</p>
+          </div>
+        `;
+        return;
+      }
+
+
+      statusMsg.style.display = "none";
+
+
+      productsWrapper.innerHTML = data.map(product => `
+        <article class="producer-product-card">
+          <img
+            src="${escapeHtml(product.image_url || "images/placeholder.jpg")}"
+            alt="${escapeHtml(product.name)}"
+          />
+          <div class="producer-product-body">
+            <h3>${escapeHtml(product.name)}</h3>
+            <div class="producer-meta">
+              ${escapeHtml(product.category || "Catégorie inconnue")} · Stock : ${escapeHtml(product.stock ?? 0)}
+            </div>
+            <div class="producer-price">
+              ${formatPrice(product.price || 0)} / ${escapeHtml(product.unit || "unité")}
+            </div>
+            <div class="producer-desc">
+              ${escapeHtml(product.description || "Aucune description.")}
+            </div>
+            <div class="producer-meta">
+              Conservation : ${escapeHtml(product.storage_info || "Non renseignée")}
+            </div>
+            <div class="producer-card-actions">
+              <a class="btn btn-primary" href="produit.html?slug=${encodeURIComponent(product.slug || "")}">Voir la fiche</a>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+
+    loadProducts();
+  </script>
+</body>
+</html>
