@@ -7,10 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
 </head>
-
 <body>
 
 <header>
@@ -41,7 +39,6 @@
 </header>
 
 <main class="container" style="padding:2.2rem 0 2.6rem;">
-
     <section class="page-hero">
         <h1>Mon profil</h1>
         <p class="section-intro">
@@ -50,7 +47,6 @@
     </section>
 
     <section style="display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;align-items:start;margin-top:1.4rem;">
-        
         <form id="login-form">
             <h2 style="margin-top:0;">Connexion</h2>
 
@@ -70,49 +66,49 @@
             </div>
 
             <div class="g-recaptcha"
-     data-sitekey="6Le6DTAtAAAAAJs5yjy4zuWAnU8HwAfOVfEqx7F2"
-     data-action="LOGIN"
-     style="margin-top:1rem;"></div>
+                 data-sitekey="6Le6DTAtAAAAAJs5yjy4zuWAnU8HwAfOVfEqx7F2"
+                 style="margin-top:1rem;"></div>
 
-            <button class="btn btn-primary" type="submit" style="width:100%;margin-top:1.2rem;">Se connecter</button>
+            <button class="btn btn-primary" type="submit" style="width:100%;margin-top:1.2rem;">
+                Se connecter
+            </button>
 
-            <button class="btn" type="button" id="logout-btn" style="width:100%; margin-top:10px;">
+            <button class="btn" type="button" id="logout-btn" style="width:100%;margin-top:10px;">
                 Se déconnecter
             </button>
 
             <p id="login-msg" style="margin:.9rem 0 0;color:var(--text-muted);font-size:.95rem;"></p>
         </form>
 
-       <div class="legal-box" style="padding:1.4rem;">
-  <h2 style="margin-top:0;">Infos projet</h2>
-  <p style="margin:0;color:var(--text-muted);line-height:1.7;">
-    Pour ce rendu, deux accès de démonstration sont proposés afin de montrer les deux parcours principaux de la plateforme.
-  </p>
+        <div class="legal-box" style="padding:1.4rem;">
+            <h2 style="margin-top:0;">Infos projet</h2>
+            <p style="margin:0;color:var(--text-muted);line-height:1.7;">
+                Pour ce rendu, deux accès de démonstration sont proposés afin de montrer les deux parcours principaux de la plateforme.
+            </p>
 
-  <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid var(--border-soft);">
-    <strong>Accès démo client</strong>
-    <p style="margin:.4rem 0 0;color:var(--text-muted);">
-      Email : demo@greencart.fr<br>
-      Mot de passe : demo123
-    </p>
-    <p style="margin:.65rem 0 0;color:var(--text-muted);line-height:1.6;">
-      Cet accès permet une navigation classique sur le site. La page espace producteur reste alors une page de présentation qui incite à devenir producteur.
-    </p>
-  </div>
+            <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid var(--border-soft);">
+                <strong>Accès démo client</strong>
+                <p style="margin:.4rem 0 0;color:var(--text-muted);">
+                    Email : demo@greencart.fr<br>
+                    Mot de passe : demo123
+                </p>
+                <p style="margin:.65rem 0 0;color:var(--text-muted);line-height:1.6;">
+                    Cet accès permet une navigation classique sur le site. La page espace producteur reste alors une page de présentation qui incite à devenir producteur.
+                </p>
+            </div>
 
-  <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid var(--border-soft);">
-    <strong>Accès démo producteur</strong>
-    <p style="margin:.4rem 0 0;color:var(--text-muted);">
-      Email : producteur@greencart.fr<br>
-      Mot de passe : demo123
-    </p>
-    <p style="margin:.65rem 0 0;color:var(--text-muted);line-height:1.6;">
-      Cet accès donne accès à une interface dashboard producteur ainsi qu’à l’ajout de produits avec upload d’image.
-    </p>
-  </div>
-</div>
+            <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid var(--border-soft);">
+                <strong>Accès démo producteur</strong>
+                <p style="margin:.4rem 0 0;color:var(--text-muted);">
+                    Email : producteur@greencart.fr<br>
+                    Mot de passe : demo123
+                </p>
+                <p style="margin:.65rem 0 0;color:var(--text-muted);line-height:1.6;">
+                    Cet accès donne accès à une interface dashboard producteur ainsi qu’à l’ajout de produits avec upload d’image.
+                </p>
+            </div>
+        </div>
     </section>
-
 </main>
 
 <footer>
@@ -150,7 +146,9 @@
 <script>
     const cartCountEl = document.getElementById("cart-count");
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    if (cartCountEl) {
+        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    }
 
     const form = document.getElementById("login-form");
     const msg = document.getElementById("login-msg");
@@ -159,8 +157,31 @@
     form.addEventListener("submit", (e) => {
         e.preventDefault();
 
+        msg.style.color = "var(--text-muted)";
+        msg.textContent = "Connexion en cours...";
+
         const email = document.getElementById("email").value.trim().toLowerCase();
         const password = document.getElementById("password").value.trim();
+
+        if (!email || !password) {
+            msg.style.color = "#b91c1c";
+            msg.textContent = "Veuillez remplir tous les champs.";
+            return;
+        }
+
+        if (typeof grecaptcha === "undefined" || !grecaptcha.enterprise) {
+            msg.style.color = "#b91c1c";
+            msg.textContent = "Captcha indisponible. Rechargez la page.";
+            return;
+        }
+
+        const captchaToken = grecaptcha.enterprise.getResponse();
+
+        if (!captchaToken) {
+            msg.style.color = "#b91c1c";
+            msg.textContent = "Veuillez valider le captcha.";
+            return;
+        }
 
         if (email === "demo@greencart.fr" && password === "demo123") {
             localStorage.setItem("greencartLoggedIn", "true");
@@ -169,6 +190,8 @@
             localStorage.removeItem("greencartProducerId");
 
             const redirect = sessionStorage.getItem("redirectAfterLogin");
+
+            msg.style.color = "#166534";
 
             if (redirect === "panier") {
                 msg.textContent = "Connexion client réussie. Redirection vers le panier...";
@@ -181,21 +204,29 @@
                 msg.textContent = "Connexion client réussie.";
             }
 
-        } else if (email === "producteur@greencart.fr" && password === "demo123") {
+            grecaptcha.enterprise.reset();
+            return;
+        }
+
+        if (email === "producteur@greencart.fr" && password === "demo123") {
             localStorage.setItem("greencartLoggedIn", "true");
             localStorage.setItem("greencartRole", "producer");
             localStorage.setItem("greencartUserEmail", email);
             localStorage.setItem("greencartProducerId", "1");
 
+            msg.style.color = "#166534";
             msg.textContent = "Connexion producteur réussie.";
+            grecaptcha.enterprise.reset();
 
-        } else {
-            msg.textContent = "Identifiants incorrects.";
+            setTimeout(() => {
+                window.location.href = "dashboard_producteur.html";
+            }, 900);
+            return;
         }
 
-        if (typeof grecaptcha !== "undefined") {
-            grecaptcha.reset();
-        }
+        msg.style.color = "#b91c1c";
+        msg.textContent = "Identifiants incorrects.";
+        grecaptcha.enterprise.reset();
     });
 
     logoutBtn.addEventListener("click", () => {
@@ -203,16 +234,20 @@
         localStorage.removeItem("greencartRole");
         localStorage.removeItem("greencartUserEmail");
         localStorage.removeItem("greencartProducerId");
+
+        msg.style.color = "#166534";
         msg.textContent = "Vous êtes déconnecté.";
 
-        if (typeof grecaptcha !== "undefined") {
-            grecaptcha.reset();
+        if (typeof grecaptcha !== "undefined" && grecaptcha.enterprise) {
+            grecaptcha.enterprise.reset();
         }
     });
 
     if (localStorage.getItem("greencartLoggedIn") === "true") {
         const role = localStorage.getItem("greencartRole");
         const email = localStorage.getItem("greencartUserEmail") || "";
+
+        msg.style.color = "var(--text-muted)";
 
         if (role === "producer") {
             msg.textContent = "Vous êtes déjà connecté comme producteur" + (email ? " : " + email : "") + ".";
