@@ -30,12 +30,12 @@
             </nav>
 
             <div class="header-right">
-    <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
-    <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
-        🛒 <span class="cart-badge" id="cart-count">0</span>
-    </a>
-    <a href="espace_agriculteur.html" class="producer-cta">Espace producteur</a>
-</div>
+                <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
+                <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+                    🛒 <span class="cart-badge" id="cart-count">0</span>
+                </a>
+                <a href="espace_agriculteur.html" class="producer-cta" id="producer-space-link">Espace producteur</a>
+            </div>
         </div>
     </header>
 
@@ -173,40 +173,10 @@
                 </p>
             </div>
 
-            <div class="reviews-grid">
-                <article class="review-card">
-                    <div class="review-avatar" aria-hidden="true"></div>
-                    <div>
-                        <div class="review-name">Utilisateur vérifié</div>
-                        <div class="review-stars" aria-label="Note : 5 sur 5">★★★★★</div>
-                        <p class="review-text">
-                            Produits super frais, livraison rapide, franchement top.
-                        </p>
-                    </div>
-                </article>
+            <div id="homepage-review-form-box" style="margin-bottom:1.2rem;"></div>
+            <p id="homepage-review-msg" style="margin:0 0 1rem;color:var(--text-muted);"></p>
 
-                <article class="review-card">
-                    <div class="review-avatar" aria-hidden="true"></div>
-                    <div>
-                        <div class="review-name">Utilisateur vérifié</div>
-                        <div class="review-stars" aria-label="Note : 4 sur 5">★★★★☆</div>
-                        <p class="review-text">
-                            Très bonne qualité, on sent la différence avec le magasin.
-                        </p>
-                    </div>
-                </article>
-
-                <article class="review-card">
-                    <div class="review-avatar" aria-hidden="true"></div>
-                    <div>
-                        <div class="review-name">Utilisateur vérifié</div>
-                        <div class="review-stars" aria-label="Note : 5 sur 5">★★★★★</div>
-                        <p class="review-text">
-                            Simple à utiliser et les producteurs sont vraiment sérieux.
-                        </p>
-                    </div>
-                </article>
-            </div>
+            <div id="homepage-reviews-list" class="reviews-grid"></div>
         </section>
 
     </main>
@@ -222,12 +192,11 @@
             </div>
 
             <div class="footer-links">
-  <strong>Informations</strong>
-  <a href="mentions-legales.html">Mentions légales</a>
-  <a href="cgu.html">CGU</a>
-  <a href="cgv.html">CGV</a>
-</div>
-
+                <strong>Informations</strong>
+                <a href="mentions-legales.html">Mentions légales</a>
+                <a href="cgu.html">CGU</a>
+                <a href="cgv.html">CGV</a>
+            </div>
 
             <div class="footer-contact">
                 <strong>Contact</strong>
@@ -243,42 +212,213 @@
         </div>
 
         <div class="footer-bottom">
-            © 2025 GreenCart – Projet étudiant.
+            © 2026 GreenCart – Projet étudiant.
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const cartCountEl = document.getElementById("cart-count");
         const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+        if (cartCountEl) {
+            cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+        }
+
+        const producerSpaceLink = document.getElementById("producer-space-link");
+        const isLoggedIn = localStorage.getItem("greencartLoggedIn") === "true";
+        const role = localStorage.getItem("greencartRole");
+
+        if (producerSpaceLink && isLoggedIn && role === "producer") {
+            producerSpaceLink.href = "espace_producteur_dashboard.html";
+        }
+
+        const SUPABASE_URL = "https://yzlcfuxeljeidtjdcmbd.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function canLeaveReview() {
+            return localStorage.getItem("greencartLoggedIn") === "true"
+                && localStorage.getItem("greencartRole") === "customer";
+        }
+
+        function getCurrentUserEmail() {
+            return localStorage.getItem("greencartUserEmail") || "";
+        }
+
+        function getAuthorName() {
+            const email = getCurrentUserEmail();
+            if (!email) return "Client";
+            return email.split("@")[0];
+        }
+
+        function escapeHtml(text) {
+            return String(text || "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function renderStars(rating) {
+            const safeRating = Math.max(1, Math.min(5, Number(rating) || 0));
+            return "★".repeat(safeRating) + "☆".repeat(5 - safeRating);
+        }
+
+        function renderHomepageReviewForm() {
+            const box = document.getElementById("homepage-review-form-box");
+            if (!box) return;
+
+            if (!canLeaveReview()) {
+                box.innerHTML = `
+                    <div class="legal-box" style="padding:1rem;">
+                        <p style="margin:0;color:var(--text-muted);">
+                            Connectez-vous avec un compte client pour laisser un avis sur la plateforme.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            box.innerHTML = `
+                <form id="homepage-review-form" class="contact-form" style="margin-top:0;">
+                    <h3 style="margin-top:0;">Laisser un avis</h3>
+
+                    <div class="form-group">
+                        <label for="homepage-review-rating">Note</label>
+                        <select id="homepage-review-rating" required>
+                            <option value="">Choisir une note</option>
+                            <option value="5">5 / 5</option>
+                            <option value="4">4 / 5</option>
+                            <option value="3">3 / 5</option>
+                            <option value="2">2 / 5</option>
+                            <option value="1">1 / 5</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="homepage-review-content">Commentaire</label>
+                        <textarea id="homepage-review-content" rows="4" required placeholder="Partagez votre expérience sur GreenCart..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Publier mon avis</button>
+                </form>
+            `;
+
+            document.getElementById("homepage-review-form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const msg = document.getElementById("homepage-review-msg");
+                const rating = Number(document.getElementById("homepage-review-rating").value);
+                const content = document.getElementById("homepage-review-content").value.trim();
+
+                if (!rating || !content) {
+                    msg.style.color = "#b91c1c";
+                    msg.textContent = "Veuillez remplir tous les champs.";
+                    return;
+                }
+
+                msg.style.color = "var(--text-muted)";
+                msg.textContent = "Envoi de votre avis...";
+
+                const { error } = await supabaseClient
+                    .from("reviews")
+                    .insert([{
+                        producer_id: null,
+                        product_id: null,
+                        author_name: getAuthorName(),
+                        rating: rating,
+                        content: content,
+                        is_approved: true
+                    }]);
+
+                if (error) {
+                    console.error("HOMEPAGE REVIEW INSERT ERROR:", error);
+                    msg.style.color = "#b91c1c";
+                    msg.textContent = "Erreur lors de l'envoi de l'avis.";
+                    return;
+                }
+
+                msg.style.color = "#166534";
+                msg.textContent = "Avis publié avec succès.";
+                e.target.reset();
+                loadHomepageReviews();
+            });
+        }
+
+        async function loadHomepageReviews() {
+            const list = document.getElementById("homepage-reviews-list");
+            if (!list) return;
+
+            const { data, error } = await supabaseClient
+                .from("reviews")
+                .select("*")
+                .is("producer_id", null)
+                .is("product_id", null)
+                .eq("is_approved", true)
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                console.error("HOMEPAGE REVIEW LOAD ERROR:", error);
+                list.innerHTML = `<p style="color:#b91c1c;">Impossible de charger les avis.</p>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                list.innerHTML = `
+                    <article class="review-card">
+                        <div>
+                            <div class="review-name">Aucun avis pour le moment</div>
+                            <p class="review-text">Soyez le premier à partager votre expérience sur GreenCart.</p>
+                        </div>
+                    </article>
+                `;
+                return;
+            }
+
+            list.innerHTML = data.map(review => `
+                <article class="review-card">
+                    <div class="review-avatar" aria-hidden="true"></div>
+                    <div>
+                        <div class="review-name">${escapeHtml(review.author_name)}</div>
+                        <div class="review-stars" aria-label="Note ${review.rating} sur 5">${renderStars(review.rating)}</div>
+                        <p class="review-text">${escapeHtml(review.content)}</p>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        renderHomepageReviewForm();
+        loadHomepageReviews();
     </script>
-<div id="cookie-banner" class="cookie-banner">
-    <p>Ce site utilise des cookies pour améliorer votre expérience. <a href="cgu.html#cookies">En savoir plus</a></p>
-    <div class="cookie-actions">
-        <button id="accept-cookies" class="btn btn-primary">Accepter</button>
-        <button id="reject-cookies" class="btn">Refuser</button>
+
+    <div id="cookie-banner" class="cookie-banner">
+        <p>Ce site utilise des cookies pour améliorer votre expérience. <a href="cgu.html#cookies">En savoir plus</a></p>
+        <div class="cookie-actions">
+            <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+            <button id="reject-cookies" class="btn">Refuser</button>
+        </div>
     </div>
-</div>
-<script>
-  const cookieBanner = document.getElementById('cookie-banner');
-  const acceptBtn = document.getElementById('accept-cookies');
-  const rejectBtn = document.getElementById('reject-cookies');
 
-  // Vérifie si l'utilisateur a déjà fait un choix
-  if (localStorage.getItem('cookiesAccepted') !== 'true' && localStorage.getItem('cookiesRejected') !== 'true') {
-    cookieBanner.style.display = 'flex';
-  }
+    <script>
+        const cookieBanner = document.getElementById("cookie-banner");
+        const acceptBtn = document.getElementById("accept-cookies");
+        const rejectBtn = document.getElementById("reject-cookies");
 
-  acceptBtn.addEventListener('click', () => {
-    localStorage.setItem('cookiesAccepted', 'true');
-    cookieBanner.style.display = 'none';
-  });
+        if (localStorage.getItem("cookiesAccepted") !== "true" && localStorage.getItem("cookiesRejected") !== "true") {
+            cookieBanner.style.display = "flex";
+        }
 
-  rejectBtn.addEventListener('click', () => {
-    localStorage.setItem('cookiesRejected', 'true');
-    cookieBanner.style.display = 'none';
-  });
-</script>
+        acceptBtn.addEventListener("click", () => {
+            localStorage.setItem("cookiesAccepted", "true");
+            cookieBanner.style.display = "none";
+        });
+
+        rejectBtn.addEventListener("click", () => {
+            localStorage.setItem("cookiesRejected", "true");
+            cookieBanner.style.display = "none";
+        });
+    </script>
 
 </body>
 </html>
