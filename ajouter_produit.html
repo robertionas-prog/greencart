@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un produit – GreenCart</title>
+    <meta name="description" content="Ajoutez un nouveau produit à votre catalogue producteur GreenCart.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+
+<header>
+    <div class="container header-inner">
+        <div class="header-left">
+            <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
+                <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
+            </a>
+        </div>
+
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="greencart.html">Accueil</a></li>
+                <li><a href="categorie.html">Produits</a></li>
+                <li><a href="producteurs.html">Producteurs</a></li>
+                <li><a href="greencart.html#pourquoi">À propos</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+
+
+        <div class="header-right">
+            <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
+            <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
+                🛒 <span class="cart-badge" id="cart-count">0</span>
+            </a>
+            <a href="espace_producteur_dashboard.html" class="producer-cta">Dashboard</a>
+        </div>
+    </div>
+</header>
+
+
+<main class="container" style="padding:2.2rem 0 2.8rem;">
+
+
+    <section class="page-hero">
+        <h1>Ajouter un produit</h1>
+        <p class="section-intro">
+            Publiez un nouveau produit dans votre catalogue GreenCart. L’image sera envoyée dans Supabase Storage
+            puis le produit sera enregistré dans votre base.
+        </p>
+    </section>
+
+
+    <section style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:1.4rem;align-items:start;margin-top:1.4rem;">
+        
+        <form id="product-form" style="background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:1.4rem;box-shadow:0 10px 24px rgba(15,23,42,0.04);">
+            <h2 style="margin-top:0;">Nouveau produit</h2>
+
+
+            <div class="form-row">
+                <label for="product-name">Nom du produit</label>
+                <input type="text" id="product-name" placeholder="Ex : Tomates anciennes" required>
+            </div>
+
+
+            <div class="form-row">
+                <label for="product-category">Catégorie</label>
+                <select id="product-category" required>
+                    <option value="">Choisir une catégorie</option>
+                    <option value="legumes">Légumes</option>
+                    <option value="fruits">Fruits</option>
+                    <option value="viandes">Viandes</option>
+                    <option value="charcuterie">Charcuterie</option>
+                    <option value="cremerie">Crèmerie</option>
+                    <option value="epicerie">Épicerie</option>
+                    <option value="boissons">Boissons</option>
+                </select>
+            </div>
+
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-row">
+                    <label for="product-price">Prix</label>
+                    <input type="number" id="product-price" step="0.01" min="0" placeholder="Ex : 4.90" required>
+                </div>
+
+
+                <div class="form-row">
+                    <label for="product-unit">Unité</label>
+                    <input type="text" id="product-unit" placeholder="Ex : Kg, lot, pièce" required>
+                </div>
+            </div>
+
+
+            <div class="form-row">
+                <label for="product-stock">Stock</label>
+                <input type="number" id="product-stock" min="0" placeholder="Ex : 25" required>
+            </div>
+
+
+            <div class="form-row">
+                <label for="product-image">Image du produit</label>
+                <input type="file" id="product-image" accept="image/*" required>
+            </div>
+
+
+            <div class="form-row">
+                <label for="product-desc">Description</label>
+                <textarea id="product-desc" rows="5" placeholder="Décrivez le produit, son origine, ses qualités..." required></textarea>
+            </div>
+
+
+            <div class="form-row">
+                <label for="product-storage-info">Conservation</label>
+                <textarea id="product-storage-info" rows="3" placeholder="Ex : À conserver au réfrigérateur entre 2 et 6°C." required></textarea>
+            </div>
+
+
+            <button class="btn btn-primary" type="submit" style="width:100%;margin-top:1rem;">
+                Ajouter le produit
+            </button>
+
+
+            <p id="product-msg" style="margin:.9rem 0 0;color:var(--text-muted);font-size:.95rem;"></p>
+        </form>
+
+
+        <div class="legal-box" style="padding:1.4rem;background:#fff;border:1px solid #e5e7eb;border-radius:20px;box-shadow:0 10px 24px rgba(15,23,42,0.04);">
+            <h2 style="margin-top:0;">Conseils de publication</h2>
+            <p style="margin:0;color:var(--text-muted);line-height:1.7;">
+                Ajoutez un nom clair, une photo propre et une description simple. Le produit sera publié comme actif
+                et visible dans votre vitrine producteur.
+            </p>
+
+
+            <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid #e5e7eb;">
+                <strong>Champs envoyés en base</strong>
+                <p style="margin:.4rem 0 0;color:var(--text-muted);line-height:1.7;">
+                    slug, name, description, price, unit, category, image_url, stock, storage_info, is_active, producer_id
+                </p>
+            </div>
+
+
+            <div style="margin-top:1rem;background:var(--bg-soft);border-radius:14px;padding:1rem;border:1px solid #e5e7eb;">
+                <strong>Bucket Storage utilisé</strong>
+                <p style="margin:.4rem 0 0;color:var(--text-muted);line-height:1.7;">
+                    product-images
+                </p>
+            </div>
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<footer>
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            <div class="footer-brand-title">GreenCart</div>
+            <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
+        </div>
+
+
+        <div class="footer-links">
+            <strong>Informations</strong>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="cgu.html">CGU</a>
+            <a href="cgv.html">CGV</a>
+        </div>
+
+
+        <div class="footer-contact">
+            <strong>Contact</strong>
+            <div class="footer-contact-row">
+                <span>✉️</span>
+                <a href="mailto:contact@greencart.fr">contact@greencart.fr</a>
+            </div>
+            <div class="footer-contact-row">
+                <span>📞</span>
+                <span>01 23 45 67 89</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer-bottom">
+        © 2026 GreenCart – Projet étudiant.
+    </div>
+</footer>
+
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js";
+
+
+const supabaseUrl = "https://yzlcfuxeljeidtjdcmbd.supabase.co/rest/v1/";
+const supabaseKey = "sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+
+const BUCKET_NAME = "product-images";
+
+
+const cartCountEl = document.getElementById("cart-count");
+const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+
+
+const form = document.getElementById("product-form");
+const msg = document.getElementById("product-msg");
+
+
+function slugify(text) {
+    return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    msg.style.color = "var(--text-muted)";
+    msg.textContent = "Enregistrement du produit...";
+
+
+    const name = document.getElementById("product-name").value.trim();
+    const category = document.getElementById("product-category").value.trim();
+    const price = parseFloat(document.getElementById("product-price").value);
+    const unit = document.getElementById("product-unit").value.trim();
+    const stock = parseInt(document.getElementById("product-stock").value, 10);
+    const description = document.getElementById("product-desc").value.trim();
+    const storageInfo = document.getElementById("product-storage-info").value.trim();
+    const imageFile = document.getElementById("product-image").files[0];
+
+
+    const producerId = Number(localStorage.getItem("greencartProducerId")) || 1;
+
+
+    if (!imageFile) {
+        msg.style.color = "#b91c1c";
+        msg.textContent = "Veuillez sélectionner une image.";
+        return;
+    }
+
+
+    const baseSlug = slugify(name);
+    const uniqueStamp = Date.now();
+    const finalSlug = `${baseSlug}-${uniqueStamp}`;
+    const fileExt = imageFile.name.split(".").pop()?.toLowerCase() || "jpg";
+    const filePath = `${finalSlug}.${fileExt}`;
+
+
+    const { error: uploadError } = await supabase.storage
+        .from(BUCKET_NAME)
+        .upload(filePath, imageFile, {
+            cacheControl: "3600",
+            upsert: false
+        });
+
+
+    if (uploadError) {
+        console.error(uploadError);
+        msg.style.color = "#b91c1c";
+        msg.textContent = "Erreur lors de l'envoi de l'image dans le storage.";
+        return;
+    }
+
+
+    const { data: publicUrlData } = supabase.storage
+        .from(BUCKET_NAME)
+        .getPublicUrl(filePath);
+
+
+    const imageUrl = publicUrlData.publicUrl;
+
+
+    const { error: insertError } = await supabase
+        .from("products")
+        .insert([{
+            producer_id: producerId,
+            slug: finalSlug,
+            name,
+            description,
+            price,
+            unit,
+            category,
+            image_url: imageUrl,
+            stock,
+            storage_info: storageInfo,
+            is_active: true
+        }]);
+
+
+    if (insertError) {
+        console.error(insertError);
+        msg.style.color = "#b91c1c";
+        msg.textContent = "Erreur lors de l'enregistrement du produit en base.";
+        return;
+    }
+
+
+    msg.style.color = "#166534";
+    msg.textContent = "Produit ajouté avec succès. Redirection vers votre vitrine...";
+    form.reset();
+
+
+    setTimeout(() => {
+        window.location.href = "ma_vitrine_producteur.html";
+    }, 1000);
+});
+</script>
+
+
+</body>
+</html>
