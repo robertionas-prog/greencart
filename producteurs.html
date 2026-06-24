@@ -38,7 +38,6 @@
     </header>
 
     <main class="producers-page container">
-
         <section class="page-hero">
             <h1>Nos producteurs partenaires</h1>
             <p class="section-intro">
@@ -52,7 +51,6 @@
                 <p class="section-intro">Chargement des producteurs...</p>
             </section>
         </div>
-
     </main>
 
     <footer>
@@ -113,48 +111,149 @@
                 .replace(/^-|-$/g, '');
         }
 
-        function renderStars(rating) {
-            const full = '★'.repeat(Math.max(0, Math.min(5, rating)));
-            const empty = '☆'.repeat(5 - Math.max(0, Math.min(5, rating)));
-            return full + empty;
+        function escapeHtml(text) {
+            return String(text || '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
         }
 
-        function renderReviews(reviews) {
-            if (!reviews || reviews.length === 0) {
+        function renderStars(rating) {
+            const safeRating = Math.max(1, Math.min(5, Number(rating) || 0));
+            return '★'.repeat(safeRating) + '☆'.repeat(5 - safeRating);
+        }
+
+        function canLeaveReview() {
+            return localStorage.getItem("greencartLoggedIn") === "true"
+                && localStorage.getItem("greencartRole") === "customer";
+        }
+
+        function getCurrentUserEmail() {
+            return localStorage.getItem("greencartUserEmail") || "";
+        }
+
+        function getAuthorName() {
+            const email = getCurrentUserEmail();
+            if (!email) return "Client";
+            return email.split("@")[0];
+        }
+
+        function renderProducerReviewForm(producerId) {
+            if (!canLeaveReview()) {
                 return `
-                    <div class="producer-reviews">
-                        <h3>Avis sur ce producteur</h3>
-                        <div class="reviews-grid">
-                            <article class="review-card">
-                                <div class="review-avatar" aria-hidden="true"></div>
-                                <div>
-                                    <div class="review-name">GreenCart</div>
-                                    <div class="review-stars">★★★★☆</div>
-                                    <p class="review-text">Les premiers avis clients arriveront bientôt pour ce producteur.</p>
-                                </div>
-                            </article>
-                        </div>
+                    <div class="legal-box" style="padding:1rem;margin-top:1rem;">
+                        <p style="margin:0;color:var(--text-muted);">
+                            Connectez-vous avec un compte client pour laisser un avis sur ce producteur.
+                        </p>
                     </div>
                 `;
             }
 
             return `
+                <form class="producer-review-form" data-producer-id="${producerId}" style="margin-top:1rem;">
+                    <h4 style="margin-top:0;">Laisser un avis sur ce producteur</h4>
+
+                    <div class="form-row">
+                        <label for="rating-${producerId}">Note</label>
+                        <select id="rating-${producerId}" class="producer-review-rating" required>
+                            <option value="">Choisir une note</option>
+                            <option value="5">5 / 5</option>
+                            <option value="4">4 / 5</option>
+                            <option value="3">3 / 5</option>
+                            <option value="2">2 / 5</option>
+                            <option value="1">1 / 5</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="content-${producerId}">Commentaire</label>
+                        <textarea id="content-${producerId}" class="producer-review-content" rows="4" required placeholder="Partagez votre expérience avec ce producteur..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Publier mon avis</button>
+                    <p class="producer-review-msg" style="margin:.9rem 0 0;color:var(--text-muted);font-size:.95rem;"></p>
+                </form>
+            `;
+        }
+
+        function renderReviews(reviews, producerId) {
+            return `
                 <div class="producer-reviews">
                     <h3>Avis sur ce producteur</h3>
-                    <div class="reviews-grid">
-                        ${reviews.map(review => `
+
+                    ${renderProducerReviewForm(producerId)}
+
+                    <div class="reviews-grid" style="margin-top:1rem;">
+                        ${reviews && reviews.length > 0 ? reviews.map(review => `
                             <article class="review-card">
                                 <div class="review-avatar" aria-hidden="true"></div>
                                 <div>
-                                    <div class="review-name">${review.author_name}</div>
-                                    <div class="review-stars">${renderStars(review.rating)}</div>
-                                    <p class="review-text">${review.content}</p>
+                                    <div class="review-name">${escapeHtml(review.author_name)}</div>
+                                    <div class="review-stars" aria-label="Note ${review.rating} sur 5">${renderStars(review.rating)}</div>
+                                    <p class="review-text">${escapeHtml(review.content)}</p>
                                 </div>
                             </article>
-                        `).join('')}
+                        `).join('') : `
+                            <article class="review-card">
+                                <div class="review-avatar" aria-hidden="true"></div>
+                                <div>
+                                    <div class="review-name">Aucun avis pour le moment</div>
+                                    <p class="review-text">Soyez le premier à partager votre expérience avec ce producteur.</p>
+                                </div>
+                            </article>
+                        `}
                     </div>
                 </div>
             `;
+        }
+
+        async function attachProducerReviewFormEvents() {
+            const forms = document.querySelectorAll('.producer-review-form');
+
+            forms.forEach(form => {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const producerId = Number(form.dataset.producerId);
+                    const rating = Number(form.querySelector('.producer-review-rating').value);
+                    const content = form.querySelector('.producer-review-content').value.trim();
+                    const msg = form.querySelector('.producer-review-msg');
+
+                    if (!rating || !content) {
+                        msg.style.color = '#b91c1c';
+                        msg.textContent = 'Veuillez remplir tous les champs.';
+                        return;
+                    }
+
+                    msg.style.color = 'var(--text-muted)';
+                    msg.textContent = "Envoi de votre avis...";
+
+                    const { error } = await supabaseClient
+                        .from('reviews')
+                        .insert([{
+                            producer_id: producerId,
+                            product_id: null,
+                            author_name: getAuthorName(),
+                            rating: rating,
+                            content: content,
+                            is_approved: true
+                        }]);
+
+                    if (error) {
+                        console.error('ERREUR INSERT AVIS PRODUCTEUR :', error);
+                        msg.style.color = '#b91c1c';
+                        msg.textContent = "Erreur lors de l'envoi de l'avis.";
+                        return;
+                    }
+
+                    msg.style.color = '#166534';
+                    msg.textContent = 'Avis publié avec succès.';
+                    form.reset();
+                    loadProducersPage();
+                });
+            });
         }
 
         async function loadProducersPage() {
@@ -200,7 +299,8 @@
                 .from('reviews')
                 .select('*')
                 .eq('is_approved', true)
-                .order('id', { ascending: true });
+                .is('product_id', null)
+                .order('created_at', { ascending: false });
 
             if (reviewsError) {
                 console.error('Erreur chargement avis :', reviewsError);
@@ -235,10 +335,10 @@
                 return `
                     <section class="producer-block" id="${producerAnchor}">
                         <div class="producer-top">
-                            <img class="producer-img" src="${producer.image_url || ''}" alt="${producer.name}">
+                            <img class="producer-img" src="${escapeHtml(producer.image_url || '')}" alt="${escapeHtml(producer.name)}">
                             <div class="producer-info">
-                                <h2>${producer.name}</h2>
-                                <p>${producer.description || ''}</p>
+                                <h2>${escapeHtml(producer.name)}</h2>
+                                <p>${escapeHtml(producer.description || '')}</p>
                             </div>
                         </div>
 
@@ -248,9 +348,9 @@
                                 ${producerProducts.length > 0 ? producerProducts.map(product => `
                                     <article class="mini-product">
                                         <a href="produit.html?slug=${encodeURIComponent(product.slug)}">
-                                            <img src="${product.image_url || ''}" alt="${product.name}">
+                                            <img src="${escapeHtml(product.image_url || '')}" alt="${escapeHtml(product.name)}">
                                             <div>
-                                                <h4>${product.name}</h4>
+                                                <h4>${escapeHtml(product.name)}</h4>
                                                 <p>${formatPrice(product.price, product.unit)}</p>
                                             </div>
                                         </a>
@@ -261,10 +361,12 @@
                             </div>
                         </div>
 
-                        ${renderReviews(producerReviews)}
+                        ${renderReviews(producerReviews, producer.id)}
                     </section>
                 `;
             }).join('');
+
+            await attachProducerReviewFormEvents();
         }
 
         loadProducersPage();
