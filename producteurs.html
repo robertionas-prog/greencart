@@ -6,6 +6,28 @@
     <meta name="description" content="Découvrez les producteurs partenaires de GreenCart et leurs produits locaux issus d’un savoir-faire artisanal en circuit court, proches de chez vous.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      function enableAnalytics() {
+        gtag('config', 'G-K98EQG0497');
+      }
+
+      function trackEvent(eventName, params = {}) {
+        if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+          gtag('event', eventName, {
+            page_location: window.location.href,
+            page_title: document.title,
+            ...params
+          });
+        }
+      }
+    </script>
 </head>
 
 <body>
@@ -85,6 +107,17 @@
         </div>
     </footer>
 
+    <div id="cookie-banner" class="cookie-banner" style="display:none;">
+        <p>
+            Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+            <a href="cgu.html#cookies">En savoir plus</a>
+        </p>
+        <div class="cookie-actions">
+            <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+            <button id="reject-cookies" class="btn">Refuser</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
@@ -93,9 +126,12 @@
 
         const cartCountEl = document.getElementById("cart-count");
         const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+        if (cartCountEl) {
+            cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+        }
 
         const producersList = document.getElementById("producers-list");
+        let producersPageViewTracked = false;
 
         function formatPrice(value, unit) {
             const price = Number(value).toFixed(2).replace('.', ',');
@@ -172,7 +208,7 @@
                         <textarea id="content-${producerId}" class="producer-review-content" rows="4" required placeholder="Partagez votre expérience avec ce producteur..."></textarea>
                     </div>
 
-                    <button class="btn btn-primary" type="submit">Publier mon avis</button>
+                    <button class="btn btn-primary producer-review-submit" type="submit">Publier mon avis</button>
                     <p class="producer-review-msg" style="margin:.9rem 0 0;color:var(--text-muted);font-size:.95rem;"></p>
                 </form>
             `;
@@ -207,6 +243,40 @@
                     </div>
                 </div>
             `;
+        }
+
+        function attachProducerProductTracking() {
+            document.querySelectorAll('.producer-product-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    trackEvent('producer_product_click', {
+                        producer_name: link.dataset.producerName || '',
+                        product_name: link.dataset.productName || ''
+                    });
+                });
+            });
+        }
+
+        function trackProducerAnchors() {
+            const blocks = document.querySelectorAll('.producer-block');
+            if (!('IntersectionObserver' in window) || !blocks.length) return;
+
+            const seen = new Set();
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const producerName = entry.target.dataset.producerName || '';
+                        if (!seen.has(producerName)) {
+                            seen.add(producerName);
+                            trackEvent('producer_section_view', {
+                                producer_name: producerName
+                            });
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            blocks.forEach(block => observer.observe(block));
         }
 
         async function attachProducerReviewFormEvents() {
@@ -247,6 +317,11 @@
                         msg.textContent = "Erreur lors de l'envoi de l'avis.";
                         return;
                     }
+
+                    trackEvent('producer_review_submit', {
+                        producer_id: producerId,
+                        rating: rating
+                    });
 
                     msg.style.color = '#166534';
                     msg.textContent = 'Avis publié avec succès.';
@@ -333,7 +408,7 @@
                 const producerAnchor = slugify(producer.name);
 
                 return `
-                    <section class="producer-block" id="${producerAnchor}">
+                    <section class="producer-block" id="${producerAnchor}" data-producer-name="${escapeHtml(producer.name)}">
                         <div class="producer-top">
                             <img class="producer-img" src="${escapeHtml(producer.image_url || '')}" alt="${escapeHtml(producer.name)}">
                             <div class="producer-info">
@@ -347,7 +422,12 @@
                             <div class="producer-products-grid">
                                 ${producerProducts.length > 0 ? producerProducts.map(product => `
                                     <article class="mini-product">
-                                        <a href="produit.html?slug=${encodeURIComponent(product.slug)}">
+                                        <a
+                                            href="produit.html?slug=${encodeURIComponent(product.slug)}"
+                                            class="producer-product-link"
+                                            data-producer-name="${escapeHtml(producer.name)}"
+                                            data-product-name="${escapeHtml(product.name)}"
+                                        >
                                             <img src="${escapeHtml(product.image_url || '')}" alt="${escapeHtml(product.name)}">
                                             <div>
                                                 <h4>${escapeHtml(product.name)}</h4>
@@ -367,9 +447,52 @@
             }).join('');
 
             await attachProducerReviewFormEvents();
+            attachProducerProductTracking();
+            trackProducerAnchors();
+
+            if (!producersPageViewTracked) {
+                trackEvent('producers_page_view', {
+                    producers_count: producers.length
+                });
+                producersPageViewTracked = true;
+            }
         }
 
         loadProducersPage();
+
+        if (localStorage.getItem('cookiesAccepted') === 'true') {
+            enableAnalytics();
+        }
+    </script>
+
+    <script>
+        const cookieBanner = document.getElementById('cookie-banner');
+        const acceptBtn = document.getElementById('accept-cookies');
+        const rejectBtn = document.getElementById('reject-cookies');
+
+        const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+        const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+        if (cookieBanner && !accepted && !rejected) {
+            cookieBanner.style.display = 'flex';
+        }
+
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem('cookiesAccepted', 'true');
+                localStorage.removeItem('cookiesRejected');
+                if (cookieBanner) cookieBanner.style.display = 'none';
+                enableAnalytics();
+            });
+        }
+
+        if (rejectBtn) {
+            rejectBtn.addEventListener('click', () => {
+                localStorage.setItem('cookiesRejected', 'true');
+                localStorage.removeItem('cookiesAccepted');
+                if (cookieBanner) cookieBanner.style.display = 'none';
+            });
+        });
     </script>
 
 </body>
