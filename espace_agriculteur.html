@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -6,22 +6,31 @@
     <meta name="description" content="Rejoignez GreenCart en tant que producteur local et développez votre activité grâce à une plateforme en circuit court.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      function enableAnalytics() {
+        gtag('config', 'G-K98EQG0497');
+      }
+    </script>
 </head>
 
-
 <body>
-
 
 <header>
     <div class="container header-inner">
         <div class="header-left">
-            <a href="greencart.html">
+            <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
                 <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
             </a>
         </div>
 
-
-        <nav>
+        <nav aria-label="Navigation principale">
             <ul>
                 <li><a href="greencart.html">Accueil</a></li>
                 <li><a href="categorie.html">Produits</a></li>
@@ -31,53 +40,43 @@
             </ul>
         </nav>
 
-
         <div class="header-right">
-            <div class="icon-circle">👤</div>
-            <a href="panier.html" class="icon-circle cart-icon">
+            <div class="icon-circle" aria-label="Mon compte">👤</div>
+            <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
                 🛒 <span class="cart-badge" id="cart-count">0</span>
             </a>
         </div>
     </div>
 </header>
 
-
 <main>
-
 
 <!-- HERO -->
 <section class="producer-hero-page container">
     <div class="producer-hero-grid">
 
-
         <div>
             <p class="producer-kicker">Partenariat producteurs</p>
 
-
             <h1>Développez votre activité locale avec GreenCart</h1>
-
 
             <p class="producer-lead">
                 Rejoignez une plateforme dédiée aux producteurs locaux et valorisez votre savoir-faire.
                 Touchez une nouvelle clientèle tout en restant fidèle au circuit court.
             </p>
 
-
             <div class="producer-hero-actions">
-                <a href="devenir_producteur.html" class="btn btn-primary">Devenir producteur</a>
+                <a href="devenir_producteur.html" class="btn btn-primary producer-join-btn">Devenir producteur</a>
                 <a href="#avantages" class="btn">Découvrir les avantages</a>
             </div>
         </div>
-
 
         <div class="producer-hero-visual">
             <img src="images/ferme-des-horizons.jpeg" alt="Producteur local">
         </div>
 
-
     </div>
 </section>
-
 
 <!-- AVANTAGES -->
 <section class="container section" id="avantages">
@@ -88,9 +87,7 @@
         </p>
     </div>
 
-
     <div class="producer-benefits-grid">
-
 
         <div class="producer-benefit-card">
             <div class="producer-benefit-icon">🌍</div>
@@ -98,13 +95,11 @@
             <p>Faites connaître votre exploitation auprès de clients proches de chez vous.</p>
         </div>
 
-
         <div class="producer-benefit-card">
             <div class="producer-benefit-icon">🛒</div>
             <h3>Canal de vente complémentaire</h3>
             <p>Ajoutez un canal digital à votre activité sans complexité.</p>
         </div>
-
 
         <div class="producer-benefit-card">
             <div class="producer-benefit-icon">🤝</div>
@@ -112,27 +107,22 @@
             <p>Présentez votre histoire, vos produits et votre engagement.</p>
         </div>
 
-
         <div class="producer-benefit-card">
             <div class="producer-benefit-icon">🚚</div>
             <h3>Expérience simplifiée</h3>
             <p>Une organisation claire pour rassurer vos clients.</p>
         </div>
 
-
     </div>
 </section>
-
 
 <!-- IMAGE + TEXTE -->
 <section class="container section producer-showcase">
     <div class="producer-showcase-grid">
 
-
         <div class="producer-showcase-image">
             <img src="images/atelier-des-saveurs.jpg" alt="Produits artisanaux">
         </div>
-
 
         <div class="producer-showcase-content">
             <h2>Racontez votre histoire</h2>
@@ -144,10 +134,8 @@
             </p>
         </div>
 
-
     </div>
 </section>
-
 
 <!-- ETAPES -->
 <section class="container section">
@@ -155,9 +143,7 @@
         <h2>Comment ça fonctionne ?</h2>
     </div>
 
-
     <div class="producer-steps-grid">
-
 
         <div class="producer-step-card">
             <span class="producer-step-number">1</span>
@@ -165,13 +151,11 @@
             <p>Remplissez le formulaire producteur.</p>
         </div>
 
-
         <div class="producer-step-card">
             <span class="producer-step-number">2</span>
             <h3>Analyse</h3>
             <p>Nous étudions votre profil.</p>
         </div>
-
 
         <div class="producer-step-card">
             <span class="producer-step-number">3</span>
@@ -179,23 +163,19 @@
             <p>Vous êtes recontacté avec la suite.</p>
         </div>
 
-
     </div>
 </section>
-
 
 <!-- CTA FINAL -->
 <section class="container producer-final-cta">
     <div class="producer-final-cta-box">
         <h2>Prêt à rejoindre GreenCart ?</h2>
         <p>Rejoignez une plateforme dédiée aux producteurs locaux.</p>
-        <a href="devenir_producteur.html" class="btn btn-primary">Devenir producteur</a>
+        <a href="devenir_producteur.html" class="btn btn-primary producer-join-btn">Devenir producteur</a>
     </div>
 </section>
 
-
 </main>
-
 
 <footer>
     <div class="container footer-inner">
@@ -204,14 +184,12 @@
             <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
         </div>
 
-
         <div class="footer-links">
             <strong>Informations</strong>
             <a href="mentions-legales.html">Mentions légales</a>
             <a href="cgu.html">CGU</a>
             <a href="cgv.html">CGV</a>
         </div>
-
 
         <div class="footer-contact">
             <strong>Contact</strong>
@@ -224,19 +202,75 @@
         </div>
     </div>
 
-
     <div class="footer-bottom">
         © 2026 GreenCart – Projet étudiant.
     </div>
 </footer>
 
+<div id="cookie-banner" class="cookie-banner" style="display:none;">
+  <p>
+    Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+    <a href="cgu.html#cookies">En savoir plus</a>
+  </p>
+  <div class="cookie-actions">
+    <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+    <button id="reject-cookies" class="btn">Refuser</button>
+  </div>
+</div>
 
 <script>
     const cartCountEl = document.getElementById("cart-count");
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    if (cartCountEl) {
+        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+    }
+
+    document.querySelectorAll('.producer-join-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+                gtag('event', 'producer_cta_click', {
+                    cta_location: button.closest('.producer-final-cta') ? 'final_cta' : 'hero',
+                    page_location: window.location.href,
+                    page_title: document.title
+                });
+            }
+        });
+    });
 </script>
 
+<script>
+  const cookieBanner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const rejectBtn = document.getElementById('reject-cookies');
+
+  const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+  const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+  if (accepted) {
+    enableAnalytics();
+  }
+
+  if (cookieBanner && !accepted && !rejected) {
+    cookieBanner.style.display = 'flex';
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      localStorage.removeItem('cookiesRejected');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+      enableAnalytics();
+    });
+  }
+
+  if (rejectBtn) {
+    rejectBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesRejected', 'true');
+      localStorage.removeItem('cookiesAccepted');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+    });
+  }
+</script>
 
 </body>
 </html>
