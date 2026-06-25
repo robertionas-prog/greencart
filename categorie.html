@@ -6,6 +6,18 @@
     <meta name="description" content="Découvrez les produits locaux GreenCart en circuit court : fruits, légumes, viandes, crèmerie et épicerie artisanale issus de producteurs partenaires.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      function enableAnalytics() {
+        gtag('config', 'G-K98EQG0497');
+      }
+    </script>
 </head>
 
 <body>
@@ -23,7 +35,7 @@
                     <li><a href="greencart.html">Accueil</a></li>
                     <li><a href="categorie.html" aria-current="page">Produits</a></li>
                     <li><a href="producteurs.html">Producteurs</a></li>
-                    <li><a href="#pourquoi">À propos</a></li>
+                    <li><a href="greencart.html#pourquoi">À propos</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
@@ -95,9 +107,20 @@
         </div>
 
         <div class="footer-bottom">
-            © 2025 GreenCart – Projet étudiant.
+            © 2026 GreenCart – Projet étudiant.
         </div>
     </footer>
+
+    <div id="cookie-banner" class="cookie-banner" style="display:none;">
+      <p>
+        Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+        <a href="cgu.html#cookies">En savoir plus</a>
+      </p>
+      <div class="cookie-actions">
+        <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+        <button id="reject-cookies" class="btn">Refuser</button>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -210,6 +233,14 @@
             updateActiveButton();
             renderProducts();
 
+            if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+                gtag('event', 'product_filter_click', {
+                    filter_name: filter,
+                    page_location: window.location.href,
+                    page_title: document.title
+                });
+            }
+
             const url = new URL(window.location.href);
 
             if (filter === "all") {
@@ -283,6 +314,40 @@
         }
 
         loadCategoryPage();
+    </script>
+
+    <script>
+      const cookieBanner = document.getElementById('cookie-banner');
+      const acceptBtn = document.getElementById('accept-cookies');
+      const rejectBtn = document.getElementById('reject-cookies');
+
+      const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+      const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+      if (accepted) {
+        enableAnalytics();
+      }
+
+      if (cookieBanner && !accepted && !rejected) {
+        cookieBanner.style.display = 'flex';
+      }
+
+      if (acceptBtn) {
+        acceptBtn.addEventListener('click', () => {
+          localStorage.setItem('cookiesAccepted', 'true');
+          localStorage.removeItem('cookiesRejected');
+          if (cookieBanner) cookieBanner.style.display = 'none';
+          enableAnalytics();
+        });
+      }
+
+      if (rejectBtn) {
+        rejectBtn.addEventListener('click', () => {
+          localStorage.setItem('cookiesRejected', 'true');
+          localStorage.removeItem('cookiesAccepted');
+          if (cookieBanner) cookieBanner.style.display = 'none';
+        });
+      }
     </script>
 
 </body>
