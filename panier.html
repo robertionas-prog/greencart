@@ -6,6 +6,18 @@
     <meta name="description" content="Consultez votre panier GreenCart et préparez votre commande de produits locaux en circuit court auprès de producteurs partenaires avec livraison simplifiée.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      function enableAnalytics() {
+        gtag('config', 'G-K98EQG0497');
+      }
+    </script>
 </head>
 
 <body>
@@ -39,7 +51,6 @@
 
 <main class="cart-page container">
 
-    <!-- Panier -->
     <section class="cart-hero">
         <h1>Mon panier</h1>
         <p class="section-intro">
@@ -49,10 +60,8 @@
 
     <section class="cart-layout" aria-label="Contenu du panier">
 
-        <!-- Liste produits -->
         <div class="cart-items" id="cart-items"></div>
 
-        <!-- Récap -->
         <aside class="cart-summary" aria-label="Récapitulatif du panier">
             <h2>Récapitulatif</h2>
 
@@ -84,7 +93,6 @@
 
 </main>
 
-<!-- Pop-up connexion obligatoire -->
 <div id="login-required-modal" class="login-modal-overlay" style="display: none;">
     <div class="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
         <h2 id="login-modal-title">Connexion requise</h2>
@@ -126,9 +134,20 @@
     </div>
 
     <div class="footer-bottom">
-      © 2025 GreenCart – Projet étudiant.
+      © 2026 GreenCart – Projet étudiant.
     </div>
-  </footer>
+</footer>
+
+<div id="cookie-banner" class="cookie-banner" style="display:none;">
+    <p>
+        Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+        <a href="cgu.html#cookies">En savoir plus</a>
+    </p>
+    <div class="cookie-actions">
+        <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+        <button id="reject-cookies" class="btn">Refuser</button>
+    </div>
+</div>
 
 <script>
     const cartCountEl = document.getElementById("cart-count");
@@ -143,6 +162,7 @@
     const goToLoginBtn = document.getElementById("go-to-login");
 
     const SHIPPING_COST = 2.90;
+    let cartViewTracked = false;
 
     function formatPrice(n){
         return n.toFixed(2).replace(".", ",") + "€";
@@ -156,6 +176,43 @@
         localStorage.setItem("cart", JSON.stringify(cart));
     }
 
+    function isAnalyticsAllowed() {
+        return localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function';
+    }
+
+    function buildGa4Items(cart) {
+        return cart.map((item, index) => ({
+            item_id: String(item.id || index + 1),
+            item_name: item.name || 'Produit',
+            price: Number(item.price || 0),
+            quantity: Number(item.qty || 1)
+        }));
+    }
+
+    function trackEvent(eventName, params = {}) {
+        if (isAnalyticsAllowed()) {
+            gtag('event', eventName, {
+                page_location: window.location.href,
+                page_title: document.title,
+                ...params
+            });
+        }
+    }
+
+    function trackViewCartOnce(cart) {
+        if (cartViewTracked || !cart.length) return;
+
+        const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+        trackEvent('view_cart', {
+            currency: 'EUR',
+            value: Number(subtotal.toFixed(2)),
+            items: buildGa4Items(cart)
+        });
+
+        cartViewTracked = true;
+    }
+
     function refreshBadge(cart){
         const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
         cartCountEl.textContent = totalItems;
@@ -167,6 +224,9 @@
 
     function openLoginModal(){
         loginRequiredModal.style.display = "flex";
+        trackEvent('login_required_modal_open', {
+            source_page: 'panier'
+        });
     }
 
     function closeLoginModal(){
@@ -181,13 +241,23 @@
             cartItemsEl.innerHTML = `
                 <div class="cart-empty">
                     <p>Votre panier est vide.</p>
-                    <a href="categorie.html" class="btn btn-primary">Voir les produits</a>
+                    <a href="categorie.html" class="btn btn-primary" id="empty-cart-products-link">Voir les produits</a>
                 </div>
             `;
             subtotalEl.textContent = formatPrice(0);
             shippingEl.textContent = formatPrice(SHIPPING_COST);
             totalEl.textContent = formatPrice(0);
             checkoutBtn.disabled = true;
+
+            const emptyLink = document.getElementById('empty-cart-products-link');
+            if (emptyLink) {
+                emptyLink.addEventListener('click', () => {
+                    trackEvent('empty_cart_cta_click', {
+                        cta_name: 'voir_les_produits'
+                    });
+                });
+            }
+
             return;
         }
 
@@ -216,6 +286,7 @@
 
         attachEvents();
         updateTotals();
+        trackViewCartOnce(cart);
     }
 
     function attachEvents(){
@@ -231,23 +302,82 @@
             minusBtn.addEventListener("click", () => {
                 cart[index].qty = Math.max(1, cart[index].qty - 1);
                 setCart(cart);
+                trackEvent('remove_from_cart', {
+                    currency: 'EUR',
+                    value: Number(cart[index].price || 0),
+                    items: [{
+                        item_id: String(cart[index].id || index + 1),
+                        item_name: cart[index].name || 'Produit',
+                        price: Number(cart[index].price || 0),
+                        quantity: 1
+                    }]
+                });
                 renderCart();
             });
 
             plusBtn.addEventListener("click", () => {
                 cart[index].qty += 1;
                 setCart(cart);
+                trackEvent('add_to_cart', {
+                    currency: 'EUR',
+                    value: Number(cart[index].price || 0),
+                    items: [{
+                        item_id: String(cart[index].id || index + 1),
+                        item_name: cart[index].name || 'Produit',
+                        price: Number(cart[index].price || 0),
+                        quantity: 1
+                    }]
+                });
                 renderCart();
             });
 
             qtyInput.addEventListener("input", () => {
+                const previousQty = cart[index].qty;
                 const v = Math.max(1, parseInt(qtyInput.value || "1", 10));
                 cart[index].qty = v;
                 setCart(cart);
+
+                if (v > previousQty) {
+                    trackEvent('add_to_cart', {
+                        currency: 'EUR',
+                        value: Number(cart[index].price || 0) * (v - previousQty),
+                        items: [{
+                            item_id: String(cart[index].id || index + 1),
+                            item_name: cart[index].name || 'Produit',
+                            price: Number(cart[index].price || 0),
+                            quantity: v - previousQty
+                        }]
+                    });
+                } else if (v < previousQty) {
+                    trackEvent('remove_from_cart', {
+                        currency: 'EUR',
+                        value: Number(cart[index].price || 0) * (previousQty - v),
+                        items: [{
+                            item_id: String(cart[index].id || index + 1),
+                            item_name: cart[index].name || 'Produit',
+                            price: Number(cart[index].price || 0),
+                            quantity: previousQty - v
+                        }]
+                    });
+                }
+
                 renderCart();
             });
 
             removeBtn.addEventListener("click", () => {
+                const removedItem = { ...cart[index] };
+
+                trackEvent('remove_from_cart', {
+                    currency: 'EUR',
+                    value: Number(removedItem.price || 0) * Number(removedItem.qty || 1),
+                    items: [{
+                        item_id: String(removedItem.id || index + 1),
+                        item_name: removedItem.name || 'Produit',
+                        price: Number(removedItem.price || 0),
+                        quantity: Number(removedItem.qty || 1)
+                    }]
+                });
+
                 cart.splice(index, 1);
                 setCart(cart);
                 renderCart();
@@ -266,19 +396,27 @@
     }
 
     checkoutBtn.addEventListener("click", () => {
-    const cart = getCart();
+        const cart = getCart();
 
-    if(cart.length === 0){
-        return;
-    }
+        if(cart.length === 0){
+            return;
+        }
 
-    if(!isUserLoggedIn()){
-        openLoginModal();
-        return;
-    }
+        const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-    window.location.href = "commande.html";
-});
+        if(!isUserLoggedIn()){
+            openLoginModal();
+            return;
+        }
+
+        trackEvent('begin_checkout', {
+            currency: 'EUR',
+            value: Number((subtotal + SHIPPING_COST).toFixed(2)),
+            items: buildGa4Items(cart)
+        });
+
+        window.location.href = "commande.html";
+    });
 
     closeLoginModalBtn.addEventListener("click", closeLoginModal);
 
@@ -290,10 +428,58 @@
 
     goToLoginBtn.addEventListener("click", () => {
         sessionStorage.setItem("redirectAfterLogin", "panier");
+        trackEvent('login_redirect_click', {
+            source_page: 'panier'
+        });
         window.location.href = "profil.html";
     });
 
     renderCart();
+
+    if (localStorage.getItem('cookiesAccepted') === 'true') {
+        enableAnalytics();
+    }
+</script>
+
+<script>
+    const cookieBanner = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('accept-cookies');
+    const rejectBtn = document.getElementById('reject-cookies');
+
+    const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+    const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+    if (cookieBanner && !accepted && !rejected) {
+        cookieBanner.style.display = 'flex';
+    }
+
+    if (acceptBtn) {
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookiesAccepted', 'true');
+            localStorage.removeItem('cookiesRejected');
+            if (cookieBanner) cookieBanner.style.display = 'none';
+            enableAnalytics();
+
+            const cart = getCart();
+            if (cart.length) {
+                const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+                gtag('event', 'view_cart', {
+                    currency: 'EUR',
+                    value: Number(subtotal.toFixed(2)),
+                    items: buildGa4Items(cart)
+                });
+                cartViewTracked = true;
+            }
+        });
+    }
+
+    if (rejectBtn) {
+        rejectBtn.addEventListener('click', () => {
+            localStorage.setItem('cookiesRejected', 'true');
+            localStorage.removeItem('cookiesAccepted');
+            if (cookieBanner) cookieBanner.style.display = 'none';
+        });
+    }
 </script>
 
 </body>
