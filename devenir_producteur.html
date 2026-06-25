@@ -8,6 +8,18 @@
 
   <link rel="stylesheet" href="style.css">
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    function enableAnalytics() {
+      gtag('config', 'G-K98EQG0497');
+    }
+  </script>
+
   <!-- Google reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
@@ -87,11 +99,11 @@
   <header>
     <div class="container header-inner">
 
-      <a href="greencart.html">
+      <a href="greencart.html" aria-label="Retour à l'accueil GreenCart">
         <img src="images/logo.png" alt="GreenCart" class="logo-img">
       </a>
 
-      <nav>
+      <nav aria-label="Navigation principale">
         <ul>
           <li><a href="greencart.html">Accueil</a></li>
           <li><a href="categorie.html">Produits</a></li>
@@ -174,7 +186,6 @@
         <label for="message">Présentation / description des produits</label>
         <textarea id="message" name="message" rows="4" required></textarea>
 
-        <!-- CAPTCHA -->
         <div class="g-recaptcha" data-sitekey="6LdFsuksAAAAABAspZ4nNm2v6iL9CZY8kjhvRMc7"></div>
 
         <button type="submit">Envoyer ma candidature</button>
@@ -189,75 +200,128 @@
 
   </main>
 
+  <div id="cookie-banner" class="cookie-banner" style="display:none;">
+    <p>
+      Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+      <a href="cgu.html#cookies">En savoir plus</a>
+    </p>
+    <div class="cookie-actions">
+      <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+      <button id="reject-cookies" class="btn">Refuser</button>
+    </div>
+  </div>
+
   <script>
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const recaptchaResponse = document.getElementById('g-recaptcha-response');
-      if (recaptchaResponse) {
-        recaptchaResponse.removeAttribute('required');
-        recaptchaResponse.removeAttribute('aria-required');
-      }
-    }, 1000);
-  });
-</script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const recaptchaResponse = document.getElementById('g-recaptcha-response');
+        if (recaptchaResponse) {
+          recaptchaResponse.removeAttribute('required');
+          recaptchaResponse.removeAttribute('aria-required');
+        }
+      }, 1000);
+    });
+  </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const form = document.getElementById('producerForm');
-  const confirmation = document.getElementById('confirmationMessage');
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const form = document.getElementById('producerForm');
+    const confirmation = document.getElementById('confirmationMessage');
 
-  const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
+    const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-    const data = {
-      farm_name: document.getElementById('name').value.trim(),
-      company_name: document.getElementById('company').value.trim(),
-      siret: document.getElementById('siret').value.trim(),
-      address: document.getElementById('address').value.trim(),
-      city: document.getElementById('city').value.trim(),
-      postal_code: document.getElementById('postal-code').value.trim(),
-      activity: document.getElementById('activity').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      message: document.getElementById('message').value.trim()
-    };
+      const data = {
+        farm_name: document.getElementById('name').value.trim(),
+        company_name: document.getElementById('company').value.trim(),
+        siret: document.getElementById('siret').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        postal_code: document.getElementById('postal-code').value.trim(),
+        activity: document.getElementById('activity').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        message: document.getElementById('message').value.trim()
+      };
 
-    if (
-      !data.farm_name || !data.company_name || !data.siret || !data.address ||
-      !data.city || !data.postal_code || !data.activity || !data.email ||
-      !data.phone || !data.message
-    ) {
-      alert('Tous les champs sont requis.');
-      return;
-    }
-
-    try {
-      const { error } = await supabaseClient
-        .from('producer_applications')
-        .insert([data]);
-
-      if (error) {
-        console.error(error);
-        alert("Erreur lors de l'envoi de la candidature.");
+      if (
+        !data.farm_name || !data.company_name || !data.siret || !data.address ||
+        !data.city || !data.postal_code || !data.activity || !data.email ||
+        !data.phone || !data.message
+      ) {
+        alert('Tous les champs sont requis.');
         return;
       }
 
-      form.reset();
-      confirmation.classList.add('visible');
+      try {
+        const { error } = await supabaseClient
+          .from('producer_applications')
+          .insert([data]);
 
-      setTimeout(() => {
-        confirmation.classList.remove('visible');
-      }, 4000);
-    } catch (error) {
-      console.error(error);
-      alert('Impossible de contacter la base de données.');
+        if (error) {
+          console.error(error);
+          alert("Erreur lors de l'envoi de la candidature.");
+          return;
+        }
+
+        if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+          gtag('event', 'producer_application_submit', {
+            activity_type: data.activity,
+            page_location: window.location.href,
+            page_title: document.title
+          });
+        }
+
+        form.reset();
+        confirmation.classList.add('visible');
+
+        setTimeout(() => {
+          confirmation.classList.remove('visible');
+        }, 4000);
+      } catch (error) {
+        console.error(error);
+        alert('Impossible de contacter la base de données.');
+      }
+    });
+  </script>
+
+  <script>
+    const cookieBanner = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('accept-cookies');
+    const rejectBtn = document.getElementById('reject-cookies');
+
+    const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+    const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+    if (accepted) {
+      enableAnalytics();
     }
-  });
-</script>
+
+    if (cookieBanner && !accepted && !rejected) {
+      cookieBanner.style.display = 'flex';
+    }
+
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', () => {
+        localStorage.setItem('cookiesAccepted', 'true');
+        localStorage.removeItem('cookiesRejected');
+        if (cookieBanner) cookieBanner.style.display = 'none';
+        enableAnalytics();
+      });
+    }
+
+    if (rejectBtn) {
+      rejectBtn.addEventListener('click', () => {
+        localStorage.setItem('cookiesRejected', 'true');
+        localStorage.removeItem('cookiesAccepted');
+        if (cookieBanner) cookieBanner.style.display = 'none';
+      });
+    }
+  </script>
 </body>
 </html>
