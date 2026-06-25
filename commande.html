@@ -6,6 +6,18 @@
     <meta name="description" content="Finalisez votre commande GreenCart en renseignant vos coordonnées et votre adresse de livraison pour compléter le parcours d’achat fictif.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      function enableAnalytics() {
+        gtag('config', 'G-K98EQG0497');
+      }
+    </script>
 </head>
 
 <body>
@@ -180,6 +192,17 @@
     </div>
 </footer>
 
+<div id="cookie-banner" class="cookie-banner" style="display:none;">
+  <p>
+    Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+    <a href="cgu.html#cookies">En savoir plus</a>
+  </p>
+  <div class="cookie-actions">
+    <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+    <button id="reject-cookies" class="btn">Refuser</button>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const cartCountEl = document.getElementById('cart-count');
@@ -199,7 +222,7 @@
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   function formatPrice(n) {
-    return n.toFixed(2).replace('.', ',');
+    return n.toFixed(2).replace('.', ',') + '€';
   }
 
   function getCart() {
@@ -217,6 +240,22 @@
 
   function openOrderSuccessModal(email) {
     orderSuccessText.textContent = `Commande passée avec succès. Vous allez recevoir un e-mail de confirmation à l’adresse ${email}.`;
+
+    if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+      const cart = getCart();
+      const itemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      const total = subtotal + SHIPPING_COST;
+
+      gtag('event', 'purchase', {
+        currency: 'EUR',
+        value: Number(total.toFixed(2)),
+        items_count: itemsCount,
+        page_location: window.location.href,
+        page_title: document.title
+      });
+    }
+
     orderSuccessModal.style.display = 'flex';
   }
 
@@ -264,7 +303,7 @@
       return;
     }
 
-    if (cart.length === 0) {
+    if (!cart.length) {
       itemsCountEl.textContent = '0';
       subtotalEl.textContent = formatPrice(0);
       shippingEl.textContent = formatPrice(SHIPPING_COST);
@@ -272,6 +311,16 @@
       checkoutMsg.textContent = 'Votre panier est vide. Retournez au panier pour ajouter des produits.';
       checkoutForm.querySelector('button[type="submit"]').disabled = true;
       return;
+    }
+
+    if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+      gtag('event', 'begin_checkout', {
+        currency: 'EUR',
+        value: Number((cart.reduce((sum, item) => sum + item.price * item.qty, 0) + SHIPPING_COST).toFixed(2)),
+        items_count: cart.reduce((sum, item) => sum + item.qty, 0),
+        page_location: window.location.href,
+        page_title: document.title
+      });
     }
 
     const itemsCount = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -374,6 +423,40 @@
   });
 
   renderSummary();
+</script>
+
+<script>
+  const cookieBanner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const rejectBtn = document.getElementById('reject-cookies');
+
+  const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+  const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+  if (accepted) {
+    enableAnalytics();
+  }
+
+  if (cookieBanner && !accepted && !rejected) {
+    cookieBanner.style.display = 'flex';
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      localStorage.removeItem('cookiesRejected');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+      enableAnalytics();
+    });
+  }
+
+  if (rejectBtn) {
+    rejectBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesRejected', 'true');
+      localStorage.removeItem('cookiesAccepted');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+    });
+  }
 </script>
 
 </body>
