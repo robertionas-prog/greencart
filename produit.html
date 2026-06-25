@@ -6,6 +6,28 @@
     <meta name="description" content="Découvrez les détails d’un produit local sur GreenCart : origine, producteur, caractéristiques et qualité pour une consommation responsable en circuit court.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      function enableAnalytics() {
+        gtag('config', 'G-K98EQG0497');
+      }
+
+      function trackEvent(eventName, params = {}) {
+        if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+          gtag('event', eventName, {
+            page_location: window.location.href,
+            page_title: document.title,
+            ...params
+          });
+        }
+      }
+    </script>
 </head>
 
 <body>
@@ -23,7 +45,7 @@
                     <li><a href="greencart.html">Accueil</a></li>
                     <li><a href="categorie.html" aria-current="page">Produits</a></li>
                     <li><a href="producteurs.html">Producteurs</a></li>
-                    <li><a href="#pourquoi">À propos</a></li>
+                    <li><a href="greencart.html#pourquoi">À propos</a></li>
                     <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
@@ -51,9 +73,9 @@
                 <div class="qty-row">
                     <div class="qty-label">Quantité</div>
                     <div class="qty-control">
-                        <button class="qty-btn" id="minus-btn" type="button">–</button>
+                        <button class="qty-btn" id="minus-btn" type="button" aria-label="Diminuer la quantité">–</button>
                         <input class="qty-input" id="qty-input" type="number" min="1" value="1">
-                        <button class="qty-btn" id="plus-btn" type="button">+</button>
+                        <button class="qty-btn" id="plus-btn" type="button" aria-label="Augmenter la quantité">+</button>
                     </div>
                 </div>
 
@@ -140,6 +162,17 @@
         </div>
     </footer>
 
+    <div id="cookie-banner" class="cookie-banner" style="display:none;">
+        <p>
+            Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+            <a href="cgu.html#cookies">En savoir plus</a>
+        </p>
+        <div class="cookie-actions">
+            <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+            <button id="reject-cookies" class="btn">Refuser</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://yzlcfuxeljeidtjdcmbd.supabase.co';
@@ -169,6 +202,8 @@
         const slug = params.get("slug") || params.get("id");
 
         let currentProduct = null;
+        let currentRecommendedProduct = null;
+        let productViewTracked = false;
 
         function refreshBadge() {
             const cart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -204,6 +239,16 @@
         function renderStars(rating) {
             const safeRating = Math.max(0, Math.min(5, Math.round(Number(rating) || 0)));
             return '★'.repeat(safeRating) + '☆'.repeat(5 - safeRating);
+        }
+
+        function buildGa4Item(product, qty = 1) {
+            return [{
+                item_id: String(product.slug || product.id || ''),
+                item_name: product.name || 'Produit',
+                item_category: product.category || '',
+                price: Number(product.price || 0),
+                quantity: Number(qty || 1)
+            }];
         }
 
         function updateTotal() {
@@ -249,6 +294,7 @@
             recoLinkEl.href = "categorie.html";
             recoLinkEl.textContent = "Voir les produits";
 
+            currentRecommendedProduct = null;
             document.title = "Produit introuvable – GreenCart";
         }
 
@@ -268,6 +314,15 @@
             addBtn.style.cursor = "";
 
             updateTotal();
+
+            if (!productViewTracked) {
+                trackEvent('view_item', {
+                    currency: 'EUR',
+                    value: Number(product.price || 0),
+                    items: buildGa4Item(product, 1)
+                });
+                productViewTracked = true;
+            }
         }
 
         function renderReviews(reviews) {
@@ -297,6 +352,8 @@
         }
 
         function renderRecommendation(product) {
+            currentRecommendedProduct = product || null;
+
             if (!product) {
                 recoNameEl.textContent = "Aucun autre produit disponible";
                 recoOldEl.textContent = "";
@@ -410,10 +467,69 @@
 
             setCart(cart);
             refreshBadge();
+
+            trackEvent('add_to_cart', {
+                currency: 'EUR',
+                value: Number((currentProduct.price * qty).toFixed(2)),
+                items: buildGa4Item(currentProduct, qty)
+            });
+
             alert("Produit ajouté au panier.");
         });
 
+        recoLinkEl.addEventListener('click', () => {
+            if (!currentRecommendedProduct) return;
+
+            trackEvent('select_item', {
+                item_list_name: 'produits_recommandes',
+                items: buildGa4Item(currentRecommendedProduct, 1)
+            });
+        });
+
         loadProductPage();
+
+        if (localStorage.getItem('cookiesAccepted') === 'true') {
+            enableAnalytics();
+        }
+    </script>
+
+    <script>
+        const cookieBanner = document.getElementById('cookie-banner');
+        const acceptBtn = document.getElementById('accept-cookies');
+        const rejectBtn = document.getElementById('reject-cookies');
+
+        const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+        const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+        if (cookieBanner && !accepted && !rejected) {
+            cookieBanner.style.display = 'flex';
+        }
+
+        if (acceptBtn) {
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem('cookiesAccepted', 'true');
+                localStorage.removeItem('cookiesRejected');
+                if (cookieBanner) cookieBanner.style.display = 'none';
+                enableAnalytics();
+
+                if (currentProduct && !productViewTracked) {
+                    trackEvent('view_item', {
+                        currency: 'EUR',
+                        value: Number(currentProduct.price || 0),
+                        items: buildGa4Item(currentProduct, 1)
+                    });
+                    productViewTracked = true;
+                }
+            });
+        }
+
+        if (rejectBtn) {
+            rejectBtn.addEventListener('click', () => {
+                localStorage.setItem('cookiesRejected', 'true');
+                localStorage.removeItem('cookiesAccepted');
+                if (cookieBanner) cookieBanner.style.display = 'none';
+            });
+        }
     </script>
 
 </body>
