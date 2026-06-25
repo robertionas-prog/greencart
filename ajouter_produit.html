@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -8,21 +8,19 @@
     <link rel="stylesheet" href="style.css">
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  function enableAnalytics() {
-    gtag('config', 'G-K98EQG0497');
-  }
-</script>
+      function enableAnalytics() {
+        gtag('config', 'G-K98EQG0497');
+      }
+    </script>
 </head>
 
-
 <body>
-
 
 <header>
     <div class="container header-inner">
@@ -31,7 +29,6 @@
                 <img src="images/logo.png" alt="Logo GreenCart" class="logo-img">
             </a>
         </div>
-
 
         <nav aria-label="Navigation principale">
             <ul>
@@ -43,7 +40,6 @@
             </ul>
         </nav>
 
-
         <div class="header-right">
             <a href="profil.html" class="icon-circle" aria-label="Mon profil">👤</a>
             <a href="panier.html" class="icon-circle cart-icon" aria-label="Panier">
@@ -54,9 +50,7 @@
     </div>
 </header>
 
-
 <main class="container" style="padding:2.2rem 0 2.8rem;">
-
 
     <section class="page-hero">
         <h1>Ajouter un produit</h1>
@@ -66,18 +60,15 @@
         </p>
     </section>
 
-
     <section style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:1.4rem;align-items:start;margin-top:1.4rem;">
         
         <form id="product-form" style="background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:1.4rem;box-shadow:0 10px 24px rgba(15,23,42,0.04);">
             <h2 style="margin-top:0;">Nouveau produit</h2>
 
-
             <div class="form-row">
                 <label for="product-name">Nom du produit</label>
                 <input type="text" id="product-name" placeholder="Ex : Tomates anciennes" required>
             </div>
-
 
             <div class="form-row">
                 <label for="product-category">Catégorie</label>
@@ -93,13 +84,11 @@
                 </select>
             </div>
 
-
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
                 <div class="form-row">
                     <label for="product-price">Prix</label>
                     <input type="number" id="product-price" step="0.01" min="0" placeholder="Ex : 4.90" required>
                 </div>
-
 
                 <div class="form-row">
                     <label for="product-unit">Unité</label>
@@ -107,39 +96,32 @@
                 </div>
             </div>
 
-
             <div class="form-row">
                 <label for="product-stock">Stock</label>
                 <input type="number" id="product-stock" min="0" placeholder="Ex : 25" required>
             </div>
-
 
             <div class="form-row">
                 <label for="product-image">Image du produit</label>
                 <input type="file" id="product-image" accept="image/*" required>
             </div>
 
-
             <div class="form-row">
                 <label for="product-desc">Description</label>
                 <textarea id="product-desc" rows="5" placeholder="Décrivez le produit, son origine, ses qualités..." required></textarea>
             </div>
-
 
             <div class="form-row">
                 <label for="product-storage-info">Conservation</label>
                 <textarea id="product-storage-info" rows="3" placeholder="Ex : À conserver au réfrigérateur entre 2 et 6°C." required></textarea>
             </div>
 
-
             <button class="btn btn-primary" type="submit" style="width:100%;margin-top:1rem;">
                 Ajouter le produit
             </button>
 
-
             <p id="product-msg" style="margin:.9rem 0 0;color:var(--text-muted);font-size:.95rem;"></p>
         </form>
-
 
         <div class="legal-box" style="padding:1.4rem;background:#fff;border:1px solid #e5e7eb;border-radius:20px;box-shadow:0 10px 24px rgba(15,23,42,0.04);">
             <h2 style="margin-top:0;">Conseils de publication</h2>
@@ -147,13 +129,11 @@
                 Ajoutez un nom clair, une photo propre et une description simple. Le produit sera publié comme actif
                 et visible dans votre vitrine producteur.
             </p>
-
+        </div>
 
     </section>
 
-
 </main>
-
 
 <footer>
     <div class="container footer-inner">
@@ -162,14 +142,12 @@
             <p style="font-size:0.9rem;">Plateforme de produits locaux en circuit court. Projet étudiant Bachelor.</p>
         </div>
 
-
         <div class="footer-links">
             <strong>Informations</strong>
             <a href="mentions-legales.html">Mentions légales</a>
             <a href="cgu.html">CGU</a>
             <a href="cgv.html">CGV</a>
         </div>
-
 
         <div class="footer-contact">
             <strong>Contact</strong>
@@ -184,21 +162,28 @@
         </div>
     </div>
 
-
     <div class="footer-bottom">
         © 2026 GreenCart – Projet étudiant.
     </div>
 </footer>
 
+<div id="cookie-banner" class="cookie-banner" style="display:none;">
+    <p>
+        Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+        <a href="cgu.html#cookies">En savoir plus</a>
+    </p>
+    <div class="cookie-actions">
+        <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+        <button id="reject-cookies" class="btn">Refuser</button>
+    </div>
+</div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
-
 const supabaseUrl = "https://yzlcfuxeljeidtjdcmbd.supabase.co";
 const supabaseKey = "sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8";
 const supabase = createClient(supabaseUrl, supabaseKey);
-
 
 const BUCKET_NAME = "product-images";
 
@@ -223,6 +208,13 @@ function slugify(text) {
 if (form) {
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        if (localStorage.getItem('cookiesAccepted') === 'true' && typeof gtag === 'function') {
+            gtag('event', 'add_product_submit', {
+                page_location: window.location.href,
+                page_title: document.title
+            });
+        }
 
         msg.style.color = "var(--text-muted)";
         msg.textContent = "Enregistrement du produit...";
@@ -311,18 +303,7 @@ if (form) {
 }
 </script>
 
-    <div id="cookie-banner" class="cookie-banner" style="display:none;">
-  <p>
-    Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
-    <a href="cgu.html#cookies">En savoir plus</a>
-  </p>
-  <div class="cookie-actions">
-    <button id="accept-cookies" class="btn btn-primary">Accepter</button>
-    <button id="reject-cookies" class="btn">Refuser</button>
-  </div>
-</div>
-
-    <script>
+<script>
   const cookieBanner = document.getElementById('cookie-banner');
   const acceptBtn = document.getElementById('accept-cookies');
   const rejectBtn = document.getElementById('reject-cookies');
@@ -355,5 +336,6 @@ if (form) {
     });
   }
 </script>
+
 </body>
 </html>
