@@ -6,6 +6,18 @@
     <meta name="description" content="Ajoutez un nouveau produit à votre catalogue producteur GreenCart.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  function enableAnalytics() {
+    gtag('config', 'G-K98EQG0497');
+  }
+</script>
 </head>
 
 
@@ -299,5 +311,49 @@ if (form) {
 }
 </script>
 
+    <div id="cookie-banner" class="cookie-banner" style="display:none;">
+  <p>
+    Ce site utilise des cookies pour améliorer votre expérience et mesurer l’audience.
+    <a href="cgu.html#cookies">En savoir plus</a>
+  </p>
+  <div class="cookie-actions">
+    <button id="accept-cookies" class="btn btn-primary">Accepter</button>
+    <button id="reject-cookies" class="btn">Refuser</button>
+  </div>
+</div>
+
+    <script>
+  const cookieBanner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const rejectBtn = document.getElementById('reject-cookies');
+
+  const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+  const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+  if (accepted) {
+    enableAnalytics();
+  }
+
+  if (cookieBanner && !accepted && !rejected) {
+    cookieBanner.style.display = 'flex';
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      localStorage.removeItem('cookiesRejected');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+      enableAnalytics();
+    });
+  }
+
+  if (rejectBtn) {
+    rejectBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesRejected', 'true');
+      localStorage.removeItem('cookiesAccepted');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+    });
+  }
+</script>
 </body>
 </html>
