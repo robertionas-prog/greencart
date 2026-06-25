@@ -109,14 +109,12 @@
         }
 
         .orders-list,
-        .actions-list,
         .catalog-list {
             display: grid;
             gap: .9rem;
         }
 
-        .order-row,
-        .action-row {
+        .order-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -126,8 +124,7 @@
             background: var(--bg-soft);
         }
 
-        .order-row small,
-        .action-row small {
+        .order-row small {
             display: block;
             color: var(--text-muted);
             margin-top: .2rem;
@@ -230,6 +227,63 @@
             color: var(--text-muted);
         }
 
+        .actions-ai-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: .9rem;
+        }
+
+        .action-ai-card {
+            background: var(--bg-soft);
+            border-radius: 18px;
+            padding: 1rem 1.05rem;
+            border: 1px solid rgba(15, 23, 42, 0.05);
+        }
+
+        .action-ai-card strong {
+            display: block;
+            margin-bottom: .35rem;
+            color: #12212B;
+            line-height: 1.35;
+        }
+
+        .action-ai-card small {
+            display: block;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        .action-ai-label {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: .38rem .7rem;
+            font-size: .76rem;
+            font-weight: 700;
+            margin-bottom: .7rem;
+            letter-spacing: .01em;
+        }
+
+        .label-alert {
+            background: #fff4d6;
+            color: #8a6100;
+        }
+
+        .label-bundle {
+            background: #e8f0ff;
+            color: #2451b2;
+        }
+
+        .label-goal {
+            background: #e8f7ed;
+            color: #256944;
+        }
+
+        .label-forecast {
+            background: #f2ebff;
+            color: #6941c6;
+        }
+
         @media (max-width: 980px) {
             .dashboard-hero,
             .dashboard-panels {
@@ -254,8 +308,7 @@
                 grid-column: 2;
             }
 
-            .order-row,
-            .action-row {
+            .order-row {
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -359,27 +412,12 @@
             </article>
 
             <article class="dashboard-panel">
-                <h2>Actions rapides</h2>
-                <div class="actions-list">
-                    <div class="action-row">
-                        <div>
-                            <strong>Mettre à jour les stocks</strong>
-                            <small>Synchroniser vos quantités avant ce soir.</small>
-                        </div>
-                    </div>
-
-                    <div class="action-row">
-                        <div>
-                            <strong>Ajouter une photo produit</strong>
-                            <small>Les fiches avec image convertissent mieux.</small>
-                        </div>
-                    </div>
-
-                    <div class="action-row">
-                        <div>
-                            <strong>Répondre aux avis clients</strong>
-                            <small>Pensez à consulter les derniers avis visibles sur votre fiche producteur.</small>
-                        </div>
+                <h2>Recommandations intelligentes</h2>
+                <div class="actions-ai-grid" id="actions-ai-grid">
+                    <div class="action-ai-card">
+                        <span class="action-ai-label label-goal">Analyse</span>
+                        <strong>Chargement des recommandations</strong>
+                        <small>GreenCart analyse vos ventes récentes pour vous proposer des actions utiles.</small>
                     </div>
                 </div>
             </article>
@@ -432,6 +470,12 @@
     const SUPABASE_KEY = 'sb_publishable_0OGg5wCM63vxbWNCnVfliw_LWFZ7ID8';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    const DASHBOARD_GOALS = {
+        revenue: 1500,
+        orders: 20,
+        customers: 8
+    };
+
     const cartCountEl = document.getElementById("cart-count");
     const dashboardTitleEl = document.getElementById("dashboard-title");
     const producerBadgeNameEl = document.getElementById("producer-badge-name");
@@ -441,6 +485,7 @@
     const statRevenueEl = document.getElementById("stat-revenue");
     const ordersListEl = document.getElementById("orders-list");
     const catalogListEl = document.getElementById("catalog-list");
+    const actionsAiGridEl = document.getElementById("actions-ai-grid");
 
     function formatPrice(value) {
         return `${Number(value || 0).toFixed(2).replace('.', ',')} €`;
@@ -608,6 +653,253 @@
         `).join('');
     }
 
+    function safeArray(value) {
+        return Array.isArray(value) ? value : [];
+    }
+
+    function normalizeItem(item) {
+        return {
+            id: Number(item?.product_id || item?.id || 0),
+            name: item?.name || 'Produit',
+            qty: Number(item?.qty || item?.quantity || 1),
+            price: Number(item?.price || 0)
+        };
+    }
+
+    function startOfDay(date) {
+        const d = new Date(date);
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+
+    function daysBetweenInclusive(start, end) {
+        return Math.max(1, Math.floor((end - start) / 86400000) + 1);
+    }
+
+    function getCurrentMonthOrders(orders) {
+        const now = new Date();
+        return safeArray(orders).filter(order => {
+            const d = new Date(order.created_at);
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        });
+    }
+
+    function getRevenueProgress(monthOrders) {
+        const revenue = monthOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+        const progress = DASHBOARD_GOALS.revenue > 0 ? (revenue / DASHBOARD_GOALS.revenue) * 100 : 0;
+        return { revenue, progress };
+    }
+
+    function getOrdersProgress(monthOrders) {
+        const count = monthOrders.length;
+        const progress = DASHBOARD_GOALS.orders > 0 ? (count / DASHBOARD_GOALS.orders) * 100 : 0;
+        return { count, progress };
+    }
+
+    function getCustomersProgress(monthOrders) {
+        const uniqueEmails = new Set(
+            monthOrders
+                .map(order => String(order.email || '').trim().toLowerCase())
+                .filter(Boolean)
+        );
+        const count = uniqueEmails.size;
+        const progress = DASHBOARD_GOALS.customers > 0 ? (count / DASHBOARD_GOALS.customers) * 100 : 0;
+        return { count, progress };
+    }
+
+    function buildDecliningProductInsight(orders) {
+        const now = new Date();
+        const today = startOfDay(now);
+
+        const currentStart = new Date(today);
+        currentStart.setDate(currentStart.getDate() - 13);
+
+        const previousStart = new Date(today);
+        previousStart.setDate(previousStart.getDate() - 27);
+
+        const previousEnd = new Date(today);
+        previousEnd.setDate(previousEnd.getDate() - 14);
+
+        const currentMap = new Map();
+        const previousMap = new Map();
+
+        safeArray(orders).forEach(order => {
+            const orderDate = new Date(order.created_at);
+            const items = safeArray(order.items).map(normalizeItem);
+
+            items.forEach(item => {
+                const key = item.id || item.name;
+                const base = { name: item.name, qty: 0 };
+
+                if (orderDate >= currentStart && orderDate <= now) {
+                    const existing = currentMap.get(key) || { ...base };
+                    existing.qty += item.qty;
+                    currentMap.set(key, existing);
+                }
+
+                if (orderDate >= previousStart && orderDate <= previousEnd) {
+                    const existing = previousMap.get(key) || { ...base };
+                    existing.qty += item.qty;
+                    previousMap.set(key, existing);
+                }
+            });
+        });
+
+        let bestDrop = null;
+
+        previousMap.forEach((prevValue, key) => {
+            const currentValue = currentMap.get(key);
+            const previousQty = Number(prevValue.qty || 0);
+            const currentQty = Number(currentValue?.qty || 0);
+
+            if (previousQty <= 0) return;
+
+            const dropPct = ((previousQty - currentQty) / previousQty) * 100;
+
+            if (dropPct <= 0) return;
+
+            if (!bestDrop || dropPct > bestDrop.dropPct) {
+                bestDrop = {
+                    name: prevValue.name,
+                    previousQty,
+                    currentQty,
+                    dropPct
+                };
+            }
+        });
+
+        if (!bestDrop) {
+            return {
+                labelClass: 'label-alert',
+                label: 'Tendance',
+                title: 'Aucune baisse marquée sur 14 jours',
+                text: 'Vos ventes produit restent stables sur les deux dernières périodes. Continuez les mises en avant actuelles.'
+            };
+        }
+
+        return {
+            labelClass: 'label-alert',
+            label: 'Produit en baisse',
+            title: `${bestDrop.name} ralentit sur 14 jours`,
+            text: `Ventes estimées : ${bestDrop.currentQty} sur les 14 derniers jours contre ${bestDrop.previousQty} auparavant, soit -${Math.round(bestDrop.dropPct)} %. Action suggérée : remise légère ou mise en avant en page produit.`
+        };
+    }
+
+    function buildBundleInsight(orders) {
+        const pairCounts = new Map();
+        const productNames = new Map();
+
+        safeArray(orders).forEach(order => {
+            const items = safeArray(order.items)
+                .map(normalizeItem)
+                .filter(item => item.name);
+
+            const uniqueProducts = [...new Map(
+                items.map(item => [String(item.id || item.name), item])
+            ).values()];
+
+            uniqueProducts.forEach(item => {
+                productNames.set(String(item.id || item.name), item.name);
+            });
+
+            for (let i = 0; i < uniqueProducts.length; i++) {
+                for (let j = i + 1; j < uniqueProducts.length; j++) {
+                    const a = String(uniqueProducts[i].id || uniqueProducts[i].name);
+                    const b = String(uniqueProducts[j].id || uniqueProducts[j].name);
+                    const pairKey = [a, b].sort().join('::');
+                    pairCounts.set(pairKey, (pairCounts.get(pairKey) || 0) + 1);
+                }
+            }
+        });
+
+        let bestPair = null;
+
+        pairCounts.forEach((count, key) => {
+            if (!bestPair || count > bestPair.count) {
+                bestPair = { key, count };
+            }
+        });
+
+        if (!bestPair) {
+            return {
+                labelClass: 'label-bundle',
+                label: 'Lot recommandé',
+                title: 'Pas assez de co-achats pour suggérer un lot',
+                text: 'Dès que plusieurs commandes contiendront des combinaisons récurrentes, GreenCart proposera un duo pertinent.'
+            };
+        }
+
+        const [a, b] = bestPair.key.split('::');
+        const nameA = productNames.get(a) || 'Produit 1';
+        const nameB = productNames.get(b) || 'Produit 2';
+
+        return {
+            labelClass: 'label-bundle',
+            label: 'Lot recommandé',
+            title: `Proposer un lot ${nameA} + ${nameB}`,
+            text: `Cette combinaison revient dans ${bestPair.count} commande(s). Action suggérée : créer un duo ou une offre panier pour augmenter le panier moyen.`
+        };
+    }
+
+    function buildGoalsInsight(monthOrders) {
+        const revenueData = getRevenueProgress(monthOrders);
+        const ordersData = getOrdersProgress(monthOrders);
+        const customersData = getCustomersProgress(monthOrders);
+
+        return {
+            labelClass: 'label-goal',
+            label: 'Objectifs du mois',
+            title: `${Math.round(revenueData.progress)} % de l’objectif CA atteint`,
+            text: `${formatPrice(revenueData.revenue)} sur ${formatPrice(DASHBOARD_GOALS.revenue)} · ${ordersData.count}/${DASHBOARD_GOALS.orders} commandes · ${customersData.count}/${DASHBOARD_GOALS.customers} clients estimés.`
+        };
+    }
+
+    function buildForecastInsight(monthOrders) {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const daysElapsed = daysBetweenInclusive(monthStart, now);
+        const totalDaysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+        const revenue = monthOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+        const ordersCount = monthOrders.length;
+
+        const projectedRevenue = (revenue / daysElapsed) * totalDaysInMonth;
+        const projectedOrders = (ordersCount / daysElapsed) * totalDaysInMonth;
+
+        const revenueGap = projectedRevenue - DASHBOARD_GOALS.revenue;
+        const isOnTrack = revenueGap >= 0;
+
+        return {
+            labelClass: 'label-forecast',
+            label: 'Projection',
+            title: isOnTrack
+                ? 'Objectif mensuel atteignable au rythme actuel'
+                : 'Risque de manquer l’objectif mensuel',
+            text: `Projection fin de mois : ${formatPrice(projectedRevenue)} et ${Math.round(projectedOrders)} commandes. ${isOnTrack ? 'Le rythme actuel est suffisant.' : `Il manque environ ${formatPrice(Math.abs(revenueGap))} pour atteindre l’objectif.`}`
+        };
+    }
+
+    function renderAiCards(cards) {
+        actionsAiGridEl.innerHTML = cards.map(card => `
+            <div class="action-ai-card">
+                <span class="action-ai-label ${card.labelClass}">${escapeHtml(card.label)}</span>
+                <strong>${escapeHtml(card.title)}</strong>
+                <small>${escapeHtml(card.text)}</small>
+            </div>
+        `).join('');
+    }
+
+    function buildAiInsights(orders) {
+        const monthOrders = getCurrentMonthOrders(orders);
+
+        return [
+            buildDecliningProductInsight(orders),
+            buildBundleInsight(orders),
+            buildGoalsInsight(monthOrders),
+            buildForecastInsight(monthOrders)
+        ];
+    }
+
     async function loadDashboard() {
         refreshBadge();
 
@@ -619,6 +911,14 @@
             heroSummaryTextEl.textContent = "Connectez-vous avec un compte producteur pour accéder au tableau de bord.";
             ordersListEl.innerHTML = `<div class="empty-state">Connexion producteur requise.</div>`;
             catalogListEl.innerHTML = `<div class="empty-state">Connexion producteur requise.</div>`;
+            renderAiCards([
+                {
+                    labelClass: 'label-goal',
+                    label: 'Accès',
+                    title: 'Connexion producteur requise',
+                    text: 'Les recommandations seront disponibles dès qu’un compte producteur sera connecté.'
+                }
+            ]);
             return;
         }
 
@@ -664,10 +964,21 @@
             statOrdersEl.textContent = '0';
             statRevenueEl.textContent = formatPrice(0);
             heroSummaryTextEl.textContent = "Impossible de charger l’activité du jour.";
+            renderAiCards([
+                {
+                    labelClass: 'label-alert',
+                    label: 'Analyse',
+                    title: 'Impossible de charger les recommandations',
+                    text: 'Les données de vente sont indisponibles pour le moment.'
+                }
+            ]);
             return;
         }
 
         renderOrders((orders || []).slice(0, 5));
+
+        const aiCards = buildAiInsights(orders || []);
+        renderAiCards(aiCards);
 
         const totalRevenue = (orders || []).reduce((sum, order) => sum + Number(order.total || 0), 0);
         const latestOrdersCount = (orders || []).length;
