@@ -6,6 +6,18 @@
     <meta name="description" content="GreenCart est une plateforme fictive de produits locaux en circuit court, reliant producteurs partenaires et consommateurs avec une livraison simple et responsable.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-K98EQG0497"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  function enableAnalytics() {
+    gtag('config', 'G-K98EQG0497');
+  }
+</script>
 </head>
 
 <body>
@@ -420,5 +432,38 @@
         });
     </script>
 
+    <script>
+  const cookieBanner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const rejectBtn = document.getElementById('reject-cookies');
+
+  const accepted = localStorage.getItem('cookiesAccepted') === 'true';
+  const rejected = localStorage.getItem('cookiesRejected') === 'true';
+
+  if (accepted) {
+    enableAnalytics();
+  }
+
+  if (cookieBanner && !accepted && !rejected) {
+    cookieBanner.style.display = 'flex';
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      localStorage.removeItem('cookiesRejected');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+      enableAnalytics();
+    });
+  }
+
+  if (rejectBtn) {
+    rejectBtn.addEventListener('click', () => {
+      localStorage.setItem('cookiesRejected', 'true');
+      localStorage.removeItem('cookiesAccepted');
+      if (cookieBanner) cookieBanner.style.display = 'none';
+    });
+  }
+</script>
 </body>
 </html>
