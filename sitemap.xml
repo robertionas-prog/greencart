@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/greencart</loc>
+    <loc>https://greencart2-five.vercel.app/</loc>
   </url>
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/categorie</loc>
+    <loc>https://greencart2-five.vercel.app/categorie.html</loc>
   </url>
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/producteurs</loc>
+    <loc>https://greencart2-five.vercel.app/producteurs.html</loc>
   </url>
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/contact</loc>
+    <loc>https://greencart2-five.vercel.app/pourquoi.html</loc>
   </url>
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/mentions-legales</loc>
+    <loc>https://greencart2-five.vercel.app/contact.html</loc>
   </url>
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/cgu</loc>
+    <loc>https://greencart2-five.vercel.app/panier.html</loc>
   </url>
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/cgv</loc>
+    <loc>https://greencart2-five.vercel.app/profil.html</loc>
   </url>
   <url>
-    <loc>https://greencart-robert-ionas.neocities.org/espace_agriculteur</loc>
+    <loc>https://greencart2-five.vercel.app/commande.html</loc>
+  </url>
+  <url>
+    <loc>https://greencart2-five.vercel.app/produit.html</loc>
+  </url>
+  <url>
+    <loc>https://greencart2-five.vercel.app/espaceagriculteur.html</loc>
+  </url>
+  <url>
+    <loc>https://greencart2-five.vercel.app/mentions-legales.html</loc>
+  </url>
+  <url>
+    <loc>https://greencart2-five.vercel.app/cgu.html</loc>
+  </url>
+  <url>
+    <loc>https://greencart2-five.vercel.app/cgv.html</loc>
   </url>
 </urlset>
